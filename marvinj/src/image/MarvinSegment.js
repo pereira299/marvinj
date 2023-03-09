@@ -15,8 +15,8 @@ export default class MarvinSegment {
   }
 
   segmentMinDistance(segments, minDistance) {
-    const math = new MarvinMath();
     let s1, s2;
+    const math = new MarvinMath();
     for (let i = 0; i < segments.size() - 1; i++) {
       for (let j = i + 1; j < segments.size(); j++) {
         s1 = segments[i];

@@ -1,7 +1,11 @@
+import MarvinJSUtils from "../MarvinJSUtils.js";
 export default class MarvinMath {
-  constructor() {}
+  constructor() {
+	this.utils = new MarvinJSUtils();
+  }
+
   static getTrueMatrix(rows, cols) {
-    let ret = MarvinJSUtils.createMatrix2D(rows, cols);
+    let ret = this.utils.createMatrix2D(rows, cols);
 
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
@@ -12,7 +16,7 @@ export default class MarvinMath {
   }
 
   static scaleMatrix(matrix, scale) {
-    let ret = MarvinJSUtils.createMatrix2D(matrix.length, matrix.length);
+    let ret = this.utils.createMatrix2D(matrix.length, matrix.length);
 
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix.length; j++) {
@@ -24,9 +28,9 @@ export default class MarvinMath {
 
   static euclideanDistance(p1, p2, p3, p4, p5, p6) {
     if (p6 != null) {
-      return euclideanDistance3D(p1, p2, p3, p4, p5, p6);
+      return this.euclideanDistance3D(p1, p2, p3, p4, p5, p6);
     } else {
-      return euclideanDistance3D(p1, p2, p3, p4);
+      return this.euclideanDistance3D(p1, p2, p3, p4);
     }
   }
 

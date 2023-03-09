@@ -5,11 +5,11 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
     this.load();
   }
 
-  load = function () {
+  load() {
     this.setAttribute("threshold", 30);
-  };
+  }
 
-  process = function (images, imageOut) {
+  process(images, imageOut) {
     let threshold = this.getAttribute("threshold");
     let image0 = images[0];
     for (let y = 0; y < image0.getHeight(); y++) {
@@ -21,9 +21,9 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
         );
       }
     }
-  };
+  }
 
-  getBackgroundPixel = function (x, y, images, threshold) {
+  getBackgroundPixel(x, y, images, threshold) {
     let colors = new Array();
     for (let i in images) {
       let img = images[i];
@@ -71,6 +71,5 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
     }
     c2 = colors[maxIndex];
     return 0xff000000 + (c2[0] << 16) + (c2[1] << 8) + c2[2];
-  };
+  }
 }
-

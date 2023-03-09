@@ -5,10 +5,8 @@ export default class AverageColor extends MarvinAbstractImagePlugin {
     super();
     this.load();
   }
-
-  load () {};
-
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  load() {}
+  process(imageIn, imageOut, attributesOut, mask, previewMode) {
     let totalR = 0;
     let totalG = 0;
     let totalB = 0;
@@ -29,5 +27,5 @@ export default class AverageColor extends MarvinAbstractImagePlugin {
     if (attributesOut != null) {
       attributesOut.set("averageColor", [totalR, totalG, totalB]);
     }
-  };
+  }
 }

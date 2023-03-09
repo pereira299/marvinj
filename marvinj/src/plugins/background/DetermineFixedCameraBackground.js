@@ -1,14 +1,13 @@
 import MarvinJSUtils from "../../MarvinJSUtils.js";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin.js";
 export default class DetermineFixedCameraBackground extends MarvinAbstractImagePlugin {
-
-  utils = new MarvinJSUtils();
   constructor() {
     super();
     this.load();
   }
 
   load() {
+	this.utils = new MarvinJSUtils();
     this.initialized = false;
   }
 
@@ -64,4 +63,3 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
     return maxIndex * 10;
   }
 }
-

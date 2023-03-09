@@ -4,11 +4,9 @@ export default class AlphaBoundary extends MarvinAbstractImagePlugin {
     super();
     this.load();
   }
-
   load() {
     this.setAttribute("radius", 5);
-  };
-
+  }
   process(imageIn, imageOut, attributesOut, mask, previewMode) {
     let neighborhood = this.getAttribute("radius");
     for (let y = 0; y < imageOut.getHeight(); y++) {
@@ -16,8 +14,7 @@ export default class AlphaBoundary extends MarvinAbstractImagePlugin {
         this.alphaRadius(imageOut, x, y, neighborhood);
       }
     }
-  };
-
+  }
   alphaRadius(image, x, y, radius) {
     let oldAlpha = image.getAlphaComponent(x, y);
     let newAlpha;
@@ -37,5 +34,5 @@ export default class AlphaBoundary extends MarvinAbstractImagePlugin {
     newAlpha = Math.floor(totalAlpha / totalPixels);
 
     if (newAlpha < oldAlpha) image.setAlphaComponent(x, y, newAlpha);
-  };
+  }
 }

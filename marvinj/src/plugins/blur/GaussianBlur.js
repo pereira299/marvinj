@@ -1,17 +1,16 @@
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin.js";
 import MarvinJSUtils from "../../MarvinJSUtils.js";
 export default class GaussianBlur extends MarvinAbstractImagePlugin {
+  constructor() {
+    super();
+    this.load();
+  }
 
-	constructor() {
-		super();
-		this.Utils = new MarvinJSUtils();
-		this.load();
-  	}
-
-  load = function () {
+  load() {
     this.RED = 0;
     this.GREEN = 1;
     this.BLUE = 2;
+	this.utils = new MarvinJSUtils();
 
     this.kernelMatrix = null;
     this.resultMatrix = null;
@@ -19,23 +18,23 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
     this.radius = null;
 
     this.setAttribute("radius", 3);
-  };
+  }
 
-  process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(imageIn, imageOut, attributesOut, mask, previewMode) {
     this.radius = this.getAttribute("radius");
 
     let l_imageWidth = imageIn.getWidth();
     let l_imageHeight = imageIn.getHeight();
 
-	let l_pixelColor;
+    let l_pixelColor;
     this.kernelMatrix = this.getGaussianKernel();
-    this.resultMatrix = this.Utils.createMatrix3D(
+    this.resultMatrix = this.utils.createMatrix3D(
       l_imageWidth,
       l_imageHeight,
       3,
       0
     );
-    this.appiledkernelMatrix = this.Utils.createMatrix2D(
+    this.appiledkernelMatrix = this.utils.createMatrix2D(
       l_imageWidth,
       l_imageHeight,
       0
@@ -74,13 +73,13 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
         );
       }
     }
-  };
+  }
 
   /*
    * Calc Gaussian Matrix.
    */
-  getGaussianKernel = function () {
-    let l_matrix = this.Utils.createMatrix2D(
+  getGaussianKernel() {
+    let l_matrix = this.utils.createMatrix2D(
       this.radius * 2 + 1,
       this.radius * 2 + 1
     );
@@ -100,12 +99,12 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
       }
     }
     return l_matrix;
-  };
+  }
 
   /*
    * Apply the blur matrix on a image region.
    */
-  applyKernel = function (centerPixel_X, centerPixel_Y, pixelColor, image) {
+  applyKernel(centerPixel_X, centerPixel_Y, pixelColor, image) {
     for (let y = centerPixel_Y; y < centerPixel_Y + this.radius * 2; y++) {
       for (let x = centerPixel_X; x < centerPixel_X + this.radius * 2; x++) {
         if (
@@ -128,5 +127,5 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
         }
       }
     }
-  };
+  }
 }

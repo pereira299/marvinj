@@ -8,7 +8,7 @@ export default class MarvinImageMask {
     this.height = h;
 
     if (w != 0 && h != 0) {
-      this.arrMask = Utils.createMatrix2D(width, height);
+      this.arrMask = MarvinJSUtils.createMatrix2D(width, height);
     } else {
       this.arrMask = null;
     }
@@ -22,13 +22,13 @@ export default class MarvinImageMask {
     return this.height;
   }
 
-  addPixel = function (x, y) {
+  addPixel(x, y) {
     this.arrMask[x][y] = true;
-  };
+  }
 
-  removePixel = function (x, y) {
+  removePixel(x, y) {
     this.arrMask[x][y] = false;
-  };
+  }
 
   clear() {
     if (this.arrMask != null) {
@@ -44,13 +44,13 @@ export default class MarvinImageMask {
     return this.arrMask;
   }
 
-  addRectRegion = function (startX, startY, regionWidth, regionHeight) {
+  addRectRegion(startX, startY, regionWidth, regionHeight) {
     for (let x = startX; x < startX + regionWidth; x++) {
       for (let y = startY; y < startY + regionHeight; y++) {
         this.arrMask[x][y] = true;
       }
     }
-  };
+  }
 
   createNullMask() {
     return new MarvinImageMask(0, 0);

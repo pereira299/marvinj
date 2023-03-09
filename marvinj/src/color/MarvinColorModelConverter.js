@@ -1,4 +1,6 @@
 export default class MarvinColorModelConverter {
+  constructor() {}
+
   static rgbToBinary(img, threshold) {
     let resultImage = new MarvinImage(
       img.getWidth(),

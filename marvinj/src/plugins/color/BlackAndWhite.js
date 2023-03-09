@@ -6,12 +6,11 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
     this.MAX_RLEVEL = 0.03;
     this.load();
   }
-  load = function () {
+  load() {
     this.grayScale = new GrayScale();
     this.setAttribute("level", 10);
-  };
-
-  process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
+  }
+  process(imageIn, imageOut, attributesOut, mask, previewMode) {
     this.grayScale.process(imageIn, imageOut);
     let level = this.getAttribute("level");
     let rlevel = (level / 100.0) * this.MAX_RLEVEL;
@@ -44,5 +43,5 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
         );
       }
     }
-  };
+  }
 }

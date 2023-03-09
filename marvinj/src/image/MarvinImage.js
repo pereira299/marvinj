@@ -3,8 +3,6 @@ export default class MarvinImage {
   COLOR_MODEL_BINARY = 1;
 
   constructor(width, height, colorModel) {
-    this.COLOR_MODEL_BINARY = 1;
-    this.COLOR_MODEL_RGB = 0;
     // properties
     this.image = null;
     this.canvas = null;
@@ -267,24 +265,12 @@ export default class MarvinImage {
     if (y == null) {
       y = 0;
     }
-    canvas.getContext("2d").putImageData(this.imageData, x, y); /*
-	if(alphaCombination == null || !alphaCombination){
-		canvas.getContext("2d").putImageData(this.imageData, x,y);
-	} else{
-		this.imageData = this.ctx.getImageData(0, 0, width, height);
-		let c = document.createElement('canvas');
-		c.width = this.width;
-		c.height = this.height;
-		c.getContext('2d').putImageData(this.imageData,x,y); 
-		let img = new Image();
-		img.src = c.toDataURL();
-		canvas.getContext("2d").drawImage(img, x, y);
-	}*/
+    canvas.getContext("2d").putImageData(this.imageData, x, y);
   }
 
   toBlob() {
     this.update();
-    return MarvinImage.dataURItoBlob(this.canvas.toDataURL("image/png"));
+    return this.dataURItoBlob(this.canvas.toDataURL("image/png"));
   }
 
   dataURItoBlob(dataURI) {
