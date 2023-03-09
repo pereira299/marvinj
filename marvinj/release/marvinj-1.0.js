@@ -2,11 +2,11 @@
 function MarvinColorModelConverter(){}
 
 MarvinColorModelConverter.rgbToBinary = function(img, threshold){		
-	var resultImage = new MarvinImage(img.getWidth(), img.getHeight(), MarvinImage.COLOR_MODEL_BINARY);
+	let resultImage = new MarvinImage(img.getWidth(), img.getHeight(), MarvinImage.COLOR_MODEL_BINARY);
 
-	for(var y=0; y<img.getHeight(); y++){
-		for(var x=0; x<img.getWidth(); x++){
-			var gray = Math.ceil(((img.getIntComponent0(x, y)*0.3)+(img.getIntComponent1(x, y)*0.59)+(img.getIntComponent2(x, y)*0.11)));
+	for(let y=0; y<img.getHeight(); y++){
+		for(let x=0; x<img.getWidth(); x++){
+			let gray = Math.ceil(((img.getIntComponent0(x, y)*0.3)+(img.getIntComponent1(x, y)*0.59)+(img.getIntComponent2(x, y)*0.11)));
 			
 			if(gray <= threshold){
 				resultImage.setBinaryColor(x, y, true);
@@ -20,10 +20,10 @@ MarvinColorModelConverter.rgbToBinary = function(img, threshold){
 };
 
 MarvinColorModelConverter.binaryToRgb = function(img){
-	var resultImage = new MarvinImage(img.getWidth(), img.getHeight(), MarvinImage.COLOR_MODEL_RGB);
+	let resultImage = new MarvinImage(img.getWidth(), img.getHeight(), MarvinImage.COLOR_MODEL_RGB);
 
-	for(var y=0; y<img.getHeight(); y++){
-		for(var x=0; x<img.getWidth(); x++){
+	for(let y=0; y<img.getHeight(); y++){
+		for(let x=0; x<img.getWidth(); x++){
 			if(img.getBinaryColor(x, y)){
 				resultImage.setIntColor(x, y, 255, 0,0,0);
 			}
@@ -36,10 +36,10 @@ MarvinColorModelConverter.binaryToRgb = function(img){
 };
 	
 MarvinColorModelConverter.rgbToHsv = function(rgbArray){
-	var hsvArray = new Array(rgbArray.length*3);
+	let hsvArray = new Array(rgbArray.length*3);
 	
-	var red,green,blue;
-	for(var i=0; i<rgbArray.length; i++){
+	let red,green,blue;
+	for(let i=0; i<rgbArray.length; i++){
 		red = (rgbArray[i] & 0xFF0000) >>> 16;
 		green = (rgbArray[i] & 0x00FF00) >>> 8;
 		blue = (rgbArray[i] & 0x0000FF);
@@ -48,12 +48,12 @@ MarvinColorModelConverter.rgbToHsv = function(rgbArray){
 		green /=255.0;
 		blue /=255.0;
 		
-		var max = Math.max(Math.max(red, green), blue);
-		var min = Math.min(Math.min(red, green), blue);
-		var c = max-min;
+		let max = Math.max(Math.max(red, green), blue);
+		let min = Math.min(Math.min(red, green), blue);
+		let c = max-min;
 		
 		// H 
-		var h,s,v;
+		let h,s,v;
 		if(c !=0 ){
 			if(max == red){
 				if(green >= blue){
@@ -86,23 +86,23 @@ MarvinColorModelConverter.rgbToHsv = function(rgbArray){
 };
 	
 MarvinColorModelConverter.hsvToRgb = function(hsvArray){
-	var rgbArray = new Array(hsvArray.length/3);
+	let rgbArray = new Array(hsvArray.length/3);
 	
-	for(var i=0, j=0; i<hsvArray.length; i+=3, j++){
-		var h = hsvArray[i];
-		var s = hsvArray[i+1];
-		var v = hsvArray[i+2];
+	for(let i=0, j=0; i<hsvArray.length; i+=3, j++){
+		let h = hsvArray[i];
+		let s = hsvArray[i+1];
+		let v = hsvArray[i+2];
 		
 		// HSV to RGB
-		var hi = Math.ceil(h/60 % 6);
-		var f = (h/60) - hi;
-		var p = v * (1-s);
-		var q = v * (1 - f*s);
-		var t = v * (1 - (1 - f) * s);
+		let hi = Math.ceil(h/60 % 6);
+		let f = (h/60) - hi;
+		let p = v * (1-s);
+		let q = v * (1 - f*s);
+		let t = v * (1 - (1 - f) * s);
 		
-		var iHi = Math.ceil(hi);
+		let iHi = Math.ceil(hi);
 		
-		var r=0,g=0,b=0;
+		let r=0,g=0,b=0;
 		
 		switch(iHi){
 			case 0:	r = Math.ceil(v*255);	g = Math.ceil(t*255);	b = Math.ceil(p*255);	break;
@@ -161,7 +161,7 @@ MarvinImage.prototype.setDimension = function(width, height){
 MarvinImage.prototype.load = function(url, callback){
 	this.onload = callback;
 	this.image = new Image();
-	var ref = this;
+	let ref = this;
 	this.image.onload = function(){ref.callbackImageLoaded(ref)};
 	this.image.crossOrigin="anonymous";
 	this.image.src = url;
@@ -187,7 +187,7 @@ MarvinImage.prototype.callbackImageLoaded = function(marvinImage){
 };
 
 MarvinImage.prototype.clone = function(){
-	var image = new MarvinImage(this.getWidth(), this.getHeight(), this.colorModel);
+	let image = new MarvinImage(this.getWidth(), this.getHeight(), this.colorModel);
 	MarvinImage.copyColorArray(this, image);
 	return image;
 };
@@ -197,8 +197,8 @@ MarvinImage.prototype.update = function(color){
 };
 
 MarvinImage.prototype.clear = function(color){
-	for(var y=0; y<this.getHeight(); y++){
-		for(var x=0; x<this.getWidth(); x++){
+	for(let y=0; y<this.getHeight(); y++){
+		for(let x=0; x<this.getWidth(); x++){
 			this.setIntColor(x,y,color);
 		}
 	}
@@ -209,28 +209,28 @@ MarvinImage.prototype.getColorModel = function(){
 };
 
 MarvinImage.prototype.getAlphaComponent = function(x,y){
-	var start = ((y*this.getWidth())+x)*4; 
+	let start = ((y*this.getWidth())+x)*4; 
 	return this.imageData.data[start+3];
 };
 
 
 MarvinImage.prototype.setAlphaComponent = function(x,y, alpha){
-	var start = ((y*this.getWidth())+x)*4; 
+	let start = ((y*this.getWidth())+x)*4; 
 	this.imageData.data[start+3] = alpha;
 };
 
 MarvinImage.prototype.getIntComponent0 = function(x,y){
-	var start = ((y*this.getWidth())+x)*4; 
+	let start = ((y*this.getWidth())+x)*4; 
 	return this.imageData.data[start];
 };
 
 MarvinImage.prototype.getIntComponent1 = function(x,y){
-	var start = ((y*this.getWidth())+x)*4; 
+	let start = ((y*this.getWidth())+x)*4; 
 	return this.imageData.data[start+1];
 };
 
 MarvinImage.prototype.getIntComponent2 = function(x,y){
-	var start = ((y*this.getWidth())+x)*4; 
+	let start = ((y*this.getWidth())+x)*4; 
 	return this.imageData.data[start+2];
 };
 
@@ -249,7 +249,7 @@ MarvinImage.prototype.setIntColor = function(x,y, a1, a2, a3, a4){
 };
 
 MarvinImage.prototype.getIntColor = function(x,y){
-	var start = ((y*this.getWidth())+x)*4;
+	let start = ((y*this.getWidth())+x)*4;
 	
 	return 	0x100000000 + 
 			(this.imageData.data[start+3] << 24) + 
@@ -259,20 +259,20 @@ MarvinImage.prototype.getIntColor = function(x,y){
 };
 
 MarvinImage.prototype.setIntColor1 = function(x,y, color){
-	var a = (color & 0xFF000000) >>> 24;
-	var r = (color & 0x00FF0000) >> 16;
-	var g = (color & 0x0000FF00) >> 8;
-	var b = color & 0x000000FF;
+	let a = (color & 0xFF000000) >>> 24;
+	let r = (color & 0x00FF0000) >> 16;
+	let g = (color & 0x0000FF00) >> 8;
+	let b = color & 0x000000FF;
 	this.setIntColor4(x,y,a,r,g,b);
 };
 
 MarvinImage.prototype.setBinaryColor = function(x,y,value){
-	var pos = ((y*this.getWidth())+x);
+	let pos = ((y*this.getWidth())+x);
 	this.arrBinaryColor[pos] = value;
 };
 
 MarvinImage.prototype.getBinaryColor = function(x,y){
-	var pos = ((y*this.getWidth())+x);
+	let pos = ((y*this.getWidth())+x);
 	return this.arrBinaryColor[pos];
 };
 
@@ -281,12 +281,12 @@ MarvinImage.copyColorArray = function(imgSource, imgDestine){
 	if(imgSource.getColorModel() == imgDestine.getColorModel()){
 		switch(imgSource.getColorModel()){
 			case MarvinImage.COLOR_MODEL_RGB:
-				for(var i=0; i<imgSource.imageData.data.length; i++){
+				for(let i=0; i<imgSource.imageData.data.length; i++){
 					imgDestine.imageData.data[i] = imgSource.imageData.data[i];
 				}
 				break;
 			case MarvinImage.COLOR_MODEL_BINARY:
-				for(var i=0; i<imgSource.arrBinaryColor.length; i++){
+				for(let i=0; i<imgSource.arrBinaryColor.length; i++){
 					imgDestine.arrBinaryColor[i] = imgSource.arrBinaryColor[i];
 				}
 				break;
@@ -295,20 +295,20 @@ MarvinImage.copyColorArray = function(imgSource, imgDestine){
 };
 
 MarvinImage.prototype.drawRect = function(x,y, width, height, color){
-	for(var i=x; i<x+width; i++){
+	for(let i=x; i<x+width; i++){
 		this.setIntColor(i, y, color);
 		this.setIntColor(i, y+(height-1), color);
 	}
 	
-	for(var i=y; i<y+height; i++){
+	for(let i=y; i<y+height; i++){
 		this.setIntColor(x, i, color);
 		this.setIntColor(x+(width-1), i, color);
 	}
 };
 
 MarvinImage.prototype.fillRect = function(x,y, width, height, color){
-	for(var i=x; i<x+width; i++){
-		for(var j=y; j<y+height; j++){
+	for(let i=x; i<x+width; i++){
+		for(let j=y; j<y+height; j++){
 			if(i < this.getWidth() && j < this.getHeight()){
 				this.setIntColor(i,j,color);
 			}
@@ -317,8 +317,8 @@ MarvinImage.prototype.fillRect = function(x,y, width, height, color){
 };
 
 MarvinImage.prototype.setColorToAlpha = function(color, alpha){
-	for(var y=0; y<this.height; y++){
-		for(var x=0; x<this.width; x++){
+	for(let y=0; y<this.height; y++){
+		for(let x=0; x<this.width; x++){
 			if((this.getIntColor(x,y) & 0x00FFFFFF) == (color & 0x00FFFFFF)){
 				this.setAlphaComponent(x,y,alpha);
 			}
@@ -327,8 +327,8 @@ MarvinImage.prototype.setColorToAlpha = function(color, alpha){
 };
 
 MarvinImage.prototype.setAlphaToColor = function(color){
-	for(var y=0; y<this.height; y++){
-		for(var x=0; x<this.width; x++){
+	for(let y=0; y<this.height; y++){
+		for(let x=0; x<this.width; x++){
 			if(this.getAlphaComponent(x, y) == 0){
 				this.setIntColor(x, y, 0xFFFFFFFF);
 			}
@@ -337,9 +337,9 @@ MarvinImage.prototype.setAlphaToColor = function(color){
 };
 
 MarvinImage.prototype.setIntColor2 = function(x,y, alpha, color){
-	var r = (color & 0x00FF0000) >> 16;
-	var g = (color & 0x0000FF00) >> 8;
-	var b = color & 0x000000FF;
+	let r = (color & 0x00FF0000) >> 16;
+	let g = (color & 0x0000FF00) >> 8;
+	let b = color & 0x000000FF;
 	this.setIntColor4(x,y,alpha,r,g,b);
 };
 
@@ -348,7 +348,7 @@ MarvinImage.prototype.setIntColor3 = function(x,y, r, g, b){
 };
 
 MarvinImage.prototype.setIntColor4 = function(x,y, alpha, r, g, b){
-	var start = ((y*this.getWidth())+x)*4;
+	let start = ((y*this.getWidth())+x)*4;
 	this.imageData.data[start] = r;
 	this.imageData.data[start+1] = g;
 	this.imageData.data[start+2] = b;
@@ -378,11 +378,11 @@ MarvinImage.prototype.draw = function(canvas, x, y, alphaCombination){
 		canvas.getContext("2d").putImageData(this.imageData, x,y);
 	} else{
 		this.imageData = this.ctx.getImageData(0, 0, width, height);
-		var c = document.createElement('canvas');
+		let c = document.createElement('canvas');
 		c.width = this.width;
 		c.height = this.height;
 		c.getContext('2d').putImageData(this.imageData,x,y); 
-		var img = new Image();
+		let img = new Image();
 		img.src = c.toDataURL();
 		canvas.getContext("2d").drawImage(img, x, y);
 	}*/
@@ -395,18 +395,18 @@ MarvinImage.prototype.toBlob = function(){
 
 MarvinImage.dataURItoBlob = function(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string
-    var byteString;
+    let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0)
         byteString = atob(dataURI.split(',')[1]);
     else
         byteString = unescape(dataURI.split(',')[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
     // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    let ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
 
@@ -444,8 +444,8 @@ MarvinImage.dataURItoBlob = function(dataURI) {
 	
 	MarvinImageMask.prototype.clear = function(){
 		if(this.arrMask != null){
-			for(var y=0; y<height; y++){
-				for(var x=0; x<width; x++){
+			for(let y=0; y<height; y++){
+				for(let x=0; x<width; x++){
 					this.arrMask[x][y] = false;
 				}
 			}
@@ -457,8 +457,8 @@ MarvinImage.dataURItoBlob = function(dataURI) {
 	};
 	
 	MarvinImageMask.prototype.addRectRegion = function(startX, startY, regionWidth, regionHeight){
-		for(var x=startX; x<startX+regionWidth; x++){
-			for(var y=startY; y<startY+regionHeight; y++){
+		for(let x=startX; x<startX+regionWidth; x++){
+			for(let y=startY; y<startY+regionHeight; y++){
 				this.arrMask[x][y] = true;
 			}
 		}
@@ -485,9 +485,9 @@ MarvinImage.dataURItoBlob = function(dataURI) {
 	}
 	
 	MarvinSegment.segmentMinDistance = function(segments, minDistance){
-		var s1,s2;
-		for(var i=0; i<segments.size()-1; i++){
-			for(var j=i+1; j<segments.size(); j++){
+		let s1,s2;
+		for(let i=0; i<segments.size()-1; i++){
+			for(let j=i+1; j<segments.size(); j++){
 				s1 = segments[i];
 				s2 = segments[j];
 				
@@ -523,11 +523,11 @@ MarvinColor.prototype.setName = function(name){
 MarvinColor.prototype.getName = function(){
 	return this.name;
 };
-var MarvinJSUtils = new Object();
+let MarvinJSUtils = new Object();
 
 MarvinJSUtils.createMatrix2D = function(rows, cols, value){
-	var arr = new Array(rows);
-	for(var i=0; i<arr.length; i++){
+	let arr = new Array(rows);
+	for(let i=0; i<arr.length; i++){
 		arr[i] = new Array(cols);
 		arr[i].fill(value)
 	}
@@ -535,10 +535,10 @@ MarvinJSUtils.createMatrix2D = function(rows, cols, value){
 };
 
 MarvinJSUtils.createMatrix3D = function(rows, cols, depth, value){
-	var arr = new Array(rows);
-	for(var i=0; i<arr.length; i++){
+	let arr = new Array(rows);
+	for(let i=0; i<arr.length; i++){
 		arr[i] = new Array(cols);
-		for(var j=0; j<arr[i].length; j++){
+		for(let j=0; j<arr[i].length; j++){
 			arr[i][j] = new Array(depth);
 			arr[i][j].fill(value)
 		}
@@ -547,12 +547,12 @@ MarvinJSUtils.createMatrix3D = function(rows, cols, depth, value){
 };
 
 MarvinJSUtils.createMatrix4D = function(rows, cols, depth, another, value){
-	var arr = new Array(rows);
-	for(var i=0; i<arr.length; i++){
+	let arr = new Array(rows);
+	for(let i=0; i<arr.length; i++){
 		arr[i] = new Array(cols);
-		for(var j=0; j<arr[i].length; j++){
+		for(let j=0; j<arr[i].length; j++){
 			arr[i][j] = new Array(depth);
-			for(var w=0; w<arr[i][j].length; w++){
+			for(let w=0; w<arr[i][j].length; w++){
 				arr[i][j][w] = new Array(another);
 				arr[i][j][w].fill(value);
 			}
@@ -560,13 +560,13 @@ MarvinJSUtils.createMatrix4D = function(rows, cols, depth, another, value){
 	}
 	return arr;
 };
-var MarvinMath = new Object();
+let MarvinMath = new Object();
 
 MarvinMath.getTrueMatrix = function(rows, cols){
-	var ret = MarvinJSUtils.createMatrix2D(rows, cols);
+	let ret = MarvinJSUtils.createMatrix2D(rows, cols);
 	
-	for(var i=0; i<rows; i++){
-		for(var j=0; j<cols; j++){
+	for(let i=0; i<rows; i++){
+		for(let j=0; j<cols; j++){
 			ret[i][j]  = true;
 		}
 	}
@@ -574,10 +574,10 @@ MarvinMath.getTrueMatrix = function(rows, cols){
 };
 
 MarvinMath.scaleMatrix = function(matrix, scale){
-	var ret = MarvinJSUtils.createMatrix2D(matrix.length, matrix.length);
+	let ret = MarvinJSUtils.createMatrix2D(matrix.length, matrix.length);
 	
-	for(var i=0; i<matrix.length; i++){
-		for(var j=0; j<matrix.length; j++){
+	for(let i=0; i<matrix.length; i++){
+		for(let j=0; j<matrix.length; j++){
 			ret[i][j] = matrix[i][j] * scale;
 		}
 	}
@@ -593,15 +593,15 @@ MarvinMath.euclideanDistance = function(p1, p2, p3, p4, p5, p6){
 };
 
 MarvinMath.euclideanDistance2D = function(x1, y1, x2, y2){
-	var dx = (x1-x2);
-	var dy = (y1-y2);
+	let dx = (x1-x2);
+	let dy = (y1-y2);
 	return Math.sqrt( dx*dx + dy*dy);
 };
 
 MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
-	var dx = (x1-x2);
-	var dy = (y1-y2);
-	var dz = (z1-z2);
+	let dx = (x1-x2);
+	let dy = (y1-y2);
+	let dz = (z1-z2);
 	return Math.sqrt( dx*dx + dy*dy + dz*dz);
 };
 
@@ -633,11 +633,11 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 			this.initialize(imageIn);
 		}
 		
-		for(var y=0; y<imageIn.getHeight(); y++){
-			for(var x=0; x<imageIn.getWidth(); x++){
-				var red 	= imageIn.getIntComponent0(x, y);
-				var green 	= imageIn.getIntComponent1(x, y);
-				var blue 	= imageIn.getIntComponent2(x, y);
+		for(let y=0; y<imageIn.getHeight(); y++){
+			for(let x=0; x<imageIn.getWidth(); x++){
+				let red 	= imageIn.getIntComponent0(x, y);
+				let green 	= imageIn.getIntComponent1(x, y);
+				let blue 	= imageIn.getIntComponent2(x, y);
 				
 				
 				weights[x][y][0][red/10]++;
@@ -651,10 +651,10 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	}
 	
 	DetermineFixedCameraBackground.prototype.getProbableColor = function(arr){
-		var max = -1;
-		var maxIndex = 0;
+		let max = -1;
+		let maxIndex = 0;
 		
-		for(var i=0; i<arr.length; i++){
+		for(let i=0; i<arr.length; i++){
 		if(max == -1 || arr[i] > max){
 				max = arr[i];
 				maxIndex = i;
@@ -681,20 +681,20 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		imageOut
 	)
 	{
-		var threshold = this.getAttribute("threshold");
-		var image0 = images[0];
-		for(var y=0; y<image0.getHeight(); y++){
-			for(var x=0; x<image0.getWidth(); x++){
+		let threshold = this.getAttribute("threshold");
+		let image0 = images[0];
+		for(let y=0; y<image0.getHeight(); y++){
+			for(let x=0; x<image0.getWidth(); x++){
 				imageOut.setIntColor(x, y, this.getBackgroundPixel(x,y, images, threshold));
 			}
 		}	
 	}
 	
 	DetermineSceneBackground.prototype.getBackgroundPixel = function(x, y, images, threshold){
-		var colors = new Array();
-		for(var i in images){
-			var img = images[i];
-			var c = new Array(4);
+		let colors = new Array();
+		for(let i in images){
+			let img = images[i];
+			let c = new Array(4);
 			c[0] = img.getIntComponent0(x, y);
 			c[1] = img.getIntComponent1(x, y);
 			c[2] = img.getIntComponent2(x, y);
@@ -704,9 +704,9 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 				colors.push(c);
 			}
 			else{
-				var found=false;
-				for(var j in colors){
-					var c2 = colors[j];
+				let found=false;
+				for(let j in colors){
+					let c2 = colors[j];
 					if
 					(
 						Math.abs(c2[0]-c[0]) < threshold*0.3 &&
@@ -728,10 +728,10 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 			}
 		}
 		
-		var max=-1;
-		var maxIndex=0;
-		var c2 = null;
-		for(var i=0; i<colors.length; i++){
+		let max=-1;
+		let maxIndex=0;
+		let c2 = null;
+		for(let i=0; i<colors.length; i++){
 			c2 = colors[i];
 			if(max == -1 || c2[3] > max){
 				max = c2[3];
@@ -772,18 +772,18 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	{
 		this.radius = this.getAttribute("radius");
 
-		var l_imageWidth = imageIn.getWidth();
-		var l_imageHeight = imageIn.getHeight();
+		let l_imageWidth = imageIn.getWidth();
+		let l_imageHeight = imageIn.getHeight();
 
-		var l_pixelColor;
+		let l_pixelColor;
 		this.kernelMatrix = this.getGaussianKernel();
 		this.resultMatrix = MarvinJSUtils.createMatrix3D(l_imageWidth, l_imageHeight, 3, 0);
 		this.appiledkernelMatrix = MarvinJSUtils.createMatrix2D(l_imageWidth, l_imageHeight, 0);
 		
-		var l_arrMask = mask.getMask();
+		let l_arrMask = mask.getMask();
 		
-		for (var x = 0; x < l_imageWidth; x++) {
-			for (var y = 0; y < l_imageHeight; y++) {	
+		for (let x = 0; x < l_imageWidth; x++) {
+			for (let y = 0; y < l_imageHeight; y++) {	
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
@@ -792,8 +792,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 			}
 		}
 		
-		for (var x = 0; x < l_imageWidth; x++) {
-			for (var y = 0; y < l_imageHeight; y++) {
+		for (let x = 0; x < l_imageWidth; x++) {
+			for (let y = 0; y < l_imageHeight; y++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
@@ -809,14 +809,14 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	 * Calc Gaussian Matrix.
 	 */
 	 GaussianBlur.prototype.getGaussianKernel = function(){
-		var l_matrix = MarvinJSUtils.createMatrix2D((this.radius*2)+1, (this.radius*2)+1);
-		var l_q=this.radius/3.0;
-		var l_distance;
-		var l_x;
-		var l_y;
+		let l_matrix = MarvinJSUtils.createMatrix2D((this.radius*2)+1, (this.radius*2)+1);
+		let l_q=this.radius/3.0;
+		let l_distance;
+		let l_x;
+		let l_y;
 		
-		for(var x=1; x<=(this.radius*2)+1; x++){
-			for(var y=1; y<=(this.radius*2)+1; y++){
+		for(let x=1; x<=(this.radius*2)+1; x++){
+			for(let y=1; y<=(this.radius*2)+1; y++){
 				l_x = Math.abs(x-(this.radius+1));
 				l_y = Math.abs(y-(this.radius+1));
 				l_distance = Math.sqrt((l_x*l_x)+(l_y*l_y));
@@ -831,8 +831,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	 */
 	GaussianBlur.prototype.applyKernel = function(centerPixel_X, centerPixel_Y, pixelColor, image)
 	{
-		for(var y=centerPixel_Y; y<centerPixel_Y+(this.radius*2); y++){
-			for(var x=centerPixel_X; x<centerPixel_X+(this.radius*2); x++){
+		for(let y=centerPixel_Y; y<centerPixel_Y+(this.radius*2); y++){
+			for(let x=centerPixel_X; x<centerPixel_X+(this.radius*2); x++){
 				if(x-this.radius >= 0 && x-this.radius < image.getWidth() && y-this.radius >= 0 && y-this.radius < image.getHeight()){
 					this.resultMatrix[x-this.radius][y-this.radius][this.RED]+= (((pixelColor & 0x00FF0000) >>> 16)*this.kernelMatrix[x-centerPixel_X][y-centerPixel_Y]);
 					this.resultMatrix[x-this.radius][y-this.radius][this.GREEN]+= (((pixelColor & 0x0000FF00) >>> 8)*this.kernelMatrix[x-centerPixel_X][y-centerPixel_Y]);
@@ -860,9 +860,9 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var neighborhood = this.getAttribute("radius");
-		for(var y=0; y<imageOut.getHeight(); y++){
-			for(var x=0; x<imageOut.getWidth(); x++){
+		let neighborhood = this.getAttribute("radius");
+		for(let y=0; y<imageOut.getHeight(); y++){
+			for(let x=0; x<imageOut.getWidth(); x++){
 				this.alphaRadius(imageOut, x, y, neighborhood);
 			}
 		}
@@ -870,14 +870,14 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	
 	AlphaBoundary.prototype.alphaRadius = function(image, x, y, radius){
 		
-		var oldAlpha = image.getAlphaComponent(x, y);
-		var newAlpha;
-		var totalAlpha=0;
-		var totalPixels=0;
-		var hn = Math.floor(radius/2);
+		let oldAlpha = image.getAlphaComponent(x, y);
+		let newAlpha;
+		let totalAlpha=0;
+		let totalPixels=0;
+		let hn = Math.floor(radius/2);
 		
-		for(var j=y-hn; j<y+hn; j++){
-			for(var i=x-hn; i<x+hn; i++){
+		for(let j=y-hn; j<y+hn; j++){
+			for(let i=x-hn; i<x+hn; i++){
 				
 				if(i >= 0 && i< image.getWidth() && j >= 0 && j < image.getHeight()){
 					totalAlpha += image.getAlphaComponent(i, j);
@@ -911,19 +911,19 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	)
 	{
 		
-		var totalR=0;
-		var totalG=0;
-		var totalB=0;
+		let totalR=0;
+		let totalG=0;
+		let totalB=0;
 		
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				totalR += imageIn.getIntComponent0(x,y);
 				totalG += imageIn.getIntComponent1(x,y);
 				totalB += imageIn.getIntComponent2(x,y);
 			}
 		}
 		
-		var totalPixels = imageIn.getWidth()*imageIn.getHeight();
+		let totalPixels = imageIn.getWidth()*imageIn.getHeight();
 		totalR = Math.round(totalR/totalPixels);
 		totalG = Math.round(totalG/totalPixels);
 		totalB = Math.round(totalB/totalPixels);
@@ -954,13 +954,13 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	)
 	{
 		this.grayScale.process(imageIn, imageOut);
-		var level = this.getAttribute("level");
-		var rlevel = (level/100.0)*this.MAX_RLEVEL;
+		let level = this.getAttribute("level");
+		let rlevel = (level/100.0)*this.MAX_RLEVEL;
 		
-		var c=0;
-		var gray;
-		for(var y=0; y<imageOut.getHeight(); y++){
-			for(var x=0; x<imageOut.getWidth(); x++){
+		let c=0;
+		let gray;
+		for(let y=0; y<imageOut.getHeight(); y++){
+			for(let x=0; x<imageOut.getWidth(); x++){
 				gray = imageIn.getIntComponent0(x, y);
 				
 				
@@ -1003,14 +1003,14 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var r,g,b;
-		var l_brightness = this.getAttribute("brightness");
-		var l_contrast = this.getAttribute("contrast");
+		let r,g,b;
+		let l_brightness = this.getAttribute("brightness");
+		let l_contrast = this.getAttribute("contrast");
 		l_contrast = Math.pow((127 + l_contrast)/127, 2);
 
 		// Brightness
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				r = imageIn.getIntComponent0(x, y);
 				g = imageIn.getIntComponent1(x, y);
 				b = imageIn.getIntComponent2(x, y);
@@ -1030,8 +1030,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		}
 
 		// Contrast
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				r = imageOut.getIntComponent0(x, y);
 				g = imageOut.getIntComponent1(x, y);
 				b = imageOut.getIntComponent2(x, y);
@@ -1090,21 +1090,21 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	)
 	{
 		
-		var vr = this.getAttribute("red");
-		var vg = this.getAttribute("green");
-		var vb = this.getAttribute("blue");
+		let vr = this.getAttribute("red");
+		let vg = this.getAttribute("green");
+		let vb = this.getAttribute("blue");
 		
-		var mr = 1+Math.abs((vr/100.0)*2.5);
-		var mg = 1+Math.abs((vg/100.0)*2.5);
-		var mb = 1+Math.abs((vb/100.0)*2.5);
+		let mr = 1+Math.abs((vr/100.0)*2.5);
+		let mg = 1+Math.abs((vg/100.0)*2.5);
+		let mb = 1+Math.abs((vb/100.0)*2.5);
 		
 		mr = (vr > 0? mr : 1.0/mr);
 		mg = (vg > 0? mg : 1.0/mg);
 		mb = (vb > 0? mb : 1.0/mb);
 		
-		var red,green,blue;
-		for(var y=0; y<imageIn.getHeight(); y++){
-			for(var x=0; x<imageIn.getWidth(); x++){
+		let red,green,blue;
+		for(let y=0; y<imageIn.getHeight(); y++){
+			for(let x=0; x<imageIn.getWidth(); x++){
 				red = imageIn.getIntComponent0(x, y);
 				green = imageIn.getIntComponent1(x, y);
 				blue = imageIn.getIntComponent2(x, y);
@@ -1135,18 +1135,18 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var l_arrMask = mask.getMask();
+		let l_arrMask = mask.getMask();
 		
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					imageOut.setIntColor(x, y, 255, imageIn.getIntColor(x, y));
 					continue;
 				}
 				             
-				var rDiff=0; 
-				var gDiff=0;
-				var bDiff=0;
+				let rDiff=0; 
+				let gDiff=0;
+				let bDiff=0;
 				
 	             if (y > 0 && x > 0){
      
@@ -1166,13 +1166,13 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	            	 bDiff = 0;
 	             }
 		    
-		         var diff = rDiff;
+		         let diff = rDiff;
 		         if (Math.abs (gDiff) > Math.abs (diff))
 		              diff = gDiff;
 		         if (Math.abs (bDiff) > Math.abs (diff))
 		              diff = bDiff;
 	
-		         var grayLevel = Math.max (Math.min (128 + diff, 255),0);
+		         let grayLevel = Math.max (Math.min (128 + diff, 255),0);
 	
 		        imageOut.setIntColor(x, y, 255, grayLevel, grayLevel, grayLevel);
 			}
@@ -1196,14 +1196,14 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	)
 	{
 		// Mask
-		var l_arrMask;
+		let l_arrMask;
 		if(mask != null){
 			l_arrMask = mask.getMask();
 		}
 		
-		var r,g,b,finalColor;
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		let r,g,b,finalColor;
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
@@ -1235,11 +1235,11 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var l_arrMask = mask.getMask();
+		let l_arrMask = mask.getMask();
 		
-		var r, g, b;
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		let r, g, b;
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
@@ -1270,18 +1270,18 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var r, g, b, depth, corfinal;
+		let r, g, b, depth, corfinal;
 		
 		//Define a intensidade do filtro...
 		depth = this.getAttribute("intensity");
 		
-		var width    = imageIn.getWidth();
-		var height   = imageIn.getHeight();
+		let width    = imageIn.getWidth();
+		let height   = imageIn.getHeight();
 		
-		var l_arrMask = mask.getMask();
+		let l_arrMask = mask.getMask();
 		
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
@@ -1290,7 +1290,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 				g = imageIn.getIntComponent1(x, y);
 				b = imageIn.getIntComponent2(x, y);
 				
-				//Define a cor como a média aritmética do pixel...
+				//Define a cor como a mï¿½dia aritmï¿½tica do pixel...
 				corfinal = (r + g + b) / 3;
 				r = g = b = corfinal;
 				 
@@ -1355,7 +1355,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		
 		this.pluginGray.process(imageIn, imageOut, attributesOut, mask, previewMode);
 		
-		var bmask = mask.getMask();
+		let bmask = mask.getMask();
 		
 		if(this.neighborhood == -1 && this.range == -1){
 			this.hardThreshold(imageIn, imageOut, bmask);
@@ -1367,13 +1367,13 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	}
 	
 	Thresholding.prototype.hardThreshold = function(imageIn, imageOut, mask){
-		for(var y=0; y<imageIn.getHeight(); y++){
-			for(var x=0; x<imageIn.getWidth(); x++){
+		for(let y=0; y<imageIn.getHeight(); y++){
+			for(let x=0; x<imageIn.getWidth(); x++){
 				if(mask != null && !mask[x][y]){
 					continue;
 				}
 				
-				var gray = imageIn.getIntComponent0(x,y); 
+				let gray = imageIn.getIntComponent0(x,y); 
 				if(gray < this.threshold || gray > this.threshold+this.thresholdRange){
 					imageOut.setIntColor(x, y, imageIn.getAlphaComponent(x,y), 0,0,0);
 				}
@@ -1386,8 +1386,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	
 	Thresholding.prototype.contrastThreshold = function(imageIn, imageOut){
 		this.range = 1;
-		for (var x = 0; x < imageIn.getWidth(); x++) {
-			for (var y = 0; y < imageIn.getHeight(); y++) {
+		for (let x = 0; x < imageIn.getWidth(); x++) {
+			for (let y = 0; y < imageIn.getHeight(); y++) {
 				if(checkNeighbors(x,y, neighborhood, neighborhood, imageIn)){
 					imageOut.setIntColor(x,y,0,0,0);
 				}
@@ -1400,13 +1400,13 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	
 	Thresholding.prototype.checkNeighbors = function(x, y, neighborhoodX, neighborhoodY, img){
 		
-		var color;
-		var z=0;
+		let color;
+		let z=0;
 		
 		color = img.getIntComponent0(x, y);
 		
-		for(var i=0-neighborhoodX; i<=neighborhoodX; i++){
-			for(var j=0-neighborhoodY; j<=neighborhoodY; j++){
+		for(let i=0-neighborhoodX; i<=neighborhoodX; i++){
+			for(let j=0-neighborhoodY; j<=neighborhoodY; j++){
 				if(i == 0 && j == 0){
 					continue;
 				}
@@ -1452,12 +1452,12 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var neighborhoodSide = this.getAttribute("neighborhoodSide");
-		var samplingPixelDistance = this.getAttribute("samplingPixelDistance");
-		var thresholdPercentageOfAverage = this.getAttribute("thresholdPercentageOfAverage");
+		let neighborhoodSide = this.getAttribute("neighborhoodSide");
+		let samplingPixelDistance = this.getAttribute("samplingPixelDistance");
+		let thresholdPercentageOfAverage = this.getAttribute("thresholdPercentageOfAverage");
 		
-		for(var y=0; y<imageIn.getHeight(); y++){
-			for(var x=0; x<imageIn.getWidth(); x++){
+		for(let y=0; y<imageIn.getHeight(); y++){
+			for(let x=0; x<imageIn.getWidth(); x++){
 				this.theshold(imageIn, imageOut, x, y, thresholdPercentageOfAverage, neighborhoodSide, samplingPixelDistance);
 			}
 		}
@@ -1465,20 +1465,20 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	
 	ThresholdingNeighborhood.prototype.theshold = function(image, imageOut, x, y, thresholdPercentageOfAverage, side, neighborhoodDistance){
 		
-		var min=-1;
-		var max=-1;
-		var pixels=0;
-		var average=0;
+		let min=-1;
+		let max=-1;
+		let pixels=0;
+		let average=0;
 		
-		var inc = neighborhoodDistance;
+		let inc = neighborhoodDistance;
 		
 		
-		for(var j=y-(side/2); j<y+(inc+side/2); j+=inc){
-			for(var i=x-(side/2); i<x+(side/2); i+=inc){
+		for(let j=y-(side/2); j<y+(inc+side/2); j+=inc){
+			for(let i=x-(side/2); i<x+(side/2); i+=inc){
 				
 				if(i >= 0 && j>= 0 && i < image.getWidth() && j < image.getHeight()){
 					
-					var color = image.getIntComponent0(i,j);
+					let color = image.getIntComponent0(i,j);
 					
 					if(min == -1 || color < min){
 						min = color;
@@ -1495,7 +1495,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		
 		average /= pixels;
 			
-		var color = image.getIntComponent0(x,y);
+		let color = image.getIntComponent0(x,y);
 		
 		if(color < average*thresholdPercentageOfAverage || (max-min) <= 30){
 			imageOut.setIntColor(x, y, 255, 0, 0, 0);
@@ -1524,34 +1524,34 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var imageOther = this.getAttribute("imageOther");
-		var x = this.getAttribute("x");
-		var y = this.getAttribute("y");
+		let imageOther = this.getAttribute("imageOther");
+		let x = this.getAttribute("x");
+		let y = this.getAttribute("y");
 		
 		if(imageOther != null){
 			
-			for(var j=0; j<imageIn.getHeight(); j++){
-				for(var i=0; i<imageIn.getWidth(); i++){
+			for(let j=0; j<imageIn.getHeight(); j++){
+				for(let i=0; i<imageIn.getWidth(); i++){
 					
-					var ox = i-x;
-					var oy = j-y;
+					let ox = i-x;
+					let oy = j-y;
 					
 					if(ox >= 0 && ox < imageOther.getWidth() && oy >= 0 && oy < imageOther.getHeight()){
-						var alpha = imageOther.getAlphaComponent(ox,oy);
+						let alpha = imageOther.getAlphaComponent(ox,oy);
 						if(alpha != 0){
-							var factor = alpha/255;
+							let factor = alpha/255;
 							
-							var rA = imageIn.getIntComponent0(i,j);
-							var gA = imageIn.getIntComponent1(i,j);
-							var bA = imageIn.getIntComponent2(i,j);
+							let rA = imageIn.getIntComponent0(i,j);
+							let gA = imageIn.getIntComponent1(i,j);
+							let bA = imageIn.getIntComponent2(i,j);
 							
-							var rB = imageOther.getIntComponent0(ox,oy);
-							var gB = imageOther.getIntComponent1(ox,oy);
-							var bB = imageOther.getIntComponent2(ox,oy);
+							let rB = imageOther.getIntComponent0(ox,oy);
+							let gB = imageOther.getIntComponent1(ox,oy);
+							let bB = imageOther.getIntComponent2(ox,oy);
 							
-							var red = Math.floor( (rA * (1-factor)) + (rB * (factor)) );
-							var green = Math.floor( (gA * (1-factor)) + (gB * (factor)) );
-							var blue = Math.floor( (bA * (1-factor)) + (bB * (factor)) );
+							let red = Math.floor( (rA * (1-factor)) + (rB * (factor)) );
+							let green = Math.floor( (gA * (1-factor)) + (gB * (factor)) );
+							let blue = Math.floor( (bA * (1-factor)) + (bB * (factor)) );
 							
 							imageOut.setIntColor(i,j,Math.max(imageIn.getAlphaComponent(x,y), alpha), red, green, blue);
 						} else{
@@ -1582,9 +1582,9 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	)
 	{
 		if(images.length > 0){
-			var threshold = this.getAttribute("threshold");
+			let threshold = this.getAttribute("threshold");
 			this.background.setAttribute("threshold", threshold);
-			var backgroundImage = images[0].clone();
+			let backgroundImage = images[0].clone();
 			this.background.process(images, backgroundImage);
 			MarvinImage.copyColorArray(backgroundImage, imageOut);
 			this.mergePhotos(images, imageOut, backgroundImage, threshold);
@@ -1592,17 +1592,17 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	}
 	
 	MergePhotos.prototype.mergePhotos = function(images, imageOut, background, threshold){
-		for(var i in images){
-			var img = images[i];
+		for(let i in images){
+			let img = images[i];
 			this.mergePhotosSingle(img, imageOut, background, threshold);
 		}
 	}
 	
 	MergePhotos.prototype.mergePhotosSingle = function(imageA, imageB, imageBackground, threshold){
 			
-		var rA, gA, bA, rB, gB, bB;
-		for(var y=0; y<imageA.getHeight(); y++){
-			for(var x=0; x<imageA.getWidth(); x++){
+		let rA, gA, bA, rB, gB, bB;
+		for(let y=0; y<imageA.getHeight(); y++){
+			for(let x=0; x<imageA.getWidth(); x++){
 				
 				rA = imageA.getIntComponent0(x, y);
 				gA = imageA.getIntComponent1(x, y);
@@ -1643,12 +1643,12 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var matrix = this.getAttribute("matrix");
+		let matrix = this.getAttribute("matrix");
 		
 		if(matrix != null && matrix.length > 0){
 			
-			for(var y=0; y<imageIn.getHeight(); y++){
-				for(var x=0; x<imageIn.getWidth(); x++){
+			for(let y=0; y<imageIn.getHeight(); y++){
+				for(let x=0; x<imageIn.getWidth(); x++){
 					
 					if(y >= matrix.length/2 && y < imageIn.getHeight()-matrix.length/2 && x >= matrix[0].length/2 && x < imageIn.getWidth()-matrix[0].length/2){
 						this.applyMatrix(x, y, matrix, imageIn, imageOut);
@@ -1670,16 +1670,16 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		imageOut
 	){
 		
-		var nx,ny;
-		var resultRed=0;
-		var resultGreen=0;
-		var resultBlue=0;
+		let nx,ny;
+		let resultRed=0;
+		let resultGreen=0;
+		let resultBlue=0;
 		
-		var xC=Math.ceil(matrix[0].length/2);
-		var yC=Math.ceil(matrix.length/2);
+		let xC=Math.ceil(matrix[0].length/2);
+		let yC=Math.ceil(matrix.length/2);
 		
-		for(var i=0; i<matrix.length; i++){
-			for(var j=0; j<matrix[0].length; j++){
+		for(let i=0; i<matrix.length; i++){
+			for(let j=0; j<matrix[0].length; j++){
 					
 				if(matrix[i][j] != 0){		
 					nx = x + (j-xC);
@@ -1739,17 +1739,17 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var matrixSize = this.getAttribute("matrixSize");
-		var threshold = this.getAttribute("threshold");
+		let matrixSize = this.getAttribute("matrixSize");
+		let threshold = this.getAttribute("threshold");
 		
-		var tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
+		let tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
 		Marvin.grayScale(imageIn, tempImage);
 		
-		var cornernessMap = MarvinJSUtils.createMatrix2D(tempImage.getWidth(), tempImage.getHeight(), 0);
-		var cornernessMapOut = MarvinJSUtils.createMatrix2D(tempImage.getWidth(), tempImage.getHeight(), 0);
+		let cornernessMap = MarvinJSUtils.createMatrix2D(tempImage.getWidth(), tempImage.getHeight(), 0);
+		let cornernessMapOut = MarvinJSUtils.createMatrix2D(tempImage.getWidth(), tempImage.getHeight(), 0);
 		
-		for(var y=0; y<tempImage.getHeight(); y++){
-			for(var x=0; x<tempImage.getWidth(); x++){
+		for(let y=0; y<tempImage.getHeight(); y++){
+			for(let x=0; x<tempImage.getWidth(); x++){
 				cornernessMap[x][y] = this.c(x,y,matrixSize,tempImage);
 				
 				if(cornernessMap[x][y] < threshold){
@@ -1758,8 +1758,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 			}
 		}
 		
-		for(var x=0; x<cornernessMap.length; x++){
-			for(var y=0; y<cornernessMap[x].length; y++){
+		for(let x=0; x<cornernessMap.length; x++){
+			for(let y=0; y<cornernessMap[x].length; y++){
 				cornernessMapOut[x][y] = this.nonmax(x,y,matrixSize,cornernessMap);
 				
 				if(cornernessMapOut[x][y] > 0){
@@ -1774,10 +1774,10 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	}
 	
 	Moravec.prototype.nonmax = function(x, y, matrixSize, matrix){
-		var s = Math.floor(matrixSize/2);
+		let s = Math.floor(matrixSize/2);
 		if(x-(s+1) >= 0 && x+(s+1) < matrix.length && y-(s+1) >= 0 && y+(s+1) < matrix[0].length){
-			for(var i=-s; i<=s; i++){
-				for(var j=-s; j<=s; j++){
+			for(let i=-s; i<=s; i++){
+				for(let j=-s; j<=s; j++){
 					if(i != 0 || j != 0){
 						if(matrix[x][y] < matrix[x+i][y+j]){
 							return 0;
@@ -1793,15 +1793,15 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 	
 	Moravec.prototype.c = function(x, y, matrixSize, image){
 		
-		var ret = -1;
-		var temp;
-		var s = Math.floor(matrixSize/2);
+		let ret = -1;
+		let temp;
+		let s = Math.floor(matrixSize/2);
 		if(x-(s+1) >= 0 && x+(s+1) < image.getWidth() && y-(s+1) >= 0 && y+(s+1) < image.getHeight()){
 			
-			for(var d=0; d<Moravec.directions.length; d++){
+			for(let d=0; d<Moravec.directions.length; d++){
 				temp=0;
-				for(var i=-s; i<=s; i++){
-					for(var j=-s; j<=s; j++){
+				for(let i=-s; i<=s; i++){
+					for(let j=-s; j<=s; j++){
 						temp += Math.pow(image.getIntComponent0(x+i, y+j)-image.getIntComponent0(x+i+Moravec.directions[d][0],y+j+Moravec.directions[d][1]), 2);
 					}
 				}
@@ -1819,7 +1819,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 
 
 /**
- * @author Gabriel Ambrósio Archanjo
+ * @author Gabriel Ambrï¿½sio Archanjo
  */
 	function Prewitt(){
 		MarvinAbstractImagePlugin.super(this);
@@ -1856,7 +1856,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
     {
-		var intensity = this.getAttribute("intensity");
+		let intensity = this.getAttribute("intensity");
 		
 		if(intensity == 1){
 			this.convolution.setAttribute("matrix", this.matrixPrewittX);
@@ -1893,36 +1893,36 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var l_list = new Array();
-    	var 	l_point,
+		let l_list = new Array();
+    	let 	l_point,
     			l_pointW,
     			l_pointE;
     
     	//MarvinImage.copyColorArray(imgIn, imgOut);
     	
-    	var x = this.getAttribute("x");
-    	var y = this.getAttribute("y");
-    	var tileImage = this.getAttribute("tile");
+    	let x = this.getAttribute("x");
+    	let y = this.getAttribute("y");
+    	let tileImage = this.getAttribute("tile");
     	this.threshold = this.getAttribute("threshold");
     	
     	if(!imgOut.isValidPosition(x, y)){
     		return;
     	}
     	
-    	var targetColor = imgIn.getIntColor(x, y);
-    	var targetRed = imgIn.getIntComponent0(x, y);
-    	var targetGreen = imgIn.getIntComponent1(x, y);
-    	var targetBlue = imgIn.getIntComponent2(x, y);
-    	var color = this.getAttribute("color");
-    	var newColor = color;
+    	let targetColor = imgIn.getIntColor(x, y);
+    	let targetRed = imgIn.getIntComponent0(x, y);
+    	let targetGreen = imgIn.getIntComponent1(x, y);
+    	let targetBlue = imgIn.getIntComponent2(x, y);
+    	let color = this.getAttribute("color");
+    	let newColor = color;
     	
-    	var fillMask = MarvinJSUtils.createMatrix2D(imgOut.getWidth(), imgOut.getHeight, false);
+    	let fillMask = MarvinJSUtils.createMatrix2D(imgOut.getWidth(), imgOut.getHeight, false);
     	fillMask[x][y] = true;
     	
     	
     	l_list.push(new MarvinPoint(x, y));
     	
-    	//for(var l_i=0; l_i<l_list.size(); l_i++){
+    	//for(let l_i=0; l_i<l_list.size(); l_i++){
     	while(l_list.length > 0){
 			l_point = l_list.splice(0,1)[0];	// list poll
     		l_pointW = new MarvinPoint(l_point.x, l_point.y);
@@ -1949,7 +1949,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
     		 }
     		
     		// set color of pixels between pointW and pointE
-    		for(var l_px=l_pointW.x; l_px<=l_pointE.x; l_px++){
+    		for(let l_px=l_pointW.x; l_px<=l_pointE.x; l_px++){
     			//imgOut.setIntColor(l_px, l_point.y, -1);
     			//drawPixel(imgOut, l_px, l_point.y, newColor, tileImage);
     			fillMask[l_px][l_point.y] = true;
@@ -1966,7 +1966,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
     	if(tileImage != null){
 			/* Plugin not ported yet. */
 			/*
-    		var p = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.texture.tileTexture.jar");
+    		let p = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.texture.tileTexture.jar");
     		p.setAttribute("lines", (int)(Math.ceil((double)imgOut.getHeight()/tileImage.getHeight())));
     		p.setAttribute("columns", (int)(Math.ceil((double)imgOut.getWidth()/tileImage.getWidth())));
     		p.setAttribute("tile", tileImage);
@@ -1975,8 +1975,8 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 			*/
     	}
     	else{
-    		for(var j=0; j<imgOut.getHeight(); j++){
-    			for(var i=0; i<imgOut.getWidth(); i++){
+    		for(let j=0; j<imgOut.getHeight(); j++){
+    			for(let i=0; i<imgOut.getWidth(); i++){
     				if(fillMask[i][j]){
     					imgOut.setIntColor(i, j, newColor);
     				}
@@ -1986,7 +1986,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
     };
 	
 	BoundaryFill.prototype.match = function(image, x, y, targetRed, targetGreen, targetBlue, threshold){
-		var diff = Math.abs(image.getIntComponent0(x, y) - targetRed) + Math.abs(image.getIntComponent1(x, y) - targetGreen) + Math.abs(image.getIntComponent2(x, y) - targetBlue);
+		let diff = Math.abs(image.getIntComponent0(x, y) - targetRed) + Math.abs(image.getIntComponent1(x, y) - targetGreen) + Math.abs(image.getIntComponent2(x, y) - targetBlue);
 		return (diff <= threshold);
 	};
 
@@ -2008,24 +2008,24 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		previewMode
 	)
 	{
-		var color;
-		var dif;
+		let color;
+		let dif;
 
 		Marvin.grayScale(imageIn, imageOut, attributesOut, mask, previewMode);
 		
 		// Mask
-		var l_arrMask;
+		let l_arrMask;
 		if(mask != null){
 			l_arrMask = mask.getMask();
 		}
 		
-		for (var y = 0; y < imageOut.getHeight(); y++) {
-			for (var x = 0; x < imageOut.getWidth(); x++) {
+		for (let y = 0; y < imageOut.getHeight(); y++) {
+			for (let x = 0; x < imageOut.getWidth(); x++) {
 				if(l_arrMask != null && !l_arrMask[x][y]){
 					continue;
 				}
 				
-				var color = imageOut.getIntComponent0(x, y);
+				let color = imageOut.getIntComponent0(x, y);
 				if(color > this.threshold){
 					imageOut.setIntColor(x,y,imageIn.getAlphaComponent(x,y), 255,255,255);
 					dif = -(255-color);
@@ -2076,7 +2076,7 @@ MarvinMath.euclideanDistance3D = function(x1, y1, z1, x2, y2, z2){
 		return a_value;
 	}
 
-var MarvinAbstractImagePlugin = new Object();
+let MarvinAbstractImagePlugin = new Object();
 
 MarvinAbstractImagePlugin.super = function(ref){
 	ref.attributes = {};
@@ -2111,7 +2111,7 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		previewMode
 	)
 	{	
-		var matrix = this.getAttribute("matrix");
+		let matrix = this.getAttribute("matrix");
 		
 		if(imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY && matrix != null){
 
@@ -2141,14 +2141,14 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		previewMode
 	)
 	{
-		var matrix = this.getAttribute("matrix");
+		let matrix = this.getAttribute("matrix");
 		
 		if(imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY && matrix != null){
 			
 			MarvinImage.copyColorArray(imgIn, imgOut);
 			
-			for(var y=0; y<imgIn.getHeight(); y++){
-				for(var x=0; x<imgIn.getWidth(); x++){
+			for(let y=0; y<imgIn.getHeight(); y++){
+				for(let x=0; x<imgIn.getWidth(); x++){
 					this.applyMatrix(x, y, matrix, imgIn, imgOut);
 				}
 			}
@@ -2164,13 +2164,13 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		imgOut
 	){
 		
-		var nx,ny;
-		var xC=matrix[0].length/2;
-		var yC=matrix.length/2;
+		let nx,ny;
+		let xC=matrix[0].length/2;
+		let yC=matrix.length/2;
 		
 		if(imgIn.getBinaryColor(x, y)){
-			for(var i=0; i<matrix.length; i++){
-				for(var j=0; j<matrix.length; j++){
+			for(let i=0; i<matrix.length; i++){
+				for(let j=0; j<matrix.length; j++){
 					
 					if((i != yC || j != xC) && matrix[i][j]){
 						
@@ -2207,14 +2207,14 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		previewMode
 	)
 	{
-		var matrix = this.getAttribute("matrix");
+		let matrix = this.getAttribute("matrix");
 		
 		if(imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY && matrix != null){
 			
 			MarvinImage.copyColorArray(imgIn, imgOut);
 			
-			for(var y=0; y<imgIn.getHeight(); y++){
-				for(var x=0; x<imgIn.getWidth(); x++){
+			for(let y=0; y<imgIn.getHeight(); y++){
+				for(let x=0; x<imgIn.getWidth(); x++){
 					this.applyMatrix(x, y, matrix, imgIn, imgOut);
 				}
 			}
@@ -2230,14 +2230,14 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		imgOut
 	){
 		
-		var nx,ny;
+		let nx,ny;
 		
-		var xC=Math.floor(matrix[0].length/2);
-		var yC=Math.floor(matrix.length/2);
+		let xC=Math.floor(matrix[0].length/2);
+		let yC=Math.floor(matrix.length/2);
 		
 		if(!imgIn.getBinaryColor(x, y)){
-			for(var i=0; i<matrix.length; i++){
-				for(var j=0; j<matrix[0].length; j++){
+			for(let i=0; i<matrix.length; i++){
+				for(let j=0; j<matrix[0].length; j++){
 					
 					if((i != yC || j != xC) && matrix[i][j]){
 						
@@ -2277,30 +2277,30 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		// The image will be affected so it's generated a new instance
 		imageIn = imageIn.clone();
 		
-		var maxWhiteSpace = this.getAttribute("maxWhiteSpace");
-		var maxFontLineWidth = this.getAttribute("maxFontLineWidth");
-		var minTextWidth = this.getAttribute("minTextWidth");
-		var grayScaleThreshold = this.getAttribute("grayScaleThreshold");
+		let maxWhiteSpace = this.getAttribute("maxWhiteSpace");
+		let maxFontLineWidth = this.getAttribute("maxFontLineWidth");
+		let minTextWidth = this.getAttribute("minTextWidth");
+		let grayScaleThreshold = this.getAttribute("grayScaleThreshold");
 		
 		
 		Marvin.thresholding(imageIn, imageIn, grayScaleThreshold);
 		
-		var segments = [];
-		for(var i=0; i<imageIn.getHeight(); i++){
+		let segments = [];
+		for(let i=0; i<imageIn.getHeight(); i++){
 			segments.push([]);
 		}
 		
 		// map of already processed pixels
 		
-		var processed = MarvinJSUtils.createMatrix2D(imageIn.getWidth(), imageIn.getHeight, false);
+		let processed = MarvinJSUtils.createMatrix2D(imageIn.getWidth(), imageIn.getHeight, false);
 		
-		var color;
-		var patternStartX=-1;
-		var patternLength=0;
-		var whitePixels=0;
-		var blackPixels=0;
-		for(var y=0; y<imageIn.getHeight(); y++){
-			for(var x=0; x<imageIn.getWidth(); x++){
+		let color;
+		let patternStartX=-1;
+		let patternLength=0;
+		let whitePixels=0;
+		let blackPixels=0;
+		for(let y=0; y<imageIn.getHeight(); y++){
+			for(let x=0; x<imageIn.getWidth(); x++){
 				
 				if(!processed[x][y]){
 					color = imageIn.getIntColor(x, y);
@@ -2325,7 +2325,7 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 					if(whitePixels > maxWhiteSpace || blackPixels > maxFontLineWidth || x == imageIn.getWidth()-1){
 						
 						if(patternLength >= minTextWidth){
-							var list = segments[y];
+							let list = segments[y];
 							list.push([patternStartX, y, patternStartX+patternLength, y]);
 						} 
 						
@@ -2346,20 +2346,20 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		
 		
 		// Group line patterns intersecting in x coordinate and too near in y coordinate.
-		for(var y=0; y<imageIn.getHeight()-2; y++){
+		for(let y=0; y<imageIn.getHeight()-2; y++){
 			
-			var listY = segments[y];
+			let listY = segments[y];
 			
-			for(var w=y+1; w<=y+2; w++){
+			for(let w=y+1; w<=y+2; w++){
 				
-				var listW = segments[w];
+				let listW = segments[w];
 				
-				for(var i=0; i<listY.length; i++){
-					var sA = listY[i];
-					for(var j=0; j<listW.length; j++){
+				for(let i=0; i<listY.length; i++){
+					let sA = listY[i];
+					for(let j=0; j<listW.length; j++){
 						
 						
-						var sB = listW[j];
+						let sB = listW[j];
 						
 						// horizontal intersection
 						if
@@ -2387,11 +2387,11 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		}
 		
 		// Convert the result to a List<> of MarvinSegment objects.
-		var marvinSegments = [];
-		for(var y=0; y<imageIn.getHeight(); y++){
-			var list = segments[y];
-			for(var i in list){
-				var seg = list[i];
+		let marvinSegments = [];
+		for(let y=0; y<imageIn.getHeight(); y++){
+			let list = segments[y];
+			for(let i in list){
+				let seg = list[i];
 				marvinSegments.push(new MarvinSegment(seg[0], seg[1], seg[2], seg[3]));
 			}
 		}
@@ -2446,23 +2446,23 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	)
 	{
 		this.loadRules();
-		var iterations = this.getAttribute("iterations");
+		let iterations = this.getAttribute("iterations");
 		
-		var x0 = 0;
-		var y0 = 0;
-		var x,y;
-		var startX;
-		var startY;
-		var factor;
+		let x0 = 0;
+		let y0 = 0;
+		let x,y;
+		let startX;
+		let startY;
+		let factor;
 		
-		var minX=999999999,minY=999999999,maxX=-999999999,maxY=-99999999;
+		let minX=999999999,minY=999999999,maxX=-999999999,maxY=-99999999;
 		
-		var tempRule;
-		var point = [x0,y0];
+		let tempRule;
+		let point = [x0,y0];
 		
 		imageOut.clear(0xFFFFFFFF);
 		
-		for(var i=0; i<iterations; i++){
+		for(let i=0; i<iterations; i++){
 			tempRule = this.getRule();
 			this.applyRule(point, tempRule);
 			
@@ -2476,11 +2476,11 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		
 		}	
 		
-		var width = imageOut.getWidth();
-		var height = imageOut.getHeight();
+		let width = imageOut.getWidth();
+		let height = imageOut.getHeight();
 		
-		var deltaX = Math.abs(maxX-minX);
-		var deltaY = Math.abs(maxY-minY); 
+		let deltaX = Math.abs(maxX-minX);
+		let deltaY = Math.abs(maxY-minY); 
 		if(deltaX > deltaY){
 			factor = (width/deltaX);
 			if(deltaY * factor > height){
@@ -2502,7 +2502,7 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		point[0] = x0;
 		point[1] = y0;
 		
-		for(var i=0; i<iterations; i++){
+		for(let i=0; i<iterations; i++){
 			tempRule = this.getRule();
 			this.applyRule(point, tempRule);
 			
@@ -2517,19 +2517,19 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 
 	IteratedFunctionSystem.prototype.loadRules = function(){
 		this.rules = [];
-		var r = this.getAttribute("rules").split("\n");
+		let r = this.getAttribute("rules").split("\n");
 		
-		for(var i=0; i<r.length; i++){
+		for(let i=0; i<r.length; i++){
 			this.addRule(r[i]);
 		}
 	}
 
 	IteratedFunctionSystem.prototype.addRule = function(rule){
 		rule = rule.replace(/ /g, "");	//replace all spaces
-		var attr = rule.split(",");
+		let attr = rule.split(",");
 		
 		if(attr.length == 7){
-			var r = new Object();
+			let r = new Object();
 			r.a = parseFloat(attr[0]);
 			r.b = parseFloat(attr[1]);
 			r.c = parseFloat(attr[2]);
@@ -2556,9 +2556,9 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	}
 	
 	IteratedFunctionSystem.prototype.getRule = function(){
-		var random = Math.random();
-		var sum=0;
-		var i;
+		let random = Math.random();
+		let sum=0;
+		let i;
 		for(i=0; i<this.rules.length; i++){
 			sum += this.rules[i].probability;
 			if(random < sum){
@@ -2573,8 +2573,8 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	};
 	
 	IteratedFunctionSystem.prototype.applyRule = function(point, rule){
-		var nx = rule.a*point[0] + rule.b*point[1]+rule.e;
-		var ny = rule.c*point[0] + rule.d*point[1]+rule.f;
+		let nx = rule.a*point[0] + rule.b*point[1]+rule.e;
+		let ny = rule.c*point[0] + rule.d*point[1]+rule.f;
 		point[0] = nx;
 		point[1] = ny;
 	};
@@ -2600,15 +2600,15 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 		previewMode
 	)
     {
-		var x = this.getAttribute("x");
-		var y = this.getAttribute("y");
-		var width = this.getAttribute("width");
-		var height = this.getAttribute("height");
+		let x = this.getAttribute("x");
+		let y = this.getAttribute("y");
+		let width = this.getAttribute("width");
+		let height = this.getAttribute("height");
 		
 		imageOut.setDimension(width, height);
 		
-		for(var i=x; i<x+width; i++){
-			for(var j=y; j<y+height; j++){
+		for(let i=x; i<x+width; i++){
+			for(let j=y; j<y+height; j++){
 				imageOut.setIntColor(i-x, j-y, imageIn.getIntColor(i, j));
 			}
 		}
@@ -2634,9 +2634,9 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	)
 	{
 		if(attributesOut != null){
-			var returnType = this.getAttribute("returnType");
-			var fillBuffer = imageIn.clone();
-			var segments = this.floodfillSegmentation(imageIn, fillBuffer);
+			let returnType = this.getAttribute("returnType");
+			let fillBuffer = imageIn.clone();
+			let segments = this.floodfillSegmentation(imageIn, fillBuffer);
 			
 			switch(returnType){
 				case "MarvinSegment":
@@ -2652,24 +2652,24 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	FloodfillSegmentation.prototype.floodfillSegmentation = function(image, fillBuffer){
 		fillBuffer.clear(0xFF000000);
 		
-		var currentColor=1;
-		for(var y=0; y<image.getHeight(); y++){
-			for(var x=0; x<image.getWidth(); x++){
+		let currentColor=1;
+		for(let y=0; y<image.getHeight(); y++){
+			for(let x=0; x<image.getWidth(); x++){
 				
-				var color = fillBuffer.getIntColor(x, y);
+				let color = fillBuffer.getIntColor(x, y);
 				
 				if((color & 0x00FFFFFF) == 0 && image.getAlphaComponent(x, y) > 0){
-					var c = 0xFF000000 | (currentColor++);
+					let c = 0xFF000000 | (currentColor++);
 					Marvin.boundaryFill(image, fillBuffer, x, y, c);
 				}
 			}
 		}
 		
-		var segments = new Array(currentColor-1);
-		var seg;
-		for(var y=0; y<fillBuffer.getHeight(); y++){
-			for(var x=0; x<fillBuffer.getWidth(); x++){
-				var color = (fillBuffer.getIntColor(x, y) & 0x00FFFFFF);
+		let segments = new Array(currentColor-1);
+		let seg;
+		for(let y=0; y<fillBuffer.getHeight(); y++){
+			for(let x=0; x<fillBuffer.getWidth(); x++){
+				let color = (fillBuffer.getIntColor(x, y) & 0x00FFFFFF);
 				
 				if(color != 0x00FFFFFF && color > 0){
 					
@@ -2700,20 +2700,20 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	
 	FloodfillSegmentation.prototype.blobSegments = function(image, segments){
 		
-		var blobSegments = new Array(segments.length);
+		let blobSegments = new Array(segments.length);
 		
-		var colorSegment;
-		var seg;
-		for(var i=0; i<segments.length; i++){
+		let colorSegment;
+		let seg;
+		for(let i=0; i<segments.length; i++){
 			seg = segments[i];
 			colorSegment = 0xFF000000 + (i+1);
 			
 			blobSegments[i] = new MarvinBlobSegment(seg.x1, seg.y1);
-			var tempBlob = new MarvinBlob(seg.width, seg.height);
+			let tempBlob = new MarvinBlob(seg.width, seg.height);
 			blobSegments[i].setBlob(tempBlob);
 			
-			for(var y=seg.y1; y<=seg.y2; y++){
-				for(var x=seg.x1; x<=seg.x2; x++){
+			for(let y=seg.y1; y<=seg.y2; y++){
+				for(let x=seg.x1; x<=seg.x2; x++){
 					if(image.getIntColor(x,y) == colorSegment){
 						tempBlob.setValue(x-seg.x1, y-seg.y1, true);
 					}
@@ -2746,20 +2746,20 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	{
 		
 		if(!previewMode){
-			var width = imageIn.getWidth();
-			var height = imageIn.getHeight();
-			var newWidth = this.getAttribute("newWidth");
-			var newHeight = this.getAttribute("newHeight");
+			let width = imageIn.getWidth();
+			let height = imageIn.getHeight();
+			let newWidth = this.getAttribute("newWidth");
+			let newHeight = this.getAttribute("newHeight");
 			
 			if(imageOut.getWidth() != newWidth || imageOut.getHeight() != newHeight){
 				imageOut.setDimension(newWidth, newHeight);
 			}
 			
-		    var x_ratio = Math.floor((width<<16)/newWidth) ;
-		    var y_ratio = Math.floor((height<<16)/newHeight) ;
-		    var x2, y2 ;
-		    for (var i=0;i<newHeight;i++) {
-		        for (var j=0;j<newWidth;j++) {
+		    let x_ratio = Math.floor((width<<16)/newWidth) ;
+		    let y_ratio = Math.floor((height<<16)/newHeight) ;
+		    let x2, y2 ;
+		    for (let i=0;i<newHeight;i++) {
+		        for (let j=0;j<newWidth;j++) {
 		            x2 = Math.floor((j*x_ratio)>>16) ;
 		            y2 = Math.floor((i*y_ratio)>>16) ;
 		            imageOut.setIntColor(j,i, imageIn.getAlphaComponent(x2,y2), imageIn.getIntColor(x2,y2));
@@ -2778,7 +2778,7 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	};
 	
 	MarvinAttributes.prototype.get = function(name, defaultValue){
-		var ret = this.hashAttributes[name];
+		let ret = this.hashAttributes[name];
 		
 		if(ret != null){
 			return ret;
@@ -2787,9 +2787,9 @@ MarvinAbstractImagePlugin.getAttribute = function(label, value){
 	};
 	
 	MarvinAttributes.prototype.clone = function(){
-		var attrs = new MarvinAttributes();
+		let attrs = new MarvinAttributes();
 		
-		for(var key in this.hashAttributes){
+		for(let key in this.hashAttributes){
 			attrs.set(key, this.hashAttributes[key]);
 		}
 		return attrs;
@@ -2813,7 +2813,7 @@ MarvinPoint.prototype.setY = function(x){
 
 MarvinPoint.prototype.getY = function(){
 	return this.y;
-};var marvinLoadPluginMethods = function(callback){
+};let marvinLoadPluginMethods = function(callback){
 	Marvin.plugins = new Object();
 	
 	// Alpha Boundary
@@ -2826,7 +2826,7 @@ MarvinPoint.prototype.getY = function(){
 	// Average Color
 	Marvin.plugins.averageColor = new AverageColor();
 	Marvin.averageColor = function(imageIn){
-		var attrOut = new MarvinAttributes();
+		let attrOut = new MarvinAttributes();
 		Marvin.plugins.averageColor.process(imageIn, null, attrOut, MarvinImageMask.NULL_MASK, false);
 		return attrOut.get("averageColor");
 	};
@@ -2900,7 +2900,7 @@ MarvinPoint.prototype.getY = function(){
 	// FindTextRegions
 	Marvin.plugins.findTextRegions = new FindTextRegions();
 	Marvin.findTextRegions = function(imageIn, maxWhiteSpace, maxFontLineWidth, minTextWidth, grayScaleThreshold){
-		var attrOut = new MarvinAttributes();
+		let attrOut = new MarvinAttributes();
 		Marvin.plugins.findTextRegions.setAttribute("maxWhiteSpace", Marvin.getValue(maxWhiteSpace, 10));
 		Marvin.plugins.findTextRegions.setAttribute("maxFontLineWidth", Marvin.getValue(maxFontLineWidth, 10));
 		Marvin.plugins.findTextRegions.setAttribute("minTextWidth", Marvin.getValue(minTextWidth, 30));
@@ -2912,7 +2912,7 @@ MarvinPoint.prototype.getY = function(){
 	// Floodfill Segmentation
 	Marvin.plugins.floodfillSegmentation = new FloodfillSegmentation();
 	Marvin.floodfillSegmentation = function(imageIn){
-		var attrOut = new MarvinAttributes();
+		let attrOut = new MarvinAttributes();
 		Marvin.plugins.floodfillSegmentation.setAttribute("returnType", "MarvinSegment");
 		Marvin.plugins.floodfillSegmentation.process(imageIn, null, attrOut, MarvinImageMask.NULL_MASK, false);
 		return attrOut.get("segments");
@@ -2954,7 +2954,7 @@ MarvinPoint.prototype.getY = function(){
 	// Moravec
 	Marvin.plugins.moravec = new Moravec();
 	Marvin.moravec = function(imageIn, imageOut, matrixSize, threshold){
-		var attrOut = new MarvinAttributes();
+		let attrOut = new MarvinAttributes();
 		Marvin.plugins.moravec.setAttribute("matrixSize", matrixSize);
 		Marvin.plugins.moravec.setAttribute("threshold", threshold);
 		Marvin.plugins.moravec.process(imageIn, imageOut, attrOut, MarvinImageMask.NULL_MASK, false);
@@ -2994,7 +2994,7 @@ MarvinPoint.prototype.getY = function(){
 	Marvin.scale = function(imageIn, imageOut, newWidth, newHeight){
 	
 		if(newHeight == null){
-			var factor = imageIn.getHeight() / imageIn.getWidth();
+			let factor = imageIn.getHeight() / imageIn.getWidth();
 			newHeight = Math.floor(factor * newWidth);
 		}
 	
@@ -3028,7 +3028,7 @@ MarvinPoint.prototype.getY = function(){
 	};
 }
 
-var Marvin = new Object();
+let Marvin = new Object();
 
 Marvin.getValue = function(value, defaultValue){
 	if(value != null){

@@ -7,8 +7,8 @@ If you are not familiar with Marvin Framework and want to play with MarvinJ, don
 In the case of MarvinJ we load images from URLs and usually use a HTML5 canvas for displaying processed images.
 
 ```
-var canvas = document.getElementById("canvas");
-var image = new MarvinImage();
+let canvas = document.getElementById("canvas");
+let image = new MarvinImage();
 
 image.load("https://i.imgur.com/4O8VFQY.jpg", function(){
    image.draw(canvas);

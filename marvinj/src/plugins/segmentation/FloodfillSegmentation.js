@@ -20,9 +20,9 @@ export default class FloodfillSegmentation extends MarvinAbstractImagePlugin {
 	)
 	{
 		if(attributesOut != null){
-			var returnType = this.getAttribute("returnType");
-			var fillBuffer = imageIn.clone();
-			var segments = this.floodfillSegmentation(imageIn, fillBuffer);
+			let returnType = this.getAttribute("returnType");
+			let fillBuffer = imageIn.clone();
+			let segments = this.floodfillSegmentation(imageIn, fillBuffer);
 			
 			switch(returnType){
 				case "MarvinSegment":
@@ -38,24 +38,24 @@ export default class FloodfillSegmentation extends MarvinAbstractImagePlugin {
 	floodfillSegmentation = function(image, fillBuffer){
 		fillBuffer.clear(0xFF000000);
 		
-		var currentColor=1;
-		for(var y=0; y<image.getHeight(); y++){
-			for(var x=0; x<image.getWidth(); x++){
+		let currentColor=1;
+		for(let y=0; y<image.getHeight(); y++){
+			for(let x=0; x<image.getWidth(); x++){
 				
-				var color = fillBuffer.getIntColor(x, y);
+				let color = fillBuffer.getIntColor(x, y);
 				
 				if((color & 0x00FFFFFF) == 0 && image.getAlphaComponent(x, y) > 0){
-					var c = 0xFF000000 | (currentColor++);
+					let c = 0xFF000000 | (currentColor++);
 					Marvin.boundaryFill(image, fillBuffer, x, y, c);
 				}
 			}
 		}
 		
-		var segments = new Array(currentColor-1);
-		var seg;
-		for(var y=0; y<fillBuffer.getHeight(); y++){
-			for(var x=0; x<fillBuffer.getWidth(); x++){
-				var color = (fillBuffer.getIntColor(x, y) & 0x00FFFFFF);
+		let segments = new Array(currentColor-1);
+		let seg;
+		for(let y=0; y<fillBuffer.getHeight(); y++){
+			for(let x=0; x<fillBuffer.getWidth(); x++){
+				let color = (fillBuffer.getIntColor(x, y) & 0x00FFFFFF);
 				
 				if(color != 0x00FFFFFF && color > 0){
 					
@@ -86,20 +86,20 @@ export default class FloodfillSegmentation extends MarvinAbstractImagePlugin {
 	
 	blobSegments = function(image, segments){
 		
-		var blobSegments = new Array(segments.length);
+		let blobSegments = new Array(segments.length);
 		
-		var colorSegment;
-		var seg;
-		for(var i=0; i<segments.length; i++){
+		let colorSegment;
+		let seg;
+		for(let i=0; i<segments.length; i++){
 			seg = segments[i];
 			colorSegment = 0xFF000000 + (i+1);
 			
 			blobSegments[i] = new MarvinBlobSegment(seg.x1, seg.y1);
-			var tempBlob = new MarvinBlob(seg.width, seg.height);
+			let tempBlob = new MarvinBlob(seg.width, seg.height);
 			blobSegments[i].setBlob(tempBlob);
 			
-			for(var y=seg.y1; y<=seg.y2; y++){
-				for(var x=seg.x1; x<=seg.x2; x++){
+			for(let y=seg.y1; y<=seg.y2; y++){
+				for(let x=seg.x1; x<=seg.x2; x++){
 					if(image.getIntColor(x,y) == colorSegment){
 						tempBlob.setValue(x-seg.x1, y-seg.y1, true);
 					}

@@ -13,28 +13,28 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
   };
 
   process = function (imgIn, imgOut, attributesOut, mask, previewMode) {
-    var l_list = new Array();
-    var l_point, l_pointW, l_pointE;
+    let l_list = new Array();
+    let l_point, l_pointW, l_pointE;
 
     //MarvinImage.copyColorArray(imgIn, imgOut);
 
-    var x = this.getAttribute("x");
-    var y = this.getAttribute("y");
-    var tileImage = this.getAttribute("tile");
+    let x = this.getAttribute("x");
+    let y = this.getAttribute("y");
+    let tileImage = this.getAttribute("tile");
     this.threshold = this.getAttribute("threshold");
 
     if (!imgOut.isValidPosition(x, y)) {
       return;
     }
 
-    var targetColor = imgIn.getIntColor(x, y);
-    var targetRed = imgIn.getIntComponent0(x, y);
-    var targetGreen = imgIn.getIntComponent1(x, y);
-    var targetBlue = imgIn.getIntComponent2(x, y);
-    var color = this.getAttribute("color");
-    var newColor = color;
+    let targetColor = imgIn.getIntColor(x, y);
+    let targetRed = imgIn.getIntComponent0(x, y);
+    let targetGreen = imgIn.getIntComponent1(x, y);
+    let targetBlue = imgIn.getIntComponent2(x, y);
+    let color = this.getAttribute("color");
+    let newColor = color;
 
-    var fillMask = MarvinJSUtils.createMatrix2D(
+    let fillMask = MarvinJSUtils.createMatrix2D(
       imgOut.getWidth(),
       imgOut.getHeight,
       false
@@ -43,7 +43,7 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
 
     l_list.push(new MarvinPoint(x, y));
 
-    //for(var l_i=0; l_i<l_list.size(); l_i++){
+    //for(let l_i=0; l_i<l_list.size(); l_i++){
     while (l_list.length > 0) {
       l_point = l_list.splice(0, 1)[0]; // list poll
       l_pointW = new MarvinPoint(l_point.x, l_point.y);
@@ -92,7 +92,7 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
       }
 
       // set color of pixels between pointW and pointE
-      for (var l_px = l_pointW.x; l_px <= l_pointE.x; l_px++) {
+      for (let l_px = l_pointW.x; l_px <= l_pointE.x; l_px++) {
         //imgOut.setIntColor(l_px, l_point.y, -1);
         //drawPixel(imgOut, l_px, l_point.y, newColor, tileImage);
         fillMask[l_px][l_point.y] = true;
@@ -133,7 +133,7 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
     if (tileImage != null) {
       /* Plugin not ported yet. */
       /*
-    		var p = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.texture.tileTexture.jar");
+    		let p = MarvinPluginLoader.loadImagePlugin("org.marvinproject.image.texture.tileTexture.jar");
     		p.setAttribute("lines", (int)(Math.ceil((double)imgOut.getHeight()/tileImage.getHeight())));
     		p.setAttribute("columns", (int)(Math.ceil((double)imgOut.getWidth()/tileImage.getWidth())));
     		p.setAttribute("tile", tileImage);
@@ -141,8 +141,8 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
     		p.process(imgOut, imgOut, null, newMask, false);
 			*/
     } else {
-      for (var j = 0; j < imgOut.getHeight(); j++) {
-        for (var i = 0; i < imgOut.getWidth(); i++) {
+      for (let j = 0; j < imgOut.getHeight(); j++) {
+        for (let i = 0; i < imgOut.getWidth(); i++) {
           if (fillMask[i][j]) {
             imgOut.setIntColor(i, j, newColor);
           }
@@ -160,7 +160,7 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
     targetBlue,
     threshold
   ) {
-    var diff =
+    let diff =
       Math.abs(image.getIntComponent0(x, y) - targetRed) +
       Math.abs(image.getIntComponent1(x, y) - targetGreen) +
       Math.abs(image.getIntComponent2(x, y) - targetBlue);

@@ -9,18 +9,18 @@ export default class Emboss extends MarvinAbstractImagePlugin {
   load = function () {};
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var l_arrMask = mask.getMask();
+    let l_arrMask = mask.getMask();
 
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           imageOut.setIntColor(x, y, 255, imageIn.getIntColor(x, y));
           continue;
         }
 
-        var rDiff = 0;
-        var gDiff = 0;
-        var bDiff = 0;
+        let rDiff = 0;
+        let gDiff = 0;
+        let bDiff = 0;
 
         if (y > 0 && x > 0) {
           // Red component difference between the current and the upperleft pixels
@@ -43,11 +43,11 @@ export default class Emboss extends MarvinAbstractImagePlugin {
           bDiff = 0;
         }
 
-        var diff = rDiff;
+        let diff = rDiff;
         if (Math.abs(gDiff) > Math.abs(diff)) diff = gDiff;
         if (Math.abs(bDiff) > Math.abs(diff)) diff = bDiff;
 
-        var grayLevel = Math.max(Math.min(128 + diff, 255), 0);
+        let grayLevel = Math.max(Math.min(128 + diff, 255), 0);
 
         imageOut.setIntColor(x, y, 255, grayLevel, grayLevel, grayLevel);
       }

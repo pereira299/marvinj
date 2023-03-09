@@ -8,7 +8,7 @@ export default class MarvinAttributes {
 	}
 
 	get(name, defaultValue) {
-		var ret = this.hashAttributes[name];
+		let ret = this.hashAttributes[name];
 
 		if (ret != null) {
 			return ret;
@@ -17,9 +17,9 @@ export default class MarvinAttributes {
 	}
 
 	clone() {
-		var attrs = new MarvinAttributes();
+		let attrs = new MarvinAttributes();
 
-		for (var key in this.hashAttributes) {
+		for (let key in this.hashAttributes) {
 			attrs.set(key, this.hashAttributes[key]);
 		}
 		return attrs;

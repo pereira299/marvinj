@@ -13,14 +13,14 @@ export default class BrightnessAndContrast extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var r, g, b;
-    var l_brightness = this.getAttribute("brightness");
-    var l_contrast = this.getAttribute("contrast");
+    let r, g, b;
+    let l_brightness = this.getAttribute("brightness");
+    let l_contrast = this.getAttribute("contrast");
     l_contrast = Math.pow((127 + l_contrast) / 127, 2);
 
     // Brightness
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         r = imageIn.getIntComponent0(x, y);
         g = imageIn.getIntComponent1(x, y);
         b = imageIn.getIntComponent2(x, y);
@@ -47,8 +47,8 @@ export default class BrightnessAndContrast extends MarvinAbstractImagePlugin {
     }
 
     // Contrast
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         r = imageOut.getIntComponent0(x, y);
         g = imageOut.getIntComponent1(x, y);
         b = imageOut.getIntComponent2(x, y);

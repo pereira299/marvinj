@@ -13,25 +13,25 @@ export default class Moravec extends MarvinAbstractImagePlugin {
   }
 
   process(imageIn, imageOut, attrOut, mask, previewMode) {
-    var matrixSize = this.getAttribute("matrixSize");
-    var threshold = this.getAttribute("threshold");
+    let matrixSize = this.getAttribute("matrixSize");
+    let threshold = this.getAttribute("threshold");
 
-    var tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
+    let tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
     Marvin.grayScale(imageIn, tempImage);
 
-    var cornernessMap = new Utils().createMatrix2D(
+    let cornernessMap = new Utils().createMatrix2D(
       tempImage.getWidth(),
       tempImage.getHeight(),
       0
     );
-    var cornernessMapOut = new Utils().createMatrix2D(
+    let cornernessMapOut = new Utils().createMatrix2D(
       tempImage.getWidth(),
       tempImage.getHeight(),
       0
     );
 
-    for (var y = 0; y < tempImage.getHeight(); y++) {
-      for (var x = 0; x < tempImage.getWidth(); x++) {
+    for (let y = 0; y < tempImage.getHeight(); y++) {
+      for (let x = 0; x < tempImage.getWidth(); x++) {
         cornernessMap[x][y] = this.c(x, y, matrixSize, tempImage);
 
         if (cornernessMap[x][y] < threshold) {
@@ -40,8 +40,8 @@ export default class Moravec extends MarvinAbstractImagePlugin {
       }
     }
 
-    for (var x = 0; x < cornernessMap.length; x++) {
-      for (var y = 0; y < cornernessMap[x].length; y++) {
+    for (let x = 0; x < cornernessMap.length; x++) {
+      for (let y = 0; y < cornernessMap[x].length; y++) {
         cornernessMapOut[x][y] = this.nonmax(x, y, matrixSize, cornernessMap);
 
         if (cornernessMapOut[x][y] > 0) {
@@ -56,15 +56,15 @@ export default class Moravec extends MarvinAbstractImagePlugin {
   }
 
   nonmax(x, y, matrixSize, matrix) {
-    var s = Math.floor(matrixSize / 2);
+    let s = Math.floor(matrixSize / 2);
     if (
       x - (s + 1) >= 0 &&
       x + (s + 1) < matrix.length &&
       y - (s + 1) >= 0 &&
       y + (s + 1) < matrix[0].length
     ) {
-      for (var i = -s; i <= s; i++) {
-        for (var j = -s; j <= s; j++) {
+      for (let i = -s; i <= s; i++) {
+        for (let j = -s; j <= s; j++) {
           if (i != 0 || j != 0) {
             if (matrix[x][y] < matrix[x + i][y + j]) {
               return 0;
@@ -88,19 +88,19 @@ export default class Moravec extends MarvinAbstractImagePlugin {
   ];
 
   c(x, y, matrixSize, image) {
-    var ret = -1;
-    var temp;
-    var s = Math.floor(matrixSize / 2);
+    let ret = -1;
+    let temp;
+    let s = Math.floor(matrixSize / 2);
     if (
       x - (s + 1) >= 0 &&
       x + (s + 1) < image.getWidth() &&
       y - (s + 1) >= 0 &&
       y + (s + 1) < image.getHeight()
     ) {
-      for (var d = 0; d < Moravec.directions.length; d++) {
+      for (let d = 0; d < Moravec.directions.length; d++) {
         temp = 0;
-        for (var i = -s; i <= s; i++) {
-          for (var j = -s; j <= s; j++) {
+        for (let i = -s; i <= s; i++) {
+          for (let j = -s; j <= s; j++) {
             temp += Math.pow(
               image.getIntComponent0(x + i, y + j) -
                 image.getIntComponent0(

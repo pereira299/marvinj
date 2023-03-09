@@ -43,10 +43,10 @@ export default class MarvinImage {
   load(url, callback) {
     this.onload = callback;
     this.image = new Image();
-    var ref = this;
+    let ref = this;
     this.image.onload = () => {
-		ref.callbackImageLoaded(ref)
-	};
+      ref.callbackImageLoaded(ref);
+    };
     this.image.crossOrigin = "anonymous";
     this.image.src = url;
   }
@@ -75,7 +75,7 @@ export default class MarvinImage {
   }
 
   clone() {
-    var image = new MarvinImage(
+    let image = new MarvinImage(
       this.getWidth(),
       this.getHeight(),
       this.colorModel
@@ -89,8 +89,8 @@ export default class MarvinImage {
   }
 
   clear(color) {
-    for (var y = 0; y < this.getHeight(); y++) {
-      for (var x = 0; x < this.getWidth(); x++) {
+    for (let y = 0; y < this.getHeight(); y++) {
+      for (let x = 0; x < this.getWidth(); x++) {
         this.setIntColor(x, y, color);
       }
     }
@@ -101,27 +101,27 @@ export default class MarvinImage {
   }
 
   getAlphaComponent(x, y) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     return this.imageData.data[start + 3];
   }
 
   setAlphaComponent(x, y, alpha) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     this.imageData.data[start + 3] = alpha;
   }
 
   getIntComponent0(x, y) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     return this.imageData.data[start];
   }
 
   getIntComponent1(x, y) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     return this.imageData.data[start + 1];
   }
 
   getIntComponent2(x, y) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     return this.imageData.data[start + 2];
   }
 
@@ -138,7 +138,7 @@ export default class MarvinImage {
   }
 
   getIntColor(x, y) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
 
     return (
       0x100000000 +
@@ -150,20 +150,20 @@ export default class MarvinImage {
   }
 
   setIntColor1(x, y, color) {
-    var a = (color & 0xff000000) >>> 24;
-    var r = (color & 0x00ff0000) >> 16;
-    var g = (color & 0x0000ff00) >> 8;
-    var b = color & 0x000000ff;
+    let a = (color & 0xff000000) >>> 24;
+    let r = (color & 0x00ff0000) >> 16;
+    let g = (color & 0x0000ff00) >> 8;
+    let b = color & 0x000000ff;
     this.setIntColor4(x, y, a, r, g, b);
   }
 
   setBinaryColor(x, y, value) {
-    var pos = y * this.getWidth() + x;
+    let pos = y * this.getWidth() + x;
     this.arrBinaryColor[pos] = value;
   }
 
   getBinaryColor(x, y) {
-    var pos = y * this.getWidth() + x;
+    let pos = y * this.getWidth() + x;
     return this.arrBinaryColor[pos];
   }
 
@@ -171,12 +171,12 @@ export default class MarvinImage {
     if (imgSource.getColorModel() == imgDestine.getColorModel()) {
       switch (imgSource.getColorModel()) {
         case MarvinImage.COLOR_MODEL_RGB:
-          for (var i = 0; i < imgSource.imageData.data.length; i++) {
+          for (let i = 0; i < imgSource.imageData.data.length; i++) {
             imgDestine.imageData.data[i] = imgSource.imageData.data[i];
           }
           break;
         case MarvinImage.COLOR_MODEL_BINARY:
-          for (var i = 0; i < imgSource.arrBinaryColor.length; i++) {
+          for (let i = 0; i < imgSource.arrBinaryColor.length; i++) {
             imgDestine.arrBinaryColor[i] = imgSource.arrBinaryColor[i];
           }
           break;
@@ -185,20 +185,20 @@ export default class MarvinImage {
   }
 
   drawRect(x, y, width, height, color) {
-    for (var i = x; i < x + width; i++) {
+    for (let i = x; i < x + width; i++) {
       this.setIntColor(i, y, color);
       this.setIntColor(i, y + (height - 1), color);
     }
 
-    for (var i = y; i < y + height; i++) {
+    for (let i = y; i < y + height; i++) {
       this.setIntColor(x, i, color);
       this.setIntColor(x + (width - 1), i, color);
     }
   }
 
   fillRect(x, y, width, height, color) {
-    for (var i = x; i < x + width; i++) {
-      for (var j = y; j < y + height; j++) {
+    for (let i = x; i < x + width; i++) {
+      for (let j = y; j < y + height; j++) {
         if (i < this.getWidth() && j < this.getHeight()) {
           this.setIntColor(i, j, color);
         }
@@ -207,8 +207,8 @@ export default class MarvinImage {
   }
 
   setColorToAlpha(color, alpha) {
-    for (var y = 0; y < this.height; y++) {
-      for (var x = 0; x < this.width; x++) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         if ((this.getIntColor(x, y) & 0x00ffffff) == (color & 0x00ffffff)) {
           this.setAlphaComponent(x, y, alpha);
         }
@@ -217,8 +217,8 @@ export default class MarvinImage {
   }
 
   setAlphaToColor(color) {
-    for (var y = 0; y < this.height; y++) {
-      for (var x = 0; x < this.width; x++) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         if (this.getAlphaComponent(x, y) == 0) {
           this.setIntColor(x, y, 0xffffffff);
         }
@@ -227,9 +227,9 @@ export default class MarvinImage {
   }
 
   setIntColor2(x, y, alpha, color) {
-    var r = (color & 0x00ff0000) >> 16;
-    var g = (color & 0x0000ff00) >> 8;
-    var b = color & 0x000000ff;
+    let r = (color & 0x00ff0000) >> 16;
+    let g = (color & 0x0000ff00) >> 8;
+    let b = color & 0x000000ff;
     this.setIntColor4(x, y, alpha, r, g, b);
   }
 
@@ -238,7 +238,7 @@ export default class MarvinImage {
   }
 
   setIntColor4(x, y, alpha, r, g, b) {
-    var start = (y * this.getWidth() + x) * 4;
+    let start = (y * this.getWidth() + x) * 4;
     this.imageData.data[start] = r;
     this.imageData.data[start + 1] = g;
     this.imageData.data[start + 2] = b;
@@ -272,11 +272,11 @@ export default class MarvinImage {
 		canvas.getContext("2d").putImageData(this.imageData, x,y);
 	} else{
 		this.imageData = this.ctx.getImageData(0, 0, width, height);
-		var c = document.createElement('canvas');
+		let c = document.createElement('canvas');
 		c.width = this.width;
 		c.height = this.height;
 		c.getContext('2d').putImageData(this.imageData,x,y); 
-		var img = new Image();
+		let img = new Image();
 		img.src = c.toDataURL();
 		canvas.getContext("2d").drawImage(img, x, y);
 	}*/
@@ -289,17 +289,17 @@ export default class MarvinImage {
 
   dataURItoBlob(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string
-    var byteString;
+    let byteString;
     if (dataURI.split(",")[0].indexOf("base64") >= 0)
       byteString = atob(dataURI.split(",")[1]);
     else byteString = unescape(dataURI.split(",")[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
 
     // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    let ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
 

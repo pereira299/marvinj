@@ -38,7 +38,7 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
       previewMode
     );
 
-    var bmask = mask.getMask();
+    let bmask = mask.getMask();
 
     if (this.neighborhood == -1 && this.range == -1) {
       this.hardThreshold(imageIn, imageOut, bmask);
@@ -48,13 +48,13 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
   };
 
   hardThreshold = function (imageIn, imageOut, mask) {
-    for (var y = 0; y < imageIn.getHeight(); y++) {
-      for (var x = 0; x < imageIn.getWidth(); x++) {
+    for (let y = 0; y < imageIn.getHeight(); y++) {
+      for (let x = 0; x < imageIn.getWidth(); x++) {
         if (mask != null && !mask[x][y]) {
           continue;
         }
 
-        var gray = imageIn.getIntComponent0(x, y);
+        let gray = imageIn.getIntComponent0(x, y);
         if (
           gray < this.threshold ||
           gray > this.threshold + this.thresholdRange
@@ -76,8 +76,8 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
 
   contrastThreshold(imageIn, imageOut) {
     this.range = 1;
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         if (checkNeighbors(x, y, neighborhood, neighborhood, imageIn)) {
           imageOut.setIntColor(x, y, 0, 0, 0);
         } else {
@@ -88,13 +88,13 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
   }
 
   checkNeighbors = function (x, y, neighborhoodX, neighborhoodY, img) {
-    var color;
-    var z = 0;
+    let color;
+    let z = 0;
 
     color = img.getIntComponent0(x, y);
 
-    for (var i = 0 - neighborhoodX; i <= neighborhoodX; i++) {
-      for (var j = 0 - neighborhoodY; j <= neighborhoodY; j++) {
+    for (let i = 0 - neighborhoodX; i <= neighborhoodX; i++) {
+      for (let j = 0 - neighborhoodY; j <= neighborhoodY; j++) {
         if (i == 0 && j == 0) {
           continue;
         }

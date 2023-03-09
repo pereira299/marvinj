@@ -28,11 +28,11 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
       this.initialize(imageIn);
     }
 
-    for (var y = 0; y < imageIn.getHeight(); y++) {
-      for (var x = 0; x < imageIn.getWidth(); x++) {
-        var red = imageIn.getIntComponent0(x, y);
-        var green = imageIn.getIntComponent1(x, y);
-        var blue = imageIn.getIntComponent2(x, y);
+    for (let y = 0; y < imageIn.getHeight(); y++) {
+      for (let x = 0; x < imageIn.getWidth(); x++) {
+        let red = imageIn.getIntComponent0(x, y);
+        let green = imageIn.getIntComponent1(x, y);
+        let blue = imageIn.getIntComponent2(x, y);
 
         weights[x][y][0][red / 10]++;
         weights[x][y][1][green / 10]++;
@@ -51,10 +51,10 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
   }
 
   getProbableColor(arr) {
-    var max = -1;
-    var maxIndex = 0;
+    let max = -1;
+    let maxIndex = 0;
 
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       if (max == -1 || arr[i] > max) {
         max = arr[i];
         maxIndex = i;

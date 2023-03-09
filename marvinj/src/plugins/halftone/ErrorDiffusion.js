@@ -11,24 +11,24 @@ export default class ErrorDiffusion extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var color;
-    var dif;
+    let color;
+    let dif;
 
     Marvin.grayScale(imageIn, imageOut, attributesOut, mask, previewMode);
 
     // Mask
-    var l_arrMask;
+    let l_arrMask;
     if (mask != null) {
       l_arrMask = mask.getMask();
     }
 
-    for (var y = 0; y < imageOut.getHeight(); y++) {
-      for (var x = 0; x < imageOut.getWidth(); x++) {
+    for (let y = 0; y < imageOut.getHeight(); y++) {
+      for (let x = 0; x < imageOut.getWidth(); x++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }
 
-        var color = imageOut.getIntComponent0(x, y);
+        let color = imageOut.getIntComponent0(x, y);
         if (color > this.threshold) {
           imageOut.setIntColor(
             x,

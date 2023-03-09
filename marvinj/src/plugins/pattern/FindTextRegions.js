@@ -17,33 +17,33 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
     // The image will be affected so it's generated a new instance
     imageIn = imageIn.clone();
 
-    var maxWhiteSpace = this.getAttribute("maxWhiteSpace");
-    var maxFontLineWidth = this.getAttribute("maxFontLineWidth");
-    var minTextWidth = this.getAttribute("minTextWidth");
-    var grayScaleThreshold = this.getAttribute("grayScaleThreshold");
+    let maxWhiteSpace = this.getAttribute("maxWhiteSpace");
+    let maxFontLineWidth = this.getAttribute("maxFontLineWidth");
+    let minTextWidth = this.getAttribute("minTextWidth");
+    let grayScaleThreshold = this.getAttribute("grayScaleThreshold");
 
     Marvin.thresholding(imageIn, imageIn, grayScaleThreshold);
 
-    var segments = [];
-    for (var i = 0; i < imageIn.getHeight(); i++) {
+    let segments = [];
+    for (let i = 0; i < imageIn.getHeight(); i++) {
       segments.push([]);
     }
 
     // map of already processed pixels
 
-    var processed = MarvinJSUtils.createMatrix2D(
+    let processed = MarvinJSUtils.createMatrix2D(
       imageIn.getWidth(),
       imageIn.getHeight,
       false
     );
 
-    var color;
-    var patternStartX = -1;
-    var patternLength = 0;
-    var whitePixels = 0;
-    var blackPixels = 0;
-    for (var y = 0; y < imageIn.getHeight(); y++) {
-      for (var x = 0; x < imageIn.getWidth(); x++) {
+    let color;
+    let patternStartX = -1;
+    let patternLength = 0;
+    let whitePixels = 0;
+    let blackPixels = 0;
+    for (let y = 0; y < imageIn.getHeight(); y++) {
+      for (let x = 0; x < imageIn.getWidth(); x++) {
         if (!processed[x][y]) {
           color = imageIn.getIntColor(x, y);
 
@@ -69,7 +69,7 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
             x == imageIn.getWidth() - 1
           ) {
             if (patternLength >= minTextWidth) {
-              var list = segments[y];
+              let list = segments[y];
               list.push([patternStartX, y, patternStartX + patternLength, y]);
             }
 
@@ -89,16 +89,16 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
     }
 
     // Group line patterns intersecting in x coordinate and too near in y coordinate.
-    for (var y = 0; y < imageIn.getHeight() - 2; y++) {
-      var listY = segments[y];
+    for (let y = 0; y < imageIn.getHeight() - 2; y++) {
+      let listY = segments[y];
 
-      for (var w = y + 1; w <= y + 2; w++) {
-        var listW = segments[w];
+      for (let w = y + 1; w <= y + 2; w++) {
+        let listW = segments[w];
 
-        for (var i = 0; i < listY.length; i++) {
-          var sA = listY[i];
-          for (var j = 0; j < listW.length; j++) {
-            var sB = listW[j];
+        for (let i = 0; i < listY.length; i++) {
+          let sA = listY[i];
+          for (let j = 0; j < listW.length; j++) {
+            let sB = listW[j];
 
             // horizontal intersection
             if (
@@ -124,11 +124,11 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
     }
 
     // Convert the result to a List<> of MarvinSegment objects.
-    var marvinSegments = [];
-    for (var y = 0; y < imageIn.getHeight(); y++) {
-      var list = segments[y];
-      for (var i in list) {
-        var seg = list[i];
+    let marvinSegments = [];
+    for (let y = 0; y < imageIn.getHeight(); y++) {
+      let list = segments[y];
+      for (let i in list) {
+        let seg = list[i];
         marvinSegments.push(new MarvinSegment(seg[0], seg[1], seg[2], seg[3]));
       }
     }

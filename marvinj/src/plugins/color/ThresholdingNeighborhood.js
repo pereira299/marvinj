@@ -13,14 +13,14 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
   }
 
   process(imageIn, imageOut, attributesOut, mask, previewMode) {
-    var neighborhoodSide = this.getAttribute("neighborhoodSide");
-    var samplingPixelDistance = this.getAttribute("samplingPixelDistance");
-    var thresholdPercentageOfAverage = this.getAttribute(
+    let neighborhoodSide = this.getAttribute("neighborhoodSide");
+    let samplingPixelDistance = this.getAttribute("samplingPixelDistance");
+    let thresholdPercentageOfAverage = this.getAttribute(
       "thresholdPercentageOfAverage"
     );
 
-    for (var y = 0; y < imageIn.getHeight(); y++) {
-      for (var x = 0; x < imageIn.getWidth(); x++) {
+    for (let y = 0; y < imageIn.getHeight(); y++) {
+      for (let x = 0; x < imageIn.getWidth(); x++) {
         this.theshold(
           imageIn,
           imageOut,
@@ -43,17 +43,17 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
     side,
     neighborhoodDistance
   ) {
-    var min = -1;
-    var max = -1;
-    var pixels = 0;
-    var average = 0;
+    let min = -1;
+    let max = -1;
+    let pixels = 0;
+    let average = 0;
 
-    var inc = neighborhoodDistance;
+    let inc = neighborhoodDistance;
 
-    for (var j = y - side / 2; j < y + (inc + side / 2); j += inc) {
-      for (var i = x - side / 2; i < x + side / 2; i += inc) {
+    for (let j = y - side / 2; j < y + (inc + side / 2); j += inc) {
+      for (let i = x - side / 2; i < x + side / 2; i += inc) {
         if (i >= 0 && j >= 0 && i < image.getWidth() && j < image.getHeight()) {
-          var color = image.getIntComponent0(i, j);
+          let color = image.getIntComponent0(i, j);
 
           if (min == -1 || color < min) {
             min = color;
@@ -70,7 +70,7 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
 
     average /= pixels;
 
-    var color = image.getIntComponent0(x, y);
+    let color = image.getIntComponent0(x, y);
 
     if (color < average * thresholdPercentageOfAverage || max - min <= 30) {
       imageOut.setIntColor(x, y, 255, 0, 0, 0);

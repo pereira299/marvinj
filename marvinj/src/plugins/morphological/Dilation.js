@@ -12,7 +12,7 @@ export default class Dilation extends MarvinAbstractImagePlugin {
   };
 
   process = function (imgIn, imgOut, attributesOut, mask, previewMode) {
-    var matrix = this.getAttribute("matrix");
+    let matrix = this.getAttribute("matrix");
 
     if (
       imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY &&
@@ -20,8 +20,8 @@ export default class Dilation extends MarvinAbstractImagePlugin {
     ) {
       MarvinImage.copyColorArray(imgIn, imgOut);
 
-      for (var y = 0; y < imgIn.getHeight(); y++) {
-        for (var x = 0; x < imgIn.getWidth(); x++) {
+      for (let y = 0; y < imgIn.getHeight(); y++) {
+        for (let x = 0; x < imgIn.getWidth(); x++) {
           this.applyMatrix(x, y, matrix, imgIn, imgOut);
         }
       }
@@ -29,13 +29,13 @@ export default class Dilation extends MarvinAbstractImagePlugin {
   };
 
   applyMatrix = function (x, y, matrix, imgIn, imgOut) {
-    var nx, ny;
-    var xC = matrix[0].length / 2;
-    var yC = matrix.length / 2;
+    let nx, ny;
+    let xC = matrix[0].length / 2;
+    let yC = matrix.length / 2;
 
     if (imgIn.getBinaryColor(x, y)) {
-      for (var i = 0; i < matrix.length; i++) {
-        for (var j = 0; j < matrix.length; j++) {
+      for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
           if ((i != yC || j != xC) && matrix[i][j]) {
             nx = x + (j - xC);
             ny = y + (i - yC);

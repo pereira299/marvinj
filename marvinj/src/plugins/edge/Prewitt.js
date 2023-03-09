@@ -26,7 +26,7 @@ export default class Prewitt extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attrOut, mask, previewMode) {
-    var intensity = this.getAttribute("intensity");
+    let intensity = this.getAttribute("intensity");
 
     if (intensity == 1) {
       this.convolution.setAttribute("matrix", this.matrixPrewittX);

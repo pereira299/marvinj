@@ -45,7 +45,7 @@ export default class Marvin {
   // Average Color
   averageColor(imageIn) {
     this.plugins.averageColor = new AverageColor();
-    var attrOut = new MarvinAttributes();
+    let attrOut = new MarvinAttributes();
     this.plugins.averageColor.process(
       imageIn,
       null,
@@ -181,7 +181,7 @@ export default class Marvin {
     grayScaleThreshold
   ) {
     this.plugins.findTextRegions = new FindTextRegions();
-    var attrOut = new MarvinAttributes();
+    let attrOut = new MarvinAttributes();
     this.plugins.findTextRegions.setAttribute(
       "maxWhiteSpace",
       getValue(maxWhiteSpace, 10)
@@ -211,7 +211,7 @@ export default class Marvin {
   // Floodfill Segmentation
   floodfillSegmentation(imageIn) {
     this.plugins.floodfillSegmentation = new FloodfillSegmentation();
-    var attrOut = new MarvinAttributes();
+    let attrOut = new MarvinAttributes();
     this.plugins.floodfillSegmentation.setAttribute(
       "returnType",
       "MarvinSegment"
@@ -286,7 +286,7 @@ export default class Marvin {
   // Moravec
   moravec(imageIn, imageOut, matrixSize, threshold) {
     this.plugins.moravec = new Moravec();
-    var attrOut = new MarvinAttributes();
+    let attrOut = new MarvinAttributes();
     this.plugins.moravec.setAttribute("matrixSize", matrixSize);
     this.plugins.moravec.setAttribute("threshold", threshold);
     this.plugins.moravec.process(
@@ -355,7 +355,7 @@ export default class Marvin {
   scale(imageIn, imageOut, newWidth, newHeight) {
     this.plugins.scale = new Scale();
     if (newHeight == null) {
-      var factor = imageIn.getHeight() / imageIn.getWidth();
+      let factor = imageIn.getHeight() / imageIn.getWidth();
       newHeight = Math.floor(factor * newWidth);
     }
 

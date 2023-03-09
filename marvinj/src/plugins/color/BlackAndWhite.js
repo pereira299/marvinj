@@ -13,13 +13,13 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
     this.grayScale.process(imageIn, imageOut);
-    var level = this.getAttribute("level");
-    var rlevel = (level / 100.0) * this.MAX_RLEVEL;
+    let level = this.getAttribute("level");
+    let rlevel = (level / 100.0) * this.MAX_RLEVEL;
 
-    var c = 0;
-    var gray;
-    for (var y = 0; y < imageOut.getHeight(); y++) {
-      for (var x = 0; x < imageOut.getWidth(); x++) {
+    let c = 0;
+    let gray;
+    for (let y = 0; y < imageOut.getHeight(); y++) {
+      for (let x = 0; x < imageOut.getWidth(); x++) {
         gray = imageIn.getIntComponent0(x, y);
 
         if (gray <= 127) {

@@ -11,11 +11,11 @@ export default class Convolution extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var matrix = this.getAttribute("matrix");
+    let matrix = this.getAttribute("matrix");
 
     if (matrix != null && matrix.length > 0) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
-        for (var x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
+        for (let x = 0; x < imageIn.getWidth(); x++) {
           if (
             y >= matrix.length / 2 &&
             y < imageIn.getHeight() - matrix.length / 2 &&
@@ -32,16 +32,16 @@ export default class Convolution extends MarvinAbstractImagePlugin {
   };
 
   applyMatrix = function (x, y, matrix, imageIn, imageOut) {
-    var nx, ny;
-    var resultRed = 0;
-    var resultGreen = 0;
-    var resultBlue = 0;
+    let nx, ny;
+    let resultRed = 0;
+    let resultGreen = 0;
+    let resultBlue = 0;
 
-    var xC = Math.ceil(matrix[0].length / 2);
-    var yC = Math.ceil(matrix.length / 2);
+    let xC = Math.ceil(matrix[0].length / 2);
+    let yC = Math.ceil(matrix.length / 2);
 
-    for (var i = 0; i < matrix.length; i++) {
-      for (var j = 0; j < matrix[0].length; j++) {
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[0].length; j++) {
         if (matrix[i][j] != 0) {
           nx = x + (j - xC);
           ny = y + (i - yC);

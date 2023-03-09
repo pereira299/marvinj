@@ -10,14 +10,14 @@ export default class GrayScale extends MarvinAbstractImagePlugin {
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
     // Mask
-    var l_arrMask;
+    let l_arrMask;
     if (mask != null) {
       l_arrMask = mask.getMask();
     }
 
-    var r, g, b, finalColor;
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    let r, g, b, finalColor;
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }

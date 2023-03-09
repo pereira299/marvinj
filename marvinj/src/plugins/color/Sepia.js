@@ -12,18 +12,18 @@ export default class Sepia extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var r, g, b, depth, corfinal;
+    let r, g, b, depth, corfinal;
 
     //Define a intensidade do filtro...
     depth = this.getAttribute("intensity");
 
-    var width = imageIn.getWidth();
-    var height = imageIn.getHeight();
+    let width = imageIn.getWidth();
+    let height = imageIn.getHeight();
 
-    var l_arrMask = mask.getMask();
+    let l_arrMask = mask.getMask();
 
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }

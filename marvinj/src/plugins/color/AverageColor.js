@@ -9,19 +9,19 @@ export default class AverageColor extends MarvinAbstractImagePlugin {
   load () {};
 
   process (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var totalR = 0;
-    var totalG = 0;
-    var totalB = 0;
+    let totalR = 0;
+    let totalG = 0;
+    let totalB = 0;
 
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         totalR += imageIn.getIntComponent0(x, y);
         totalG += imageIn.getIntComponent1(x, y);
         totalB += imageIn.getIntComponent2(x, y);
       }
     }
 
-    var totalPixels = imageIn.getWidth() * imageIn.getHeight();
+    let totalPixels = imageIn.getWidth() * imageIn.getHeight();
     totalR = Math.round(totalR / totalPixels);
     totalG = Math.round(totalG / totalPixels);
     totalB = Math.round(totalB / totalPixels);

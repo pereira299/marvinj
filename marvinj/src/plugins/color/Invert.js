@@ -9,11 +9,11 @@ export default class Invert extends MarvinAbstractImagePlugin {
   load = function () {};
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var l_arrMask = mask.getMask();
+    let l_arrMask = mask.getMask();
 
-    var r, g, b;
-    for (var x = 0; x < imageIn.getWidth(); x++) {
-      for (var y = 0; y < imageIn.getHeight(); y++) {
+    let r, g, b;
+    for (let x = 0; x < imageIn.getWidth(); x++) {
+      for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }

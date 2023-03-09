@@ -14,15 +14,15 @@ export default class Crop extends MarvinAbstractImagePlugin {
   };
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
-    var x = this.getAttribute("x");
-    var y = this.getAttribute("y");
-    var width = this.getAttribute("width");
-    var height = this.getAttribute("height");
+    let x = this.getAttribute("x");
+    let y = this.getAttribute("y");
+    let width = this.getAttribute("width");
+    let height = this.getAttribute("height");
 
     imageOut.setDimension(width, height);
 
-    for (var i = x; i < x + width; i++) {
-      for (var j = y; j < y + height; j++) {
+    for (let i = x; i < x + width; i++) {
+      for (let j = y; j < y + height; j++) {
         imageOut.setIntColor(i - x, j - y, imageIn.getIntColor(i, j));
       }
     }

@@ -24,10 +24,10 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
     this.radius = this.getAttribute("radius");
 
-    var l_imageWidth = imageIn.getWidth();
-    var l_imageHeight = imageIn.getHeight();
+    let l_imageWidth = imageIn.getWidth();
+    let l_imageHeight = imageIn.getHeight();
 
-	var l_pixelColor;
+	let l_pixelColor;
     this.kernelMatrix = this.getGaussianKernel();
     this.resultMatrix = this.Utils.createMatrix3D(
       l_imageWidth,
@@ -41,10 +41,10 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
       0
     );
 
-    var l_arrMask = mask.getMask();
+    let l_arrMask = mask.getMask();
 
-    for (var x = 0; x < l_imageWidth; x++) {
-      for (var y = 0; y < l_imageHeight; y++) {
+    for (let x = 0; x < l_imageWidth; x++) {
+      for (let y = 0; y < l_imageHeight; y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }
@@ -53,8 +53,8 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
       }
     }
 
-    for (var x = 0; x < l_imageWidth; x++) {
-      for (var y = 0; y < l_imageHeight; y++) {
+    for (let x = 0; x < l_imageWidth; x++) {
+      for (let y = 0; y < l_imageHeight; y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }
@@ -80,17 +80,17 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
    * Calc Gaussian Matrix.
    */
   getGaussianKernel = function () {
-    var l_matrix = this.Utils.createMatrix2D(
+    let l_matrix = this.Utils.createMatrix2D(
       this.radius * 2 + 1,
       this.radius * 2 + 1
     );
-    var l_q = this.radius / 3.0;
-    var l_distance;
-    var l_x;
-    var l_y;
+    let l_q = this.radius / 3.0;
+    let l_distance;
+    let l_x;
+    let l_y;
 
-    for (var x = 1; x <= this.radius * 2 + 1; x++) {
-      for (var y = 1; y <= this.radius * 2 + 1; y++) {
+    for (let x = 1; x <= this.radius * 2 + 1; x++) {
+      for (let y = 1; y <= this.radius * 2 + 1; y++) {
         l_x = Math.abs(x - (this.radius + 1));
         l_y = Math.abs(y - (this.radius + 1));
         l_distance = Math.sqrt(l_x * l_x + l_y * l_y);
@@ -106,8 +106,8 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
    * Apply the blur matrix on a image region.
    */
   applyKernel = function (centerPixel_X, centerPixel_Y, pixelColor, image) {
-    for (var y = centerPixel_Y; y < centerPixel_Y + this.radius * 2; y++) {
-      for (var x = centerPixel_X; x < centerPixel_X + this.radius * 2; x++) {
+    for (let y = centerPixel_Y; y < centerPixel_Y + this.radius * 2; y++) {
+      for (let x = centerPixel_X; x < centerPixel_X + this.radius * 2; x++) {
         if (
           x - this.radius >= 0 &&
           x - this.radius < image.getWidth() &&

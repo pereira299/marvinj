@@ -10,10 +10,10 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
   };
 
   process = function (images, imageOut) {
-    var threshold = this.getAttribute("threshold");
-    var image0 = images[0];
-    for (var y = 0; y < image0.getHeight(); y++) {
-      for (var x = 0; x < image0.getWidth(); x++) {
+    let threshold = this.getAttribute("threshold");
+    let image0 = images[0];
+    for (let y = 0; y < image0.getHeight(); y++) {
+      for (let x = 0; x < image0.getWidth(); x++) {
         imageOut.setIntColor(
           x,
           y,
@@ -24,10 +24,10 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
   };
 
   getBackgroundPixel = function (x, y, images, threshold) {
-    var colors = new Array();
-    for (var i in images) {
-      var img = images[i];
-      var c = new Array(4);
+    let colors = new Array();
+    for (let i in images) {
+      let img = images[i];
+      let c = new Array(4);
       c[0] = img.getIntComponent0(x, y);
       c[1] = img.getIntComponent1(x, y);
       c[2] = img.getIntComponent2(x, y);
@@ -36,9 +36,9 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
       if (colors.length == 0) {
         colors.push(c);
       } else {
-        var found = false;
-        for (var j in colors) {
-          var c2 = colors[j];
+        let found = false;
+        for (let j in colors) {
+          let c2 = colors[j];
           if (
             Math.abs(c2[0] - c[0]) < threshold * 0.3 &&
             Math.abs(c2[1] - c[1]) < threshold * 0.3 &&
@@ -59,10 +59,10 @@ export default class DetermineSceneBackground extends MarvinAbstractImagePlugin 
       }
     }
 
-    var max = -1;
-    var maxIndex = 0;
-    var c2 = null;
-    for (var i = 0; i < colors.length; i++) {
+    let max = -1;
+    let maxIndex = 0;
+    let c2 = null;
+    for (let i = 0; i < colors.length; i++) {
       c2 = colors[i];
       if (max == -1 || c2[3] > max) {
         max = c2[3];

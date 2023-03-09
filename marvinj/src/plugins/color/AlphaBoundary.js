@@ -10,23 +10,23 @@ export default class AlphaBoundary extends MarvinAbstractImagePlugin {
   };
 
   process(imageIn, imageOut, attributesOut, mask, previewMode) {
-    var neighborhood = this.getAttribute("radius");
-    for (var y = 0; y < imageOut.getHeight(); y++) {
-      for (var x = 0; x < imageOut.getWidth(); x++) {
+    let neighborhood = this.getAttribute("radius");
+    for (let y = 0; y < imageOut.getHeight(); y++) {
+      for (let x = 0; x < imageOut.getWidth(); x++) {
         this.alphaRadius(imageOut, x, y, neighborhood);
       }
     }
   };
 
   alphaRadius(image, x, y, radius) {
-    var oldAlpha = image.getAlphaComponent(x, y);
-    var newAlpha;
-    var totalAlpha = 0;
-    var totalPixels = 0;
-    var hn = Math.floor(radius / 2);
+    let oldAlpha = image.getAlphaComponent(x, y);
+    let newAlpha;
+    let totalAlpha = 0;
+    let totalPixels = 0;
+    let hn = Math.floor(radius / 2);
 
-    for (var j = y - hn; j < y + hn; j++) {
-      for (var i = x - hn; i < x + hn; i++) {
+    for (let j = y - hn; j < y + hn; j++) {
+      for (let i = x - hn; i < x + hn; i++) {
         if (i >= 0 && i < image.getWidth() && j >= 0 && j < image.getHeight()) {
           totalAlpha += image.getAlphaComponent(i, j);
           totalPixels++;

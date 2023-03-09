@@ -20,26 +20,26 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
 
   process = function (imageIn, imageOut, attributesOut, mask, previewMode) {
     this.loadRules();
-    var iterations = this.getAttribute("iterations");
+    let iterations = this.getAttribute("iterations");
 
-    var x0 = 0;
-    var y0 = 0;
-    var x, y;
-    var startX;
-    var startY;
-    var factor;
+    let x0 = 0;
+    let y0 = 0;
+    let x, y;
+    let startX;
+    let startY;
+    let factor;
 
-    var minX = 999999999,
+    let minX = 999999999,
       minY = 999999999,
       maxX = -999999999,
       maxY = -99999999;
 
-    var tempRule;
-    var point = [x0, y0];
+    let tempRule;
+    let point = [x0, y0];
 
     imageOut.clear(0xffffffff);
 
-    for (var i = 0; i < iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       tempRule = this.getRule();
       this.applyRule(point, tempRule);
 
@@ -60,11 +60,11 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
       }
     }
 
-    var width = imageOut.getWidth();
-    var height = imageOut.getHeight();
+    let width = imageOut.getWidth();
+    let height = imageOut.getHeight();
 
-    var deltaX = Math.abs(maxX - minX);
-    var deltaY = Math.abs(maxY - minY);
+    let deltaX = Math.abs(maxX - minX);
+    let deltaY = Math.abs(maxY - minY);
     if (deltaX > deltaY) {
       factor = width / deltaX;
       if (deltaY * factor > height) {
@@ -85,7 +85,7 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
     point[0] = x0;
     point[1] = y0;
 
-    for (var i = 0; i < iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       tempRule = this.getRule();
       this.applyRule(point, tempRule);
 
@@ -100,19 +100,19 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
 
   loadRules = function () {
     this.rules = [];
-    var r = this.getAttribute("rules").split("\n");
+    let r = this.getAttribute("rules").split("\n");
 
-    for (var i = 0; i < r.length; i++) {
+    for (let i = 0; i < r.length; i++) {
       this.addRule(r[i]);
     }
   };
 
   addRule = function (rule) {
     rule = rule.replace(/ /g, ""); //replace all spaces
-    var attr = rule.split(",");
+    let attr = rule.split(",");
 
     if (attr.length == 7) {
-      var r = new Object();
+      let r = new Object();
       r.a = parseFloat(attr[0]);
       r.b = parseFloat(attr[1]);
       r.c = parseFloat(attr[2]);
@@ -126,9 +126,9 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
   };
 
   getRule = function () {
-    var random = Math.random();
-    var sum = 0;
-    var i;
+    let random = Math.random();
+    let sum = 0;
+    let i;
     for (i = 0; i < this.rules.length; i++) {
       sum += this.rules[i].probability;
       if (random < sum) {
@@ -143,8 +143,8 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
   };
 
   applyRule = function (point, rule) {
-    var nx = rule.a * point[0] + rule.b * point[1] + rule.e;
-    var ny = rule.c * point[0] + rule.d * point[1] + rule.f;
+    let nx = rule.a * point[0] + rule.b * point[1] + rule.e;
+    let ny = rule.c * point[0] + rule.d * point[1] + rule.f;
     point[0] = nx;
     point[1] = ny;
   };

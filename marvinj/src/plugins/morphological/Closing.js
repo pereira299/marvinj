@@ -12,7 +12,7 @@ export default class Closing extends MarvinAbstractImagePlugin {
   };
 
   process = function (imgIn, imgOut, attributesOut, mask, previewMode) {
-    var matrix = this.getAttribute("matrix");
+    let matrix = this.getAttribute("matrix");
 
     if (
       imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY &&
