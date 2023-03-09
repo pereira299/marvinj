@@ -1,0 +1,21 @@
+{
+  "name": "marvin-ts",
+  "version": "1.0.0",
+  "description": "typescript image processing framework",
+  "main": "index.ts",
+  "repository": "https://github.com/pereira299/marvinj.git",
+  "author": "Lucas Pereira <lucasper057@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "ts-node index.ts",
+    "dev": "nodemon index.ts",
+    "lint": "eslint src --ext .ts"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "eslint": "^8.35.0",
+    "typescript": "^4.9.5"
+  }
+}
