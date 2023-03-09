@@ -1,29 +1,26 @@
-	function Closing(){
-		MarvinAbstractImagePlugin.super(this);
-		this.load();
-	}
+import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
-	Closing.prototype.load = function(){
-		this.matrix = MarvinJSUtils.createMatrix2D(3,3,true);
-		this.setAttribute("matrix",3);
-	};
+export default class Closing extends MarvinAbstractImagePlugin {
+  constructor() {
+    super();
+    this.load();
+  }
 
-	
-	Closing.prototype.process = function
-	(
-		imgIn, 
-		imgOut,
-		attributesOut,
-		mask, 
-		previewMode
-	)
-	{	
-		var matrix = this.getAttribute("matrix");
-		
-		if(imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY && matrix != null){
+  load = function () {
+    this.matrix = MarvinJSUtils.createMatrix2D(3, 3, true);
+    this.setAttribute("matrix", 3);
+  };
 
-			Marvin.morphologicalDilation(imgIn, imgOut, matrix);
-			MarvinImage.copyColorArray(imgOut, imgIn);
-			Marvin.morphologicalErosion(imgIn, imgOut, matrix);
-		}
-	};
+  process = function (imgIn, imgOut, attributesOut, mask, previewMode) {
+    var matrix = this.getAttribute("matrix");
+
+    if (
+      imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY &&
+      matrix != null
+    ) {
+      Marvin.morphologicalDilation(imgIn, imgOut, matrix);
+      MarvinImage.copyColorArray(imgOut, imgIn);
+      Marvin.morphologicalErosion(imgIn, imgOut, matrix);
+    }
+  };
+}

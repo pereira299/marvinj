@@ -1,13 +1,16 @@
-	function FloodfillSegmentation(){
-		MarvinAbstractImagePlugin.super(this);
+import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
+
+export default class FloodfillSegmentation extends MarvinAbstractImagePlugin {
+	constructor(){
+		super();
 		this.load();
 	}
 
-	FloodfillSegmentation.prototype.load = function(){
+	load = function(){
 		this.setAttribute("returnType", "MarvinSegment");
 	};
 	
-	FloodfillSegmentation.prototype.process = function
+	process = function
 	(
 		imageIn, 
 		imageOut,
@@ -32,7 +35,7 @@
 		}
 	};
 	
-	FloodfillSegmentation.prototype.floodfillSegmentation = function(image, fillBuffer){
+	floodfillSegmentation = function(image, fillBuffer){
 		fillBuffer.clear(0xFF000000);
 		
 		var currentColor=1;
@@ -81,7 +84,7 @@
 		return segments;
 	}
 	
-	FloodfillSegmentation.prototype.blobSegments = function(image, segments){
+	blobSegments = function(image, segments){
 		
 		var blobSegments = new Array(segments.length);
 		
@@ -105,4 +108,5 @@
 			
 		}
 		return blobSegments;
-	};
+	}
+}

@@ -1,15 +1,13 @@
-var MarvinAbstractImagePlugin = new Object();
+export default class MarvinAbstractImagePlugin {
+	attributes = {};
+	constructor() {}
 
-MarvinAbstractImagePlugin.super = function(ref){
-	ref.attributes = {};
-	ref["setAttribute"] = MarvinAbstractImagePlugin.setAttribute;
-	ref["getAttribute"] = MarvinAbstractImagePlugin.getAttribute;
-};
+	setAttribute = function(label, value){
+		this.attributes[label] = value;
+	};
+	
+	getAttribute = function(label, value){
+		return this.attributes[label];
+	};
 
-MarvinAbstractImagePlugin.setAttribute = function(label, value){
-	this.attributes[label] = value;
-};
-
-MarvinAbstractImagePlugin.getAttribute = function(label, value){
-	return this.attributes[label];
-};
+}

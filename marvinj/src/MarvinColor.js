@@ -1,23 +1,25 @@
+export default class MarvinColor {
 
-function MarvinColor(red, green, blue){
+  constructor(red, green, blue) {
 	this.red = red;
 	this.green = green;
 	this.blue = blue;
 	return this;
-}
+  }
 
-MarvinColor.prototype.setId = function(id){
+  setId(id) {
 	this.id = id;
-};
+  }
 
-MarvinColor.prototype.getId = function(){
+  getId() {
 	return this.id;
-};
+  }
 
-MarvinColor.prototype.setName = function(name){
+  setName(name) {
 	this.name = name;
-};
+  }
 
-MarvinColor.prototype.getName = function(){
+  getName() {
 	return this.name;
-};
+  }
+}

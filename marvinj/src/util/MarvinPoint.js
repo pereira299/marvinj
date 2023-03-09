@@ -1,20 +1,22 @@
-function MarvinPoint(x,y){
-	this.x = x;
-	this.y = y;
+export default class MarvinPoint{
+	constructor(x,y){
+		this.x = x;
+		this.y = y;
+	}
+	
+	setX(x){
+		this.x = x;
+	}
+	
+	getX(){
+		return this.x;
+	}
+	
+	setY(y){
+		this.y = y;
+	}
+	
+	getY(){
+		return this.y;
+	}
 }
-
-MarvinPoint.prototype.setX = function(x){
-	this.x = x;
-};
-
-MarvinPoint.prototype.getX = function(){
-	return this.x;
-};
-
-MarvinPoint.prototype.setY = function(x){
-	this.y = y;
-};
-
-MarvinPoint.prototype.getY = function(){
-	return this.y;
-};
