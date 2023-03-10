@@ -52,3 +52,4 @@ marvinproject/dev/.metadata/
 *.log
 
 node_modules
+output/**/*
