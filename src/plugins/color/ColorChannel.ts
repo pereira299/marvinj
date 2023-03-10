@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class ColorChannel extends MarvinAbstractImagePlugin {
@@ -6,13 +9,19 @@ export default class ColorChannel extends MarvinAbstractImagePlugin {
     this.load();
   }
 
-  load () {
+  load() {
     ColorChannel.setAttribute("red", 0);
     ColorChannel.setAttribute("green", 0);
     ColorChannel.setAttribute("blue", 0);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
     const vr = ColorChannel.getAttribute("red");
     const vg = ColorChannel.getAttribute("green");
     const vb = ColorChannel.getAttribute("blue");
@@ -39,5 +48,7 @@ export default class ColorChannel extends MarvinAbstractImagePlugin {
         imageOut.setIntColor(x, y, 255, red, green, blue);
       }
     }
+
+    return imageOut;
   }
 }

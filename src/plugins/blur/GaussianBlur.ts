@@ -1,5 +1,8 @@
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import MarvinJSUtils from "../../MarvinJSUtils";
+import MarvinImage from "../../image/MarvinImage";
+import MarvinAttributes from "../../util/MarvinAttributes";
+import MarvinImageMask from "../../image/MarvinImageMask";
 export default class GaussianBlur extends MarvinAbstractImagePlugin {
   RED: number;
   GREEN: number;
@@ -22,9 +25,14 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
     GaussianBlur.setAttribute("radius", 3);
   }
 
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     this.radius = GaussianBlur.getAttribute("radius");
-
+    const imageOut = imageIn.clone();
     const l_imageWidth = imageIn.getWidth();
     const l_imageHeight = imageIn.getHeight();
 
@@ -75,6 +83,7 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
         );
       }
     }
+    return imageOut;
   }
 
   /*

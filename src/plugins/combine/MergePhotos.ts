@@ -3,7 +3,6 @@ import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import MarvinImage from "../../image/MarvinImage";
 
 export default class MergePhotos extends MarvinAbstractImagePlugin {
-
   background: DetermineSceneBackground;
 
   constructor() {
@@ -17,25 +16,37 @@ export default class MergePhotos extends MarvinAbstractImagePlugin {
     MergePhotos.setAttribute("threshold", 30);
   }
 
-  process(images, imageOut) {
+  process(images: MarvinImage[], imageOut: MarvinImage) {
     if (images.length > 0) {
       const threshold = MergePhotos.getAttribute("threshold");
       DetermineSceneBackground.setAttribute("threshold", threshold);
       const backgroundImage = images[0].clone();
       this.background.process(images, backgroundImage);
       MarvinImage.copyColorArray(backgroundImage, imageOut);
-      this.mergePhotos(images, imageOut, backgroundImage, threshold);
+      return this.mergePhotos(images, imageOut, backgroundImage, threshold);
     }
+    return null;
   }
 
-  mergePhotos(images, imageOut, background, threshold) {
+  mergePhotos(
+    images: MarvinImage[],
+    imageOut: MarvinImage,
+    background: MarvinImage,
+    threshold: number
+  ) {
     for (const i in images) {
       const img = images[i];
-      this.mergePhotosSingle(img, imageOut, background, threshold);
+      imageOut = this.mergePhotosSingle(img, imageOut, background, threshold);
     }
+    return imageOut;
   }
 
-  mergePhotosSingle(imageA, imageB, imageBackground, threshold) {
+  mergePhotosSingle(
+    imageA: MarvinImage,
+    imageB: MarvinImage,
+    imageBackground: MarvinImage,
+    threshold: number
+  ) {
     let rA, gA, bA, rB, gB, bB;
     for (let y = 0; y < imageA.getHeight(); y++) {
       for (let x = 0; x < imageA.getWidth(); x++) {
@@ -55,5 +66,6 @@ export default class MergePhotos extends MarvinAbstractImagePlugin {
         }
       }
     }
+    return imageB;
   }
 }

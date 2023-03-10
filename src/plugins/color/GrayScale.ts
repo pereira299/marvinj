@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class GrayScale extends MarvinAbstractImagePlugin {
@@ -8,7 +11,13 @@ export default class GrayScale extends MarvinAbstractImagePlugin {
 
   load () {}
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
     // Mask
     let l_arrMask;
     if (mask != null) {
@@ -36,5 +45,7 @@ export default class GrayScale extends MarvinAbstractImagePlugin {
         );
       }
     }
+
+    return imageOut;
   }
 }

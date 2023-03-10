@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class Emboss extends MarvinAbstractImagePlugin {
@@ -8,9 +11,14 @@ export default class Emboss extends MarvinAbstractImagePlugin {
 
   load () {}
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     const l_arrMask = mask.getMask();
-
+    const imageOut = imageIn.clone();
     for (let x = 0; x < imageIn.getWidth(); x++) {
       for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {
@@ -52,5 +60,6 @@ export default class Emboss extends MarvinAbstractImagePlugin {
         imageOut.setIntColor(x, y, 255, grayLevel, grayLevel, grayLevel);
       }
     }
+    return imageOut;
   }
 }

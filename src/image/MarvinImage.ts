@@ -1,20 +1,29 @@
+import { JSDOM } from "jsdom";
+import axios from "axios";
+import * as canvas from "canvas";
+import * as fs from "fs";
+
 export default class MarvinImage {
   static COLOR_MODEL_RGB = 0;
   static COLOR_MODEL_BINARY = 1;
   image: any;
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D | null;
+  canvas: canvas.Canvas | null;
+  ctx: canvas.CanvasRenderingContext2D | null;
   data: any;
-  imageData: ImageData;
+  document: Document;
+  imageData: canvas.ImageData;
   colorModel: number;
   arrBinaryColor: any;
   width: number;
   height: number;
   onload: Function;
 
-  constructor(width: number, height: number, colorModel: number | null = null) {
+  constructor(
+    width: number = 100,
+    height: number = 100,
+    colorModel: number | null = null
+  ) {
     // properties
-
     if (colorModel == null) {
       colorModel = MarvinImage.COLOR_MODEL_RGB;
     } else {
@@ -24,16 +33,14 @@ export default class MarvinImage {
     if (width != null) {
       this.create(width, height);
     }
-    
+
     if (colorModel == MarvinImage.COLOR_MODEL_BINARY) {
       this.arrBinaryColor = new Array(width * height);
     }
   }
 
-  create(width, height) {
-    this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
+  create(width: number, height: number) {
+    this.canvas = canvas.createCanvas(width, height);
     this.ctx = this.canvas.getContext("2d");
     if (this.ctx == null) throw new Error("Could not get canvas context");
     this.imageData = this.ctx.getImageData(0, 0, width, height);
@@ -41,41 +48,62 @@ export default class MarvinImage {
     this.height = height;
   }
 
-  setDimension(width, height) {
+  setDimension(width: number, height: number) {
     this.create(width, height);
   }
 
-  load(url, callback) {
-    this.onload = callback;
-    this.image = new Image();
+  load(url: string): Promise<MarvinImage>{
     const ref = this;
-    this.image.onload = () => {
-      ref.callbackImageLoaded(ref);
-    };
-    this.image.crossOrigin = "anonymous";
-    this.image.src = url;
+    return new Promise((resolve, reject) => {
+      this.image = new canvas.Image();
+      this.image.onload = () => {
+        const res = ref.callbackImageLoaded(ref);
+        if (!res) reject(res);
+        resolve(res);
+      };
+      this.image.crossOrigin = "anonymous";
+      this.image.src = url;
+    });
   }
 
+  loadFromBase64(base64: string): Promise<MarvinImage> {
+    const ref = this;
+    return new Promise((resolve, reject) => {
+      this.image = new canvas.Image();
+      this.image.onload = () => {
+        const res = ref.callbackImageLoaded(ref);
+        if (!res) reject(res);
+        resolve(res);
+      };
+      this.image.src = base64;
+    });
+  }
   // WARN: the callback "this" object is the reference to js Image object.
-  callbackImageLoaded(marvinImage) {
-    marvinImage.width = marvinImage.image.width;
-    marvinImage.height = marvinImage.image.height;
-    marvinImage.canvas = document.createElement("canvas");
-    marvinImage.canvas.width = marvinImage.image.width;
-    marvinImage.canvas.height = marvinImage.image.height;
+  callbackImageLoaded(marvinImage: MarvinImage) {
+    try {
+      marvinImage.width = marvinImage.image.width;
+      marvinImage.height = marvinImage.image.height;
+      marvinImage.canvas = canvas.createCanvas(
+        marvinImage.image.width,
+        marvinImage.image.height
+      );
 
-    marvinImage.ctx = marvinImage.canvas.getContext("2d");
-    marvinImage.ctx.drawImage(marvinImage.image, 0, 0);
+      marvinImage.ctx = marvinImage.canvas.getContext("2d");
+      marvinImage.ctx.drawImage(marvinImage.image, 0, 0);
 
-    this.imageData = marvinImage.ctx.getImageData(
-      0,
-      0,
-      marvinImage.getWidth(),
-      marvinImage.getHeight()
-    );
+      this.imageData = marvinImage.ctx.getImageData(
+        0,
+        0,
+        marvinImage.getWidth(),
+        marvinImage.getHeight()
+      );
 
-    if (marvinImage.onload != null) {
-      marvinImage.onload();
+      if (marvinImage.onload != null) {
+        marvinImage.onload(this);
+      }
+      return this;
+    } catch (e) {
+      return e;
     }
   }
 
@@ -85,12 +113,16 @@ export default class MarvinImage {
       this.getHeight(),
       this.colorModel
     );
-    MarvinImage.copyColorArray(this, image);
-    return image;
+    image.canvas = this.canvas;
+    image.ctx = this.ctx;
+    image.imageData = this.imageData;
+    image.image = this.image;
+    return MarvinImage.copyColorArray(this, image);
   }
 
   update() {
     this.canvas.getContext("2d")?.putImageData(this.imageData, 0, 0);
+    return this;
   }
 
   clear(color) {
@@ -99,6 +131,7 @@ export default class MarvinImage {
         this.setIntColor(x, y, color);
       }
     }
+    return this;
   }
 
   getColorModel() {
@@ -144,9 +177,11 @@ export default class MarvinImage {
       this.setIntColor2(x, y, a1, a2);
     } else if (a4 == null && a3 != null) {
       this.setIntColor3(x, y, a1, a2, a3);
-    } else if (a4 != null && a3 != null && a2 != null){
+    } else if (a4 != null && a3 != null && a2 != null) {
       this.setIntColor4(x, y, a1, a2, a3, a4);
     }
+
+    return this;
   }
 
   getIntColor(x, y) {
@@ -179,7 +214,7 @@ export default class MarvinImage {
     return this.arrBinaryColor[pos];
   }
 
-  static copyColorArray(imgSource, imgDestine) {
+  static copyColorArray(imgSource: MarvinImage, imgDestine: MarvinImage) {
     if (imgSource.getColorModel() == imgDestine.getColorModel()) {
       switch (imgSource.getColorModel()) {
         case MarvinImage.COLOR_MODEL_RGB:
@@ -194,6 +229,7 @@ export default class MarvinImage {
           break;
       }
     }
+    return imgDestine;
   }
 
   drawRect(x, y, width, height, color) {
@@ -206,6 +242,8 @@ export default class MarvinImage {
       this.setIntColor(x, i, color);
       this.setIntColor(x + (width - 1), i, color);
     }
+
+    return this;
   }
 
   fillRect(x, y, width, height, color) {
@@ -216,6 +254,7 @@ export default class MarvinImage {
         }
       }
     }
+    return this;
   }
 
   setColorToAlpha(color, alpha) {
@@ -247,6 +286,13 @@ export default class MarvinImage {
 
   setIntColor3(x: number, y: number, r: number, g: number, b: number) {
     this.setIntColor4(x, y, 255, r, g, b);
+  }
+
+  download(filepath: string) {
+    const dataURL = this.canvas.toDataURL("image/png");
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, "");
+    console.log(base64Data);
+    fs.writeFileSync(filepath, base64Data, "base64");
   }
 
   setIntColor4(
@@ -311,5 +357,12 @@ export default class MarvinImage {
     }
 
     return new Blob([ia], { type: mimeString });
+  }
+
+  getBuffer() {
+    //image data to base64
+    const dataURL = this.canvas.toDataURL("image/png");
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, "");
+    return Buffer.from(base64Data, "base64");
   }
 }

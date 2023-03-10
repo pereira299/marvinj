@@ -1,4 +1,7 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
 import Marvin from "../../MarvinFramework";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class ErrorDiffusion extends MarvinAbstractImagePlugin {
@@ -14,11 +17,17 @@ export default class ErrorDiffusion extends MarvinAbstractImagePlugin {
     this.threshold = 128;
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     let color;
     let dif;
-
-    Marvin.grayScale(imageIn, imageOut);
+    let imageOut = imageIn.clone();
+    const marvin = new Marvin(imageOut);
+    imageOut = marvin.grayScale().output();
 
     // Mask
     let l_arrMask;
@@ -109,6 +118,7 @@ export default class ErrorDiffusion extends MarvinAbstractImagePlugin {
         }
       }
     }
+    return imageOut;
   }
 
   getValidGray (a_value) {

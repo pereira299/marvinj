@@ -1,4 +1,7 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
 import MarvinMath from "../../math/MarvinMath";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import Convolution from "../convolution/Convolution";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
@@ -32,25 +35,31 @@ export default class Prewitt extends MarvinAbstractImagePlugin {
     Prewitt.setAttribute("intensity", 1.0);
   }
 
-  process (imageIn, imageOut, attrOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attrOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     const intensity = Prewitt.getAttribute("intensity");
-
+    let imageOut = imageIn.clone();
     if (intensity == 1) {
       Convolution.setAttribute("matrix", this.matrixPrewittX);
-      this.convolution.process(imageIn, imageOut, null, mask, this.previewMode);
+      imageOut = this.convolution.process(imageOut, null, mask, this.previewMode);
       Convolution.setAttribute("matrix", this.matrixPrewittY);
-      this.convolution.process(imageIn, imageOut, null, mask, this.previewMode);
+      imageOut = this.convolution.process(imageOut, null, mask, this.previewMode);
     } else {
       Convolution.setAttribute(
         "matrix",
         MarvinMath.scaleMatrix(this.matrixPrewittX, intensity)
       );
-      this.convolution.process(imageIn, imageOut, null, mask, previewMode);
+      imageOut = this.convolution.process(imageOut, null, mask, previewMode);
       Convolution.setAttribute(
         "matrix",
         MarvinMath.scaleMatrix(this.matrixPrewittY, intensity)
       );
-      this.convolution.process(imageIn, imageOut, null, mask, previewMode);
+      imageOut = this.convolution.process(imageOut, null, mask, previewMode);
     }
+    return imageOut;
   }
 }

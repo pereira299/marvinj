@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class Sepia extends MarvinAbstractImagePlugin {
@@ -11,7 +14,13 @@ export default class Sepia extends MarvinAbstractImagePlugin {
     Sepia.setAttribute("intensity", 20);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    let imageOut = imageIn.clone();
     let r, g, b, depth, corfinal;
 
     //Define a intensidade do filtro...
@@ -43,6 +52,7 @@ export default class Sepia extends MarvinAbstractImagePlugin {
         imageOut.setIntColor(x, y, imageIn.getAlphaComponent(x, y), r, g, b);
       }
     }
+    return imageOut;
   }
 
   /**

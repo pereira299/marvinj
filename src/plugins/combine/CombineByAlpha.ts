@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class CombineByAlpha extends MarvinAbstractImagePlugin {
@@ -12,7 +15,13 @@ export default class CombineByAlpha extends MarvinAbstractImagePlugin {
     CombineByAlpha.setAttribute("imageOther", null);
   }
 
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
     const imageOther = CombineByAlpha.getAttribute("imageOther");
     const x = CombineByAlpha.getAttribute("x");
     const y = CombineByAlpha.getAttribute("y");
@@ -62,5 +71,7 @@ export default class CombineByAlpha extends MarvinAbstractImagePlugin {
         }
       }
     }
+
+    return imageOut;
   }
 }

@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class AverageColor extends MarvinAbstractImagePlugin {
@@ -6,7 +9,12 @@ export default class AverageColor extends MarvinAbstractImagePlugin {
     this.load();
   }
   load() {}
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     let totalR = 0;
     let totalG = 0;
     let totalB = 0;

@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class Convolution extends MarvinAbstractImagePlugin {
@@ -10,9 +13,14 @@ export default class Convolution extends MarvinAbstractImagePlugin {
     Convolution.setAttribute("matrix", null);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     const matrix = Convolution.getAttribute("matrix");
-
+    let imageOut = imageIn.clone();
     if (matrix != null && matrix.length > 0) {
       for (let y = 0; y < imageIn.getHeight(); y++) {
         for (let x = 0; x < imageIn.getWidth(); x++) {
@@ -22,16 +30,17 @@ export default class Convolution extends MarvinAbstractImagePlugin {
             x >= matrix[0].length / 2 &&
             x < imageIn.getWidth() - matrix[0].length / 2
           ) {
-            this.applyMatrix(x, y, matrix, imageIn, imageOut);
+            imageOut = this.applyMatrix(x, y, matrix, imageIn, imageOut);
           } else {
-            imageOut.setIntColor(x, y, 0xff000000);
+            imageOut = imageOut.setIntColor(x, y, 0xff000000);
           }
         }
       }
     }
+    return imageOut;
   }
 
-  applyMatrix (x, y, matrix, imageIn, imageOut) {
+  applyMatrix (x:number, y:number, matrix:number[][], imageIn:MarvinImage, imageOut:MarvinImage) {
     let nx, ny;
     let resultRed = 0;
     let resultGreen = 0;
@@ -85,5 +94,7 @@ export default class Convolution extends MarvinAbstractImagePlugin {
       Math.floor(resultGreen),
       Math.floor(resultBlue)
     );
+
+    return imageOut;
   }
 }

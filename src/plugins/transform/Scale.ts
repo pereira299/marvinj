@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class Scale extends MarvinAbstractImagePlugin {
@@ -12,7 +15,13 @@ export default class Scale extends MarvinAbstractImagePlugin {
     Scale.setAttribute("newHeight", 0);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
     if (!previewMode) {
       const width = imageIn.getWidth();
       const height = imageIn.getHeight();
@@ -42,5 +51,6 @@ export default class Scale extends MarvinAbstractImagePlugin {
         }
       }
     }
+    return imageOut;
   }
 }

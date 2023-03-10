@@ -2,6 +2,9 @@ import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import MarvinJSUtils from "../../MarvinJSUtils";
 import Marvin from "../../MarvinFramework";
 import MarvinSegment from "../../image/MarvinSegment";
+import MarvinImage from "../../image/MarvinImage";
+import MarvinAttributes from "../../util/MarvinAttributes";
+import MarvinImageMask from "../../image/MarvinImageMask";
 
 export default class FindTextRegions extends MarvinAbstractImagePlugin {
   constructor() {
@@ -9,23 +12,30 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
     this.load();
   }
 
-  load () {
+  load() {
     FindTextRegions.setAttribute("maxWhiteSpace", 10);
     FindTextRegions.setAttribute("maxFontLineWidth", 10);
     FindTextRegions.setAttribute("minTextWidth", 30);
     FindTextRegions.setAttribute("grayScaleThreshold", 127);
   }
 
-  process (imageIn, imageOut, attrOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attrOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     // The image will be affected so it's generated a new instance
     imageIn = imageIn.clone();
 
     const maxWhiteSpace = FindTextRegions.getAttribute("maxWhiteSpace");
     const maxFontLineWidth = FindTextRegions.getAttribute("maxFontLineWidth");
     const minTextWidth = FindTextRegions.getAttribute("minTextWidth");
-    const grayScaleThreshold = FindTextRegions.getAttribute("grayScaleThreshold");
+    const grayScaleThreshold =
+      FindTextRegions.getAttribute("grayScaleThreshold");
 
-    Marvin.thresholding(imageIn, imageIn, grayScaleThreshold, true);
+    const marvin = new Marvin(imageIn);
+    imageIn = marvin.thresholding(grayScaleThreshold, true).output();
 
     const segments = [];
     for (let i = 0; i < imageIn.getHeight(); i++) {

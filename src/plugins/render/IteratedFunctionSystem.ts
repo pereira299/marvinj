@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
@@ -22,10 +25,15 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
     IteratedFunctionSystem.setAttribute("iterations", 1000000);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process (
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     this.loadRules();
     const iterations = IteratedFunctionSystem.getAttribute("iterations");
-
+    const imageOut = imageIn.clone();
     const x0 = 0;
     const y0 = 0;
     let x, y;
@@ -100,6 +108,7 @@ export default class IteratedFunctionSystem extends MarvinAbstractImagePlugin {
         imageOut.setIntColor(Math.floor(x), Math.floor(y), 255, 0);
       }
     }
+    return imageOut;
   }
 
   loadRules () {

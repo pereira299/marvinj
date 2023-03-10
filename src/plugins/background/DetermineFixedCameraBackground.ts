@@ -25,7 +25,12 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
     this.initialized = true;
   }
 
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     if (!this.initialized) {
       this.initialize(imageIn);
     }

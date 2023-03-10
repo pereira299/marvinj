@@ -2,6 +2,8 @@ import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import MarvinJSUtils from "../../MarvinJSUtils";
 import MarvinPoint from "../../util/MarvinPoint";
 import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinImage from "../../image/MarvinImage";
+import MarvinAttributes from "../../util/MarvinAttributes";
 
 export default class BoundaryFill extends MarvinAbstractImagePlugin {
 
@@ -21,13 +23,13 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
   }
 
   process (
-		imgIn, 
-		imgOut,
-		attributesOut,
-		mask, 
-		previewMode
+		imgIn: MarvinImage,
+		attributesOut: MarvinAttributes,
+		mask: MarvinImageMask, 
+		previewMode: boolean
 	)
 	{
+		const imgOut = imgIn.clone();
 		var l_list = new Array();
     	var 	l_point,
     			l_pointW,
@@ -118,6 +120,8 @@ export default class BoundaryFill extends MarvinAbstractImagePlugin {
     			}
     		}
     	}
+
+		return imgOut;
     };
 
   match (

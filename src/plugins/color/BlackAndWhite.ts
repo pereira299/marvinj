@@ -1,11 +1,13 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import GrayScale from "./GrayScale";
 
 export default class BlackAndWhite extends MarvinAbstractImagePlugin {
-
   MAX_RLEVEL: number;
   grayScale: GrayScale;
-  
+
   constructor() {
     super();
     this.MAX_RLEVEL = 0.03;
@@ -15,8 +17,19 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
     this.grayScale = new GrayScale();
     BlackAndWhite.setAttribute("level", 10);
   }
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
-    this.grayScale.process(imageIn, imageOut, attributesOut, mask, previewMode);
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
+    this.grayScale.process(
+    imageIn,
+    attributesOut,
+    mask,
+    previewMode
+  );
     const level = BlackAndWhite.getAttribute("level");
     const rlevel = (level / 100.0) * this.MAX_RLEVEL;
 
@@ -48,5 +61,7 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
         );
       }
     }
+
+    return imageOut;
   }
 }

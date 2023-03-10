@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin {
@@ -12,16 +15,24 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
     ThresholdingNeighborhood.setAttribute("thresholdPercentageOfAverage", 1.0);
   }
 
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
-    const neighborhoodSide = ThresholdingNeighborhood.getAttribute("neighborhoodSide");
-    const samplingPixelDistance = ThresholdingNeighborhood.getAttribute("samplingPixelDistance");
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const neighborhoodSide =
+      ThresholdingNeighborhood.getAttribute("neighborhoodSide");
+    const samplingPixelDistance = ThresholdingNeighborhood.getAttribute(
+      "samplingPixelDistance"
+    );
     const thresholdPercentageOfAverage = ThresholdingNeighborhood.getAttribute(
       "thresholdPercentageOfAverage"
     );
-
+    let imageOut = imageIn.clone();
     for (let y = 0; y < imageIn.getHeight(); y++) {
       for (let x = 0; x < imageIn.getWidth(); x++) {
-        this.theshold(
+        imageOut = this.threshold(
           imageIn,
           imageOut,
           x,
@@ -32,16 +43,18 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
         );
       }
     }
+
+    return imageOut;
   }
 
-  theshold(
-    image,
-    imageOut,
-    x,
-    y,
-    thresholdPercentageOfAverage,
-    side,
-    neighborhoodDistance
+  threshold(
+    image: MarvinImage,
+    imageOut: MarvinImage,
+    x: number,
+    y: number,
+    thresholdPercentageOfAverage: number,
+    side: number,
+    neighborhoodDistance: number
   ) {
     let min = -1;
     let max = -1;
@@ -77,5 +90,6 @@ export default class ThresholdingNeighborhood extends MarvinAbstractImagePlugin 
     } else {
       imageOut.setIntColor(x, y, 255, 255, 255, 255);
     }
+    return imageOut;
   }
 }

@@ -2,6 +2,8 @@ import MarvinImage from "../../image/MarvinImage";
 import Utils from "../../MarvinJSUtils";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import Marvin from "../../MarvinFramework"
+import MarvinAttributes from "../../util/MarvinAttributes";
+import MarvinImageMask from "../../image/MarvinImageMask";
 
 export default class Moravec extends MarvinAbstractImagePlugin {
 
@@ -26,12 +28,18 @@ export default class Moravec extends MarvinAbstractImagePlugin {
     Moravec.setAttribute("threshold", 0);
   }
 
-  process(imageIn, imageOut, attrOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attrOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     const matrixSize = Moravec.getAttribute("matrixSize");
     const threshold = Moravec.getAttribute("threshold");
 
-    const tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
-    Marvin.grayScale(imageIn, tempImage);
+    let tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
+    const marvin = new Marvin(tempImage);
+    tempImage = marvin.grayScale().output();
 
     const cornernessMap = Utils.createMatrix2D(
       tempImage.getWidth(),

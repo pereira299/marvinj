@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class Crop extends MarvinAbstractImagePlugin {
@@ -6,14 +9,21 @@ export default class Crop extends MarvinAbstractImagePlugin {
     this.load();
   }
 
-  load () {
+  load() {
     Crop.setAttribute("x", 0);
     Crop.setAttribute("y", 0);
     Crop.setAttribute("width", 0);
     Crop.setAttribute("height", 0);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+
+    const imageOut = imageIn.clone();
     const x = Crop.getAttribute("x");
     const y = Crop.getAttribute("y");
     const width = Crop.getAttribute("width");
@@ -26,5 +36,7 @@ export default class Crop extends MarvinAbstractImagePlugin {
         imageOut.setIntColor(i - x, j - y, imageIn.getIntColor(i, j));
       }
     }
+
+    return imageOut;
   }
 }

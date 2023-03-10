@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 
 export default class BrightnessAndContrast extends MarvinAbstractImagePlugin {
@@ -6,13 +9,19 @@ export default class BrightnessAndContrast extends MarvinAbstractImagePlugin {
     this.load();
   }
 
-  load () {
+  load() {
     // Attributes
     BrightnessAndContrast.setAttribute("brightness", 0);
     BrightnessAndContrast.setAttribute("contrast", 0);
   }
 
-  process (imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
+    const imageOut = imageIn.clone();
     let r, g, b;
     const l_brightness = BrightnessAndContrast.getAttribute("brightness");
     let l_contrast = BrightnessAndContrast.getAttribute("contrast");
@@ -88,5 +97,7 @@ export default class BrightnessAndContrast extends MarvinAbstractImagePlugin {
         );
       }
     }
+
+    return imageOut;
   }
 }

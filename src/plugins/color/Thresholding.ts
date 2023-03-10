@@ -1,3 +1,6 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 import GrayScale from "./GrayScale";
 
@@ -23,7 +26,12 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
     this.pluginGray = new GrayScale();
   }
 
-  process(imageIn, imageOut, attributesOut, mask, previewMode) {
+  process(
+    imageIn: MarvinImage,
+    attributesOut: MarvinAttributes,
+    mask: MarvinImageMask,
+    previewMode: boolean
+  ) {
     this.threshold = Thresholding.getAttribute("threshold");
     this.thresholdRange = Thresholding.getAttribute("thresholdRange");
     this.neighborhood = Thresholding.getAttribute("neighborhood");
@@ -33,9 +41,8 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
       this.thresholdRange = 255 - this.threshold;
     }
 
-    this.pluginGray.process(
+    const imageOut = this.pluginGray.process(
       imageIn,
-      imageOut,
       attributesOut,
       mask,
       previewMode
@@ -44,13 +51,13 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
     const bmask = mask.getMask();
 
     if (this.neighborhood == -1 && this.range == -1) {
-      this.hardThreshold(imageIn, imageOut, bmask);
+      return this.hardThreshold(imageIn, imageOut, bmask);
     } else {
-      this.contrastThreshold(imageIn, imageOut);
+      return this.contrastThreshold(imageIn, imageOut);
     }
   }
 
-  hardThreshold(imageIn, imageOut, mask) {
+  hardThreshold(imageIn:MarvinImage, imageOut: MarvinImage, mask: boolean[][]) {
     for (let y = 0; y < imageIn.getHeight(); y++) {
       for (let x = 0; x < imageIn.getWidth(); x++) {
         if (mask != null && !mask[x][y]) {
@@ -75,9 +82,10 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
         }
       }
     }
+    return imageOut;
   }
 
-  contrastThreshold(imageIn, imageOut) {
+  contrastThreshold(imageIn: MarvinImage, imageOut: MarvinImage) {
     this.range = 1;
     for (let x = 0; x < imageIn.getWidth(); x++) {
       for (let y = 0; y < imageIn.getHeight(); y++) {
@@ -90,6 +98,7 @@ export default class Thresholding extends MarvinAbstractImagePlugin {
         }
       }
     }
+    return imageOut;
   }
 
   checkNeighbors(x, y, neighborhoodX, neighborhoodY, img) {
