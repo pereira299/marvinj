@@ -6,12 +6,9 @@ import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 export default class GrayScale extends MarvinAbstractImagePlugin {
   constructor() {
     super();
-    this.load();
   }
 
-  load () {}
-
-  process (
+  process(
     imageIn: MarvinImage,
     attributesOut: MarvinAttributes,
     mask: MarvinImageMask,
@@ -23,7 +20,7 @@ export default class GrayScale extends MarvinAbstractImagePlugin {
     if (mask != null) {
       l_arrMask = mask.getMask();
     }
-
+    
     let r, g, b, finalColor;
     for (let x = 0; x < imageIn.getWidth(); x++) {
       for (let y = 0; y < imageIn.getHeight(); y++) {

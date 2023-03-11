@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "out",
+    "sourceMap": true
   }
 }

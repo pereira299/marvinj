@@ -16,19 +16,17 @@ export default class MarvinImage {
   arrBinaryColor: any;
   width: number;
   height: number;
-  onload: Function;
+  onload: any;
 
   constructor(
-    width: number = 100,
-    height: number = 100,
+    width = 100,
+    height = 100,
     colorModel: number | null = null
   ) {
     // properties
     if (colorModel == null) {
       colorModel = MarvinImage.COLOR_MODEL_RGB;
-    } else {
-      colorModel = colorModel;
-    }
+    } 
 
     if (width != null) {
       this.create(width, height);
@@ -53,11 +51,10 @@ export default class MarvinImage {
   }
 
   load(url: string): Promise<MarvinImage>{
-    const ref = this;
     return new Promise((resolve, reject) => {
       this.image = new canvas.Image();
       this.image.onload = () => {
-        const res = ref.callbackImageLoaded(ref);
+        const res = this.callbackImageLoaded(this);
         if (!res) reject(res);
         resolve(res);
       };
@@ -67,11 +64,10 @@ export default class MarvinImage {
   }
 
   loadFromBase64(base64: string): Promise<MarvinImage> {
-    const ref = this;
     return new Promise((resolve, reject) => {
       this.image = new canvas.Image();
       this.image.onload = () => {
-        const res = ref.callbackImageLoaded(ref);
+        const res = this.callbackImageLoaded(this);
         if (!res) reject(res);
         resolve(res);
       };
@@ -360,8 +356,11 @@ export default class MarvinImage {
   }
 
   getBuffer() {
+    const cv = canvas.createCanvas(this.imageData.width, this.imageData.height);
+    const ctx = cv.getContext("2d");
+    ctx.putImageData(this.imageData, 0, 0);
     //image data to base64
-    const dataURL = this.canvas.toDataURL("image/png");
+    const dataURL = cv.toDataURL("image/png");
     const base64Data = dataURL.replace(/^data:image\/png;base64,/, "");
     return Buffer.from(base64Data, "base64");
   }

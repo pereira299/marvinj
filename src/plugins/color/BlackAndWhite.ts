@@ -23,9 +23,9 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
     mask: MarvinImageMask,
     previewMode: boolean
   ) {
-    const imageOut = imageIn.clone();
-    this.grayScale.process(
-    imageIn,
+    let imageOut = imageIn.clone();
+    imageOut = this.grayScale.process(
+    imageOut,
     attributesOut,
     mask,
     previewMode
@@ -50,8 +50,8 @@ export default class BlackAndWhite extends MarvinAbstractImagePlugin {
           console.log("level:" + level);
           console.log("rlevel:" + rlevel);
         }
-
-        imageOut.setIntColor(
+        
+        imageOut = imageOut.setIntColor(
           x,
           y,
           255,

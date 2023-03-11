@@ -1,4 +1,7 @@
+import MarvinImage from "../../image/MarvinImage";
+import MarvinImageMask from "../../image/MarvinImageMask";
 import MarvinJSUtils from "../../MarvinJSUtils";
+import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 export default class DetermineFixedCameraBackground extends MarvinAbstractImagePlugin {
   
@@ -35,6 +38,8 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
       this.initialize(imageIn);
     }
 
+    let imageOut = imageIn.clone();
+
     for (let y = 0; y < imageIn.getHeight(); y++) {
       for (let x = 0; x < imageIn.getWidth(); x++) {
         const red = imageIn.getIntComponent0(x, y);
@@ -45,7 +50,7 @@ export default class DetermineFixedCameraBackground extends MarvinAbstractImageP
         this.weights[x][y][1][green / 10]++;
         this.weights[x][y][2][blue / 10]++;
 
-        imageOut.setIntColor(
+        imageOut = imageOut.setIntColor(
           x,
           y,
           255,

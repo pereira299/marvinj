@@ -90,7 +90,11 @@ export default class Marvin {
   }
 
   // Black And White
-  blackAndWhite(level) {
+  blackAndWhite(level:number) {
+    //check if level is a number between -100 and 100
+    if (level < -100 || level > 100) {
+      throw new Error("Level must be a number between -100 and 100");
+    }
     this.plugins.blackAndWhite = new BlackAndWhite();
     BlackAndWhite.setAttribute("level", level);
     this.image = this.plugins.blackAndWhite.process(
@@ -258,7 +262,7 @@ export default class Marvin {
   gaussianBlur(radius) {
     this.plugins.gaussianBlur = new GaussianBlur();
     const tempBlob = new MarvinBlob(this.image.width, this.image.height);
-    GaussianBlur.setAttribute("radius", tempBlob.getValue(radius, 3.0));
+    GaussianBlur.setAttribute("radius", tempBlob.getValue(radius, 1));
     this.image = this.plugins.gaussianBlur.process(
       this.image,
       null,
