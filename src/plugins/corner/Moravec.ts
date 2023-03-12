@@ -54,6 +54,9 @@ export default class Moravec extends MarvinAbstractImagePlugin {
 
     for (let y = 0; y < tempImage.getHeight(); y++) {
       for (let x = 0; x < tempImage.getWidth(); x++) {
+        if(y == Math.abs(tempImage.getHeight()/2) && x == Math.abs(tempImage.getWidth()/4)){
+          console.log("x: " + x + " y: " + y);
+        }
         cornernessMap[x][y] = this.c(x, y, matrixSize, tempImage);
 
         if (cornernessMap[x][y] < threshold) {
@@ -124,6 +127,7 @@ export default class Moravec extends MarvinAbstractImagePlugin {
             );
           }
         }
+        if()
         if (ret == -1 || temp < ret) {
           ret = temp;
         }
