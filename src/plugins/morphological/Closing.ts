@@ -25,17 +25,19 @@ export default class Closing extends MarvinAbstractImagePlugin {
     previewMode: boolean
   ) {
     const matrix = Closing.getAttribute("matrix");
-    let imgOut = imgIn.clone();
+    let imgOut = new MarvinImage(imgIn.getWidth(), imgIn.getHeight(), 1);
+    imgOut.loadFromImage(imgIn);
+    
     if (
-      imgIn.getColorModel() == MarvinImage.COLOR_MODEL_BINARY &&
+      imgOut.getColorModel() == MarvinImage.COLOR_MODEL_BINARY &&
       matrix != null
     ) {
+      
       const marvin = new Marvin(imgOut);
       imgOut = marvin.morphologicalDilation(matrix).output();
       MarvinImage.copyColorArray(imgOut, imgIn);
       imgOut = marvin.morphologicalDilation(matrix).output();
     }
-
     return imgOut;
   }
 }

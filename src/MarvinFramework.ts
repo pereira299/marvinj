@@ -29,45 +29,21 @@ import MarvinImageMask from "./image/MarvinImageMask";
 import MarvinBlob from "./image/MarvinBlob";
 import MarvinImage from "./image/MarvinImage";
 import * as fs from "fs";
+import MarvinJSUtils from "./MarvinJSUtils";
+import Flip from "./plugins/transform/Flip";
+import Rotate from "./plugins/transform/Rotate";
+import NoiseReduction from "./plugins/restoration/NoiseReduction";
 
 export default class Marvin {
-  plugins = {
-    alphaBoundary: new AlphaBoundary(),
-    averageColor: new AverageColor(),
-    blackAndWhite: new BlackAndWhite(),
-    boundaryFill: new BoundaryFill(),
-    brightnessAndContrast: new BrightnessAndContrast(),
-    colorChannel: new ColorChannel(),
-    combineByAlpha: new CombineByAlpha(),
-    morphologicalClosing: new Closing(),
-    crop: new Crop(),
-    morphologicalDilation: new Dilation(),
-    emboss: new Emboss(),
-    morphologicalErosion: new Erosion(),
-    findTextRegions: new FindTextRegions(),
-    floodfillSegmentation: new FloodfillSegmentation(),
-    gaussianBlur: new GaussianBlur(),
-    grayScale: new GrayScale(),
-    invertColors: new Invert(),
-    iteratedFunctionSystem: new IteratedFunctionSystem(),
-    mergePhotos: new MergePhotos(),
-    moravec: new Moravec(),
-    prewitt: new Prewitt(),
-    scale: new Scale(),
-    sepia: new Sepia(),
-    thresholding: new Thresholding(),
-    thresholdingNeighborhood: new ThresholdingNeighborhood(),
-    halftoneErrorDiffusion: new ErrorDiffusion(),
-  };
   private image: MarvinImage;
   constructor(image: MarvinImage) {
     this.image = image;
   }
   // Alpha Boundary
   alphaBoundary(radius) {
-    this.plugins.alphaBoundary = new AlphaBoundary();
+    const alphaBoundary = new AlphaBoundary();
     AlphaBoundary.setAttribute("radius", radius);
-    this.image = this.plugins.alphaBoundary.process(
+    this.image = alphaBoundary.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -78,26 +54,21 @@ export default class Marvin {
 
   // Average Color
   averageColor() {
-    this.plugins.averageColor = new AverageColor();
+    const averageColor = new AverageColor();
     const attrOut = new MarvinAttributes();
-    this.plugins.averageColor.process(
-      this.image,
-      attrOut,
-      MarvinImageMask.NULL_MASK,
-      false
-    );
+    averageColor.process(this.image, attrOut, MarvinImageMask.NULL_MASK, false);
     return attrOut.get("averageColor", null);
   }
 
   // Black And White
-  blackAndWhite(level:number) {
+  blackAndWhite(level: number) {
     //check if level is a number between -100 and 100
     if (level < -100 || level > 100) {
       throw new Error("Level must be a number between -100 and 100");
     }
-    this.plugins.blackAndWhite = new BlackAndWhite();
+    const blackAndWhite = new BlackAndWhite();
     BlackAndWhite.setAttribute("level", level);
-    this.image = this.plugins.blackAndWhite.process(
+    this.image = blackAndWhite.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -108,7 +79,7 @@ export default class Marvin {
 
   // BoundaryFill
   boundaryFill(x, y, color, threshold) {
-    this.plugins.boundaryFill = new BoundaryFill();
+    const boundaryFill = new BoundaryFill();
     BoundaryFill.setAttribute("x", x);
     BoundaryFill.setAttribute("y", y);
     BoundaryFill.setAttribute("color", color);
@@ -116,7 +87,7 @@ export default class Marvin {
       BoundaryFill.setAttribute("threshold", threshold);
     }
 
-    this.image = this.plugins.boundaryFill.process(
+    this.image = boundaryFill.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -127,10 +98,10 @@ export default class Marvin {
 
   // Brightness and Contrast
   brightnessAndContrast(brightness, contrast) {
-    this.plugins.brightnessAndContrast = new BrightnessAndContrast();
+    const brightnessAndContrast = new BrightnessAndContrast();
     BrightnessAndContrast.setAttribute("brightness", brightness);
     BrightnessAndContrast.setAttribute("contrast", contrast);
-    this.image = this.plugins.brightnessAndContrast.process(
+    this.image = brightnessAndContrast.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -141,11 +112,11 @@ export default class Marvin {
 
   // Color Channel
   colorChannel(red, green, blue) {
-    this.plugins.colorChannel = new ColorChannel();
+    const colorChannel = new ColorChannel();
     ColorChannel.setAttribute("red", red);
     ColorChannel.setAttribute("green", green);
     ColorChannel.setAttribute("blue", blue);
-    this.image = this.plugins.colorChannel.process(
+    this.image = colorChannel.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -156,12 +127,12 @@ export default class Marvin {
 
   // Color Channel
   crop(x: number, y: number, width: number, height: number) {
-    this.plugins.crop = new Crop();
+    const crop = new Crop();
     Crop.setAttribute("x", x);
     Crop.setAttribute("y", y);
     Crop.setAttribute("width", width);
     Crop.setAttribute("height", height);
-    this.image = this.plugins.crop.process(
+    this.image = crop.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -172,11 +143,11 @@ export default class Marvin {
 
   // Combine by Alpha
   combineByAlpha(imageOther: MarvinImage, x: number, y: number) {
-    this.plugins.combineByAlpha = new CombineByAlpha();
+    const combineByAlpha = new CombineByAlpha();
     CombineByAlpha.setAttribute("imageOther", imageOther);
     CombineByAlpha.setAttribute("x", x);
     CombineByAlpha.setAttribute("y", y);
-    this.image = this.plugins.combineByAlpha.process(
+    this.image = combineByAlpha.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -187,8 +158,8 @@ export default class Marvin {
 
   // Emboss
   emboss() {
-    this.plugins.emboss = new Emboss();
-    this.image = this.plugins.emboss.process(
+    const emboss = new Emboss();
+    this.image = emboss.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -199,8 +170,8 @@ export default class Marvin {
 
   // Emboss
   halftoneErrorDiffusion() {
-    this.plugins.halftoneErrorDiffusion = new ErrorDiffusion();
-    this.image = this.plugins.halftoneErrorDiffusion.process(
+    const halftoneErrorDiffusion = new ErrorDiffusion();
+    this.image = halftoneErrorDiffusion.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -211,31 +182,18 @@ export default class Marvin {
 
   // FindTextRegions
   findTextRegions(
-    maxWhiteSpace,
-    maxFontLineWidth,
-    minTextWidth,
-    grayScaleThreshold
+    maxWhiteSpace = 10,
+    maxFontLineWidth = 10,
+    minTextWidth = 30,
+    grayScaleThreshold = 127
   ) {
-    this.plugins.findTextRegions = new FindTextRegions();
+    const findTextRegions = new FindTextRegions();
     const attrOut = new MarvinAttributes();
-    const tempBlob = new MarvinBlob(this.image.width, this.image.height);
-    FindTextRegions.setAttribute(
-      "maxWhiteSpace",
-      tempBlob.getValue(maxWhiteSpace, 10)
-    );
-    FindTextRegions.setAttribute(
-      "maxFontLineWidth",
-      tempBlob.getValue(maxFontLineWidth, 10)
-    );
-    FindTextRegions.setAttribute(
-      "minTextWidth",
-      tempBlob.getValue(minTextWidth, 30)
-    );
-    FindTextRegions.setAttribute(
-      "grayScaleThreshold",
-      tempBlob.getValue(grayScaleThreshold, 127)
-    );
-    this.plugins.findTextRegions.process(
+    FindTextRegions.setAttribute("maxWhiteSpace", maxWhiteSpace);
+    FindTextRegions.setAttribute("maxFontLineWidth", maxFontLineWidth);
+    FindTextRegions.setAttribute("minTextWidth", minTextWidth);
+    FindTextRegions.setAttribute("grayScaleThreshold", grayScaleThreshold);
+    findTextRegions.process(
       this.image,
       attrOut,
       MarvinImageMask.NULL_MASK,
@@ -246,10 +204,10 @@ export default class Marvin {
 
   // Floodfill Segmentation
   floodfillSegmentation() {
-    this.plugins.floodfillSegmentation = new FloodfillSegmentation();
+    const floodfillSegmentation = new FloodfillSegmentation();
     const attrOut = new MarvinAttributes();
     FloodfillSegmentation.setAttribute("returnType", "MarvinSegment");
-    this.plugins.floodfillSegmentation.process(
+    floodfillSegmentation.process(
       this.image,
       attrOut,
       MarvinImageMask.NULL_MASK,
@@ -260,10 +218,9 @@ export default class Marvin {
 
   // Gaussian Blur
   gaussianBlur(radius) {
-    this.plugins.gaussianBlur = new GaussianBlur();
-    const tempBlob = new MarvinBlob(this.image.width, this.image.height);
-    GaussianBlur.setAttribute("radius", tempBlob.getValue(radius, 1));
-    this.image = this.plugins.gaussianBlur.process(
+    const gaussianBlur = new GaussianBlur();
+    GaussianBlur.setAttribute("radius", radius);
+    this.image = gaussianBlur.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -274,8 +231,8 @@ export default class Marvin {
 
   // Invert
   invertColors() {
-    this.plugins.invertColors = new Invert();
-    this.image = this.plugins.invertColors.process(
+    const invertColors = new Invert();
+    this.image = invertColors.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -285,10 +242,10 @@ export default class Marvin {
   }
 
   iteratedFunctionSystem(rules: string, iterations: number) {
-    this.plugins.iteratedFunctionSystem = new IteratedFunctionSystem();
+    const iteratedFunctionSystem = new IteratedFunctionSystem();
     IteratedFunctionSystem.setAttribute("rules", rules);
     IteratedFunctionSystem.setAttribute("iterations", iterations);
-    this.image = this.plugins.iteratedFunctionSystem.process(
+    this.image = iteratedFunctionSystem.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -299,8 +256,8 @@ export default class Marvin {
 
   // GrayScale
   grayScale() {
-    this.plugins.grayScale = new GrayScale();
-    this.image = this.plugins.grayScale.process(
+    const grayScale = new GrayScale();
+    this.image = grayScale.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -311,32 +268,44 @@ export default class Marvin {
 
   //Merge Photos
   mergePhotos(images: MarvinImage[], threshold: number) {
-    this.plugins.mergePhotos = new MergePhotos();
+    const mergePhotos = new MergePhotos();
+    if (!threshold) threshold = 0.5;
     MergePhotos.setAttribute("threshold", threshold);
-    this.image = this.plugins.mergePhotos.process(images, this.image);
+    this.image = mergePhotos.process(images, this.image);
     return this;
   }
 
   // Moravec
   moravec(matrixSize, threshold) {
-    this.plugins.moravec = new Moravec();
+    const moravec = new Moravec();
     const attrOut = new MarvinAttributes();
     Moravec.setAttribute("matrixSize", matrixSize);
     Moravec.setAttribute("threshold", threshold);
-    this.plugins.moravec.process(
-      this.image,
-      attrOut,
-      MarvinImageMask.NULL_MASK,
-      false
-    );
-    return attrOut.get("cornernessMap");
+    moravec.process(this.image, attrOut, MarvinImageMask.NULL_MASK, false);
+    const res: number[][] = attrOut.get("cornernessMap");
+    const coords = [];
+    res.forEach((_, i) => {
+      _.forEach((_, j) => {
+        if (res[i][j] > 0) {
+          coords.push({ x: i, y: j });
+        }
+      });
+    });
+    return coords;
   }
 
   // Morphological Dilation
-  morphologicalDilation(matrix) {
-    this.plugins.morphologicalDilation = new Dilation();
+  morphologicalDilation(matrix?: number[][]) {
+    const morphologicalDilation = new Dilation();
+    if (!matrix) {
+      matrix = MarvinJSUtils.createMatrix2D(
+        this.image.width,
+        this.image.height,
+        1
+      );
+    }
     Dilation.setAttribute("matrix", matrix);
-    this.image = this.plugins.morphologicalDilation.process(
+    this.image = morphologicalDilation.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -346,10 +315,17 @@ export default class Marvin {
   }
 
   // Morphological Erosion
-  morphologicalErosion(matrix) {
-    this.plugins.morphologicalErosion = new Erosion();
+  morphologicalErosion(matrix?: number[][]) {
+    const morphologicalErosion = new Erosion();
+    if (!matrix) {
+      matrix = MarvinJSUtils.createMatrix2D(
+        this.image.width,
+        this.image.height,
+        1
+      );
+    }
     Erosion.setAttribute("matrix", matrix);
-    this.image = this.plugins.morphologicalErosion.process(
+    this.image = morphologicalErosion.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -359,10 +335,17 @@ export default class Marvin {
   }
 
   // Morphological Closing
-  morphologicalClosing(matrix) {
-    this.plugins.morphologicalClosing = new Closing();
+  morphologicalClosing(matrix?: number[][]) {
+    const morphologicalClosing = new Closing();
+    if (!matrix) {
+      matrix = MarvinJSUtils.createMatrix2D(
+        this.image.width,
+        this.image.height,
+        1
+      );
+    }
     Closing.setAttribute("matrix", matrix);
-    this.image = this.plugins.morphologicalClosing.process(
+    this.image = morphologicalClosing.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -373,10 +356,9 @@ export default class Marvin {
 
   // Prewitt
   prewitt(intensity) {
-    this.plugins.prewitt = new Prewitt();
-    const tempBlob = new MarvinBlob(this.image.width, this.image.height);
-    Prewitt.setAttribute("intensity", tempBlob.getValue(intensity, 1.0));
-    this.image = this.plugins.prewitt.process(
+    const prewitt = new Prewitt();
+    Prewitt.setAttribute("intensity", intensity);
+    this.image = prewitt.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -387,7 +369,7 @@ export default class Marvin {
 
   // Scale
   scale(newWidth, newHeight) {
-    this.plugins.scale = new Scale();
+    const scale = new Scale();
     if (newHeight == null) {
       const factor = this.image.getHeight() / this.image.getWidth();
       newHeight = Math.floor(factor * newWidth);
@@ -395,7 +377,7 @@ export default class Marvin {
 
     Scale.setAttribute("newWidth", newWidth);
     Scale.setAttribute("newHeight", newHeight);
-    this.image = this.plugins.scale.process(
+    this.image = scale.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -406,9 +388,9 @@ export default class Marvin {
 
   // Sepia
   sepia(intensity) {
-    this.plugins.sepia = new Sepia();
+    const sepia = new Sepia();
     Sepia.setAttribute("intensity", intensity);
-    this.image = this.plugins.sepia.process(
+    this.image = sepia.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -418,11 +400,11 @@ export default class Marvin {
   }
 
   // Thresholding
-  thresholding(threshold:number, thresholdRange: boolean) {
-    this.plugins.thresholding = new Thresholding();
+  thresholding(threshold: number, thresholdRange: boolean) {
+    const thresholding = new Thresholding();
     Thresholding.setAttribute("threshold", threshold);
     Thresholding.setAttribute("thresholdRange", thresholdRange);
-    this.image = this.plugins.thresholding.process(
+    this.image = thresholding.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -437,7 +419,7 @@ export default class Marvin {
     neighborhoodSide,
     samplingPixelDistance
   ) {
-    this.plugins.thresholdingNeighborhood = new ThresholdingNeighborhood();
+    const thresholdingNeighborhood = new ThresholdingNeighborhood();
     ThresholdingNeighborhood.setAttribute(
       "thresholdPercentageOfAverage",
       thresholdPercentageOfAverage
@@ -447,7 +429,7 @@ export default class Marvin {
       "samplingPixelDistance",
       samplingPixelDistance
     );
-    this.image = this.plugins.thresholdingNeighborhood.process(
+    this.image = thresholdingNeighborhood.process(
       this.image,
       null,
       MarvinImageMask.NULL_MASK,
@@ -457,6 +439,53 @@ export default class Marvin {
     return this;
   }
 
+  // Flip Horizontal
+  flipHorizontal() {
+    const flip = new Flip();
+    Flip.setAttribute("flip", "horizontal");
+    this.image = flip.process(this.image, null, MarvinImageMask.NULL_MASK);
+    return this;
+  }
+
+  // Flip Vertical
+  flipVertical() {
+    const flip = new Flip();
+    Flip.setAttribute("flip", "vertical");
+    this.image = flip.process(this.image, null, MarvinImageMask.NULL_MASK);
+    return this;
+  }
+
+  // Flip Both
+  flipBoth() {
+    const flip = new Flip();
+    Flip.setAttribute("flip", "both");
+    this.image = flip.process(this.image, null, MarvinImageMask.NULL_MASK);
+    return this;
+  }
+
+  rotate(angle: number) {
+    const rotate = new Rotate();
+    this.image = rotate.process(
+      this.image,
+      angle,
+      null,
+      MarvinImageMask.NULL_MASK,
+      false
+    );
+    return this;
+  }
+
+  //Reduce Noise
+  /**
+   * @param iter number of iterations to reduce noise. Default is 20
+   * @param threshold threshold to reduce noise. Default is 0.4
+   * @returns an instance of Marvin
+   */
+  noiseReduction(iter = 20, threshold = 0.4) {
+    const reduceNoise = new NoiseReduction();
+    this.image = reduceNoise.process(this.image, iter, threshold);
+    return this;
+  }
   //Output
   output() {
     return this.image;

@@ -22,6 +22,11 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
     this.GREEN = 1;
     this.BLUE = 2;
 
+    this.kernelMatrix = null;
+    this.resultMatrix = null;
+    this.appiledkernelMatrix = null;
+    this.radius = null;
+
     GaussianBlur.setAttribute("radius", 3);
   }
 
@@ -32,6 +37,8 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
     previewMode: boolean
   ) {
     this.radius = GaussianBlur.getAttribute("radius");
+    if(!this.radius) this.radius = 10;
+    
     const imageOut = imageIn.clone();
     const l_imageWidth = imageIn.getWidth();
     const l_imageHeight = imageIn.getHeight();
@@ -67,12 +74,23 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
         if (l_arrMask != null && !l_arrMask[x][y]) {
           continue;
         }
+        // console.log(
+        //   "R: " + this.resultMatrix[x][y][this.RED],
+        //   " G: " + this.resultMatrix[x][y][this.GREEN],
+        //   " B: " + this.resultMatrix[x][y][this.BLUE]
+        // );
+        // console.log("applied: " + this.appiledkernelMatrix[x][y]);
         this.resultMatrix[x][y][this.RED] =
           (this.resultMatrix[x][y][0] / this.appiledkernelMatrix[x][y]) % 256;
         this.resultMatrix[x][y][this.GREEN] =
           (this.resultMatrix[x][y][1] / this.appiledkernelMatrix[x][y]) % 256;
         this.resultMatrix[x][y][this.BLUE] =
           (this.resultMatrix[x][y][2] / this.appiledkernelMatrix[x][y]) % 256;
+        // console.log(
+        //   "R: " + this.resultMatrix[x][y][this.RED],
+        //   " G: " + this.resultMatrix[x][y][this.GREEN],
+        //   " B: " + this.resultMatrix[x][y][this.BLUE]
+        // );
         imageOut.setIntColor(
           x,
           y,
@@ -83,6 +101,13 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
         );
       }
     }
+
+    // console.log(
+    //   "out R: " + this.resultMatrix[0][0][this.RED],
+    //   " G: " + this.resultMatrix[0][0][this.GREEN],
+    //   " B: " + this.resultMatrix[0][0][this.BLUE],
+    //   "Alpha: " + imageOut.getAlphaComponent(0, 0)
+    // );
     return imageOut;
   }
 
@@ -90,11 +115,13 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
    * Calc Gaussian Matrix.
    */
   getGaussianKernel() {
+    console.log("radius: " + this.radius);
+    
     const l_matrix = MarvinJSUtils.createMatrix2D(
       this.radius * 2 + 1,
-      this.radius * 2 + 1,
-      0
+      this.radius * 2 + 1
     );
+    console.log(l_matrix);
     const l_q = this.radius / 3.0;
     let l_distance;
     let l_x;
@@ -110,6 +137,7 @@ export default class GaussianBlur extends MarvinAbstractImagePlugin {
           Math.exp(-(l_distance * l_distance) / (2.0 * l_q * l_q));
       }
     }
+    console.log(l_matrix);
     return l_matrix;
   }
 

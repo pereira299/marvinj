@@ -18,16 +18,13 @@ export default class MarvinImage {
   height: number;
   onload: any;
 
-  constructor(
-    width = 100,
-    height = 100,
-    colorModel: number | null = null
-  ) {
+  constructor(width = 100, height = 100, colorModel: number | null = null) {
     // properties
-    if (colorModel == null) {
+    if (!colorModel) {
       colorModel = MarvinImage.COLOR_MODEL_RGB;
-    } 
+    }
 
+    this.colorModel = colorModel;
     if (width != null) {
       this.create(width, height);
     }
@@ -50,7 +47,15 @@ export default class MarvinImage {
     this.create(width, height);
   }
 
-  load(url: string): Promise<MarvinImage>{
+  loadFromImage(imgIn: MarvinImage) {
+    this.ctx?.drawImage(imgIn.canvas, 0, 0);
+    this.imageData =
+      this.ctx?.getImageData(0, 0, this.width, this.height) ||
+      new canvas.ImageData(0, 0);
+    return this;
+  }
+
+  load(url: string): Promise<MarvinImage> {
     return new Promise((resolve, reject) => {
       this.image = new canvas.Image();
       this.image.onload = () => {
@@ -103,16 +108,18 @@ export default class MarvinImage {
     }
   }
 
-  clone() {
+  clone(all = true) {
     const image = new MarvinImage(
       this.getWidth(),
       this.getHeight(),
       this.colorModel
     );
-    image.canvas = this.canvas;
-    image.ctx = this.ctx;
-    image.imageData = this.imageData;
-    image.image = this.image;
+    if (all) {
+      image.canvas = this.canvas;
+      image.ctx = this.ctx;
+      image.imageData = this.imageData;
+      image.image = this.image;
+    }
     return MarvinImage.copyColorArray(this, image);
   }
 
@@ -287,7 +294,6 @@ export default class MarvinImage {
   download(filepath: string) {
     const dataURL = this.canvas.toDataURL("image/png");
     const base64Data = dataURL.replace(/^data:image\/png;base64,/, "");
-    console.log(base64Data);
     fs.writeFileSync(filepath, base64Data, "base64");
   }
 

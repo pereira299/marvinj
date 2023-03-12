@@ -6,7 +6,7 @@ export default class MarvinImageMask {
   height: number;
   arrMask: boolean[][] | null;
 
-  constructor(w, h, mask?: boolean[][]) {
+  constructor(w:number, h:number, mask?: boolean[][]) {
     if (mask != null) {
       this.arrMask = mask;
       this.width = mask.length;

@@ -44,4 +44,8 @@ export default class MarvinMath {
     const dz = z1 - z2;
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
+
+  static degToRad(deg) {
+    return (deg * Math.PI) / 180;
+  }
 }

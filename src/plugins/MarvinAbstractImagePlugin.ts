@@ -1,3 +1,5 @@
+import MarvinAttributes from "../util/MarvinAttributes";
+
 export default class MarvinAbstractImagePlugin {
 	static attributes = {};
 	constructor() {}
@@ -8,6 +10,10 @@ export default class MarvinAbstractImagePlugin {
 	
 	static getAttribute(label){
 		return this.attributes[label];
+	}
+
+	static getAttributes(){
+		return new MarvinAttributes(this.attributes);
 	}
 
 }

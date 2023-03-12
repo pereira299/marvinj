@@ -39,7 +39,7 @@ export default class MarvinBlob {
   }
 
   public getValue(x: number, y: number): boolean {
-	console.log(x, y);
+	  console.log(x, y);
     return this.pixels[x][y];
   }
 

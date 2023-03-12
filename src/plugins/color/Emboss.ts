@@ -6,19 +6,17 @@ import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
 export default class Emboss extends MarvinAbstractImagePlugin {
   constructor() {
     super();
-    this.load();
   }
 
-  load () {}
-
-  process (
+  process(
     imageIn: MarvinImage,
     attributesOut: MarvinAttributes,
     mask: MarvinImageMask,
     previewMode: boolean
   ) {
     const l_arrMask = mask.getMask();
-    const imageOut = imageIn.clone();
+    const imageOut = imageIn.clone(false);
+
     for (let x = 0; x < imageIn.getWidth(); x++) {
       for (let y = 0; y < imageIn.getHeight(); y++) {
         if (l_arrMask != null && !l_arrMask[x][y]) {

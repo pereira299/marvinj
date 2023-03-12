@@ -46,7 +46,7 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
 
     const processed = MarvinJSUtils.createMatrix2D(
       imageIn.getWidth(),
-      imageIn.getHeight,
+      imageIn.getHeight(),
       false
     );
 

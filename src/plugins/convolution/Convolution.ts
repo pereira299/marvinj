@@ -20,6 +20,7 @@ export default class Convolution extends MarvinAbstractImagePlugin {
     previewMode: boolean
   ) {
     const matrix = Convolution.getAttribute("matrix");
+    console.log("matrix: ", matrix);
     let imageOut = imageIn.clone();
     if (matrix != null && matrix.length > 0) {
       for (let y = 0; y < imageIn.getHeight(); y++) {
@@ -72,20 +73,20 @@ export default class Convolution extends MarvinAbstractImagePlugin {
     resultRed = Math.abs(resultRed);
     resultGreen = Math.abs(resultGreen);
     resultBlue = Math.abs(resultBlue);
-
     // allow the combination of multiple applications
-    resultRed += imageOut.getIntComponent0(x, y);
-    resultGreen += imageOut.getIntComponent1(x, y);
-    resultBlue += imageOut.getIntComponent2(x, y);
-
-    resultRed = Math.min(resultRed, 255);
-    resultGreen = Math.min(resultGreen, 255);
-    resultBlue = Math.min(resultBlue, 255);
-
-    resultRed = Math.max(resultRed, 0);
-    resultGreen = Math.max(resultGreen, 0);
-    resultBlue = Math.max(resultBlue, 0);
-
+    // resultRed += imageOut.getIntComponent0(x, y);
+    // resultGreen += imageOut.getIntComponent1(x, y);
+    // resultBlue += imageOut.getIntComponent2(x, y);
+    
+    // resultRed = Math.min(resultRed, 255);
+    // resultGreen = Math.min(resultGreen, 255);
+    // resultBlue = Math.min(resultBlue, 255);
+    
+    // resultRed = Math.max(resultRed, 0);
+    // resultGreen = Math.max(resultGreen, 0);
+    // resultBlue = Math.max(resultBlue, 0);
+    
+    console.log("R: " + Math.floor(resultRed), " G: " + Math.floor(resultGreen), " B: " + Math.floor(resultBlue));
     imageOut.setIntColor(
       x,
       y,
