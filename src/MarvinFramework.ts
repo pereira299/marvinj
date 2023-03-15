@@ -33,6 +33,8 @@ import MarvinJSUtils from "./MarvinJSUtils";
 import Flip from "./plugins/transform/Flip";
 import Rotate from "./plugins/transform/Rotate";
 import NoiseReduction from "./plugins/restoration/NoiseReduction";
+import RemoveBackground from "./plugins/background/RemoveBackground";
+import DrawLine from "./plugins/draw/DrawLine";
 
 export default class Marvin {
   private image: MarvinImage;
@@ -276,22 +278,15 @@ export default class Marvin {
   }
 
   // Moravec
-  moravec(matrixSize, threshold) {
+  moravec(matrixSize, threshold, preview = false) {
     const moravec = new Moravec();
     const attrOut = new MarvinAttributes();
     Moravec.setAttribute("matrixSize", matrixSize);
     Moravec.setAttribute("threshold", threshold);
-    moravec.process(this.image, attrOut, MarvinImageMask.NULL_MASK, false);
-    const res: number[][] = attrOut.get("cornernessMap");
-    const coords = [];
-    res.forEach((_, i) => {
-      _.forEach((_, j) => {
-        if (res[i][j] > 0) {
-          coords.push({ x: i, y: j });
-        }
-      });
-    });
-    return coords;
+    moravec.process(this.image, attrOut, MarvinImageMask.NULL_MASK, preview);
+    const res = attrOut.get("cornernessMap");
+    
+    return res;
   }
 
   // Morphological Dilation
@@ -402,12 +397,12 @@ export default class Marvin {
   // Thresholding
   thresholding(threshold: number, thresholdRange: boolean) {
     const thresholding = new Thresholding();
+    const mask = new MarvinImageMask(this.image.getWidth(), this.image.getHeight());
     Thresholding.setAttribute("threshold", threshold);
-    Thresholding.setAttribute("thresholdRange", thresholdRange);
     this.image = thresholding.process(
       this.image,
       null,
-      MarvinImageMask.NULL_MASK,
+      mask,
       false
     );
     return this;
@@ -484,6 +479,48 @@ export default class Marvin {
   noiseReduction(iter = 20, threshold = 0.4) {
     const reduceNoise = new NoiseReduction();
     this.image = reduceNoise.process(this.image, iter, threshold);
+    return this;
+  }
+
+
+  //Remove Background
+  /**
+   * @param threshold threshold to remove background. Default is 0.4
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin('image.jpg');
+   * marvin.removeBackground(0.4);
+   * marvin.save('image.jpg');
+    */
+  removeBackground(threshold = 0.4) {
+    const removeBackground = new RemoveBackground();
+    this.image = removeBackground.process(this.image, null, MarvinImageMask.NULL_MASK, true);
+    return this;
+  }
+
+  //Draw Line
+  /**
+   * @param x1 x coordinate of the first point
+   * @param y1 y coordinate of the first point
+   * @param x2 x coordinate of the second point
+   * @param y2 y coordinate of the second point
+   * @param color color of the line. default is #000000
+   * @param weight weight of the line. default is 1
+   * @returns an instance of Marvin
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * @example
+   * const marvin = new Marvin('image.jpg');
+   * marvin.drawLine(0, 0, 100, 100, '#000000', 1).save('image.jpg');
+    */
+  drawLine(x1: number, y1: number, x2: number, y2: number, color = "#000000", weight = 1) {
+    const drawLine = new DrawLine();
+    DrawLine.setAttribute("x1", x1);
+    DrawLine.setAttribute("y1", y1);
+    DrawLine.setAttribute("x2", x2);
+    DrawLine.setAttribute("y2", y2);
+    DrawLine.setAttribute("color", color);
+    DrawLine.setAttribute("weight", weight);
+    this.image = drawLine.process(this.image);
     return this;
   }
   //Output

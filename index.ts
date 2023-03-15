@@ -9,9 +9,11 @@ const url2 = "https://marvinproject.net/images/pluginsOut/noiseReductionIn.jpg";
 const url3 = "https://marvinj.org/images/cheetah.jpg"
 
 const main = async () => {
-  const image = await new MarvinImage(635, 424).load(url);
-  const image2 = await new MarvinImage(240, 320).load(url2);
+  // const image = await new MarvinImage(635, 424).load(url);
+  // const image2 = await new MarvinImage(240, 320).load(url2);
+  console.time("load");
   const image3 = await new MarvinImage(240, 320).load(url3);
+  console.timeEnd("load");
   // alphaBoundary
   // new Marvin(image).alphaBoundary(50).save("output/alphaBoundary.png");-----No changes-----
   // averageColor
@@ -43,7 +45,7 @@ const main = async () => {
   // gaussianBlur
   // new Marvin(image).gaussianBlur(10).save("output/gaussianBlur.png");
   // grayScale
-  // new Marvin(image).grayScale().save("output/grayScale.png");
+  // new Marvin(image3).grayScale().save("output/grayScale.png");
   // invertColors
   // new Marvin(image).invertColors().save("output/invertColors.png");
   // iteratedFunctionSystem
@@ -52,7 +54,8 @@ const main = async () => {
   // new Marvin(image).mergePhotos([image], 0.5).save("output/mergePhotos.png");
   // moravec
   // new Marvin(image).blackAndWhite(15).emboss().save("output/emboss2.png");
-  console.log(new Marvin(image3).moravec(3, 70));
+  // x: 156 y: 491
+  // console.log(new Marvin(image3).moravec(3, 600, true));
   // prewitt
   // new Marvin(image).prewitt(1).save("output/prewitt.png"); //-----No changes-----
   // scale
@@ -60,7 +63,7 @@ const main = async () => {
   // sepia
   // new Marvin(image).sepia(20).save("output/sepia.png");
   // thresholding
-  // new Marvin(image).thresholding(100, true).save("output/thresholding.png");
+  new Marvin(image3).thresholding(100, true).save("output/thresholding.png");
   // thresholdingNeighborhood
   // new Marvin(image).thresholdingNeighborhood(100,null, 20).save("output/thresholdingNeighborhood.png");  -----No changes-----
   // halftoneErrorDiffusion
@@ -77,7 +80,8 @@ const main = async () => {
   // new Marvin(image).rotate(45).save("output/rotate45.png");
   // Noise Reduction
   // new Marvin(image2).noiseReduction().save("output/noiseReduction.png");
-  
+  // Remove Background
+  new Marvin(image3).removeBackground().save("output/removeBackground.png");
 };
 
 main();

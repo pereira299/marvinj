@@ -1,12 +1,11 @@
 import MarvinImage from "../../image/MarvinImage";
 import Utils from "../../MarvinJSUtils";
 import MarvinAbstractImagePlugin from "../MarvinAbstractImagePlugin";
-import Marvin from "../../MarvinFramework"
+import Marvin from "../../MarvinFramework";
 import MarvinAttributes from "../../util/MarvinAttributes";
 import MarvinImageMask from "../../image/MarvinImageMask";
 
 export default class Moravec extends MarvinAbstractImagePlugin {
-
   static directions = [
     [1, 0],
     [-1, 0],
@@ -37,9 +36,12 @@ export default class Moravec extends MarvinAbstractImagePlugin {
     const matrixSize = Moravec.getAttribute("matrixSize");
     const threshold = Moravec.getAttribute("threshold");
 
-    let tempImage = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
-    const marvin = new Marvin(tempImage);
-    tempImage = marvin.grayScale().output();
+    const imageOut = imageIn.clone();
+    const marvin = new Marvin(imageOut);
+    console.time("grayScale");
+    const tempImage = marvin.grayScale().output();
+    console.timeEnd("grayScale");
+    new Marvin(tempImage).save("output/temp.png");
 
     const cornernessMap = Utils.createMatrix2D(
       tempImage.getWidth(),
@@ -54,9 +56,6 @@ export default class Moravec extends MarvinAbstractImagePlugin {
 
     for (let y = 0; y < tempImage.getHeight(); y++) {
       for (let x = 0; x < tempImage.getWidth(); x++) {
-        if(y == Math.abs(tempImage.getHeight()/2) && x == Math.abs(tempImage.getWidth()/4)){
-          console.log("x: " + x + " y: " + y);
-        }
         cornernessMap[x][y] = this.c(x, y, matrixSize, tempImage);
 
         if (cornernessMap[x][y] < threshold) {
@@ -64,20 +63,35 @@ export default class Moravec extends MarvinAbstractImagePlugin {
         }
       }
     }
-
+    
+    const coords = [];
     for (let x = 0; x < cornernessMap.length; x++) {
       for (let y = 0; y < cornernessMap[x].length; y++) {
         cornernessMapOut[x][y] = this.nonmax(x, y, matrixSize, cornernessMap);
 
         if (cornernessMapOut[x][y] > 0) {
           cornernessMapOut[x][y] = 1;
+          coords.push({ x, y });
         }
       }
     }
 
     if (attrOut != null) {
-      attrOut.set("cornernessMap", cornernessMapOut);
+      attrOut.set("cornernessMap", coords);
     }
+  }
+
+  drawDots(cornernessMap, imageIn: MarvinImage) {
+    const imageOut = imageIn.clone();
+    cornernessMap.forEach((coord) => {
+      imageOut.setIntColor(coord.x-1, coord.y, 255, 0,0);
+      imageOut.setIntColor(coord.x, coord.y, 255, 0, 0);
+      imageOut.setIntColor(coord.x, coord.y-1, 255, 0,0);
+      imageOut.setIntColor(coord.x, coord.y+1, 255, 0,0);
+      imageOut.setIntColor(coord.x+1, coord.y, 255, 0,0);
+    });
+
+    return imageOut;
   }
 
   nonmax(x, y, matrixSize, matrix) {
@@ -100,8 +114,8 @@ export default class Moravec extends MarvinAbstractImagePlugin {
     }
     return matrix[x][y];
   }
-
   
+
 
   c(x, y, matrixSize, image) {
     let ret = -1;
@@ -118,8 +132,8 @@ export default class Moravec extends MarvinAbstractImagePlugin {
         for (let i = -s; i <= s; i++) {
           for (let j = -s; j <= s; j++) {
             temp += Math.pow(
-              image.getIntComponent0(x + i, y + j) -
-                image.getIntComponent0(
+              image.getIntComponent1(x + i, y + j) -
+                image.getIntComponent1(
                   x + i + Moravec.directions[d][0],
                   y + j + Moravec.directions[d][1]
                 ),
@@ -127,7 +141,6 @@ export default class Moravec extends MarvinAbstractImagePlugin {
             );
           }
         }
-        if()
         if (ret == -1 || temp < ret) {
           ret = temp;
         }
