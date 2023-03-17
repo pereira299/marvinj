@@ -39,7 +39,7 @@ export default class Moravec extends MarvinAbstractImagePlugin {
     const imageOut = imageIn.clone();
     const marvin = new Marvin(imageOut);
     console.time("grayScale");
-    const tempImage = marvin.grayScale().output();
+    const tempImage = marvin.emboss().blackAndWhite(100).noiseReduction(5, 0.8).output();
     console.timeEnd("grayScale");
     new Marvin(tempImage).save("output/temp.png");
 
@@ -76,6 +76,10 @@ export default class Moravec extends MarvinAbstractImagePlugin {
       }
     }
 
+    if(previewMode){
+      const prev = this.drawDots(coords, imageIn);
+      new Marvin(prev).save("output/preview-moravec.png");
+    }
     if (attrOut != null) {
       attrOut.set("cornernessMap", coords);
     }

@@ -6,10 +6,10 @@ import marvinJSUtils from "./src/MarvinJSUtils";
 const url =
   "https://cursinhoparamedicina.com.br/wp-content/uploads/2022/10/Paisagem-1.jpg";
 const url2 = "https://marvinproject.net/images/pluginsOut/noiseReductionIn.jpg";
-const url3 = "https://marvinj.org/images/cheetah.jpg"
+const url3 = "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa-ou-nao.jpg"
 
 const main = async () => {
-  // const image = await new MarvinImage(635, 424).load(url);
+  const image = await new MarvinImage(635, 424).load(url);
   // const image2 = await new MarvinImage(240, 320).load(url2);
   console.time("load");
   const image3 = await new MarvinImage(240, 320).load(url3);
@@ -35,7 +35,7 @@ const main = async () => {
   // morphologicalDilation
   // new Marvin(image).morphologicalDilation([[0, 0, 0], [0, 0, 0]]).save("output/morphologicalDilation.png");
   // emboss
-  // new Marvin(image).emboss().save("output/emboss.png");
+  new Marvin(image3).emboss().save("output/emboss.png");
   // morphologicalErosion
   // new Marvin(image).morphologicalErosion([[0, 0, 0], [0, 0, 0]]).save("output/morphologicalErosion.png");
   // findTextRegions
@@ -55,7 +55,7 @@ const main = async () => {
   // moravec
   // new Marvin(image).blackAndWhite(15).emboss().save("output/emboss2.png");
   // x: 156 y: 491
-  // console.log(new Marvin(image3).moravec(3, 600, true));
+  // console.log(new Marvin(image3).moravec(3, 15000, true));
   // prewitt
   // new Marvin(image).prewitt(1).save("output/prewitt.png"); //-----No changes-----
   // scale
@@ -63,7 +63,7 @@ const main = async () => {
   // sepia
   // new Marvin(image).sepia(20).save("output/sepia.png");
   // thresholding
-  new Marvin(image3).thresholding(100, true).save("output/thresholding.png");
+  // new Marvin(image3).thresholding(100, true).save("output/thresholding.png");
   // thresholdingNeighborhood
   // new Marvin(image).thresholdingNeighborhood(100,null, 20).save("output/thresholdingNeighborhood.png");  -----No changes-----
   // halftoneErrorDiffusion
@@ -81,7 +81,9 @@ const main = async () => {
   // Noise Reduction
   // new Marvin(image2).noiseReduction().save("output/noiseReduction.png");
   // Remove Background
-  new Marvin(image3).removeBackground().save("output/removeBackground.png");
+  // new Marvin(image3).removeBackground(0.4).save("output/removeBackground.png");
+  // new Marvin(image3).emboss().blackAndWhite(100).noiseReduction(5, 0.8).save("output/emboss3.png");
+  new Marvin(image).prewitt(1).invertColors().thresholding(500, true).save("output/edge.png");
 };
 
 main();

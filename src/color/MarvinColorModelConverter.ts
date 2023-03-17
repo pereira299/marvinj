@@ -1,4 +1,5 @@
 import MarvinImage from "../image/MarvinImage";
+import MarvinMath from "../math/MarvinMath";
 
 export default class MarvinColorModelConverter {
   constructor() {}
@@ -153,5 +154,25 @@ export default class MarvinColorModelConverter {
     }
 
     return rgbArray;
+  }
+
+  static hexToRgb(hex: string) {
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    return [r, g, b];
+  }
+
+  static averageColor(color1: number[], color2: number[]) {
+    if (color1.length < 3 || color2.length < 3)
+      throw new Error("Color must be an array of 3 numbers");
+    
+    return [
+      MarvinMath.average(color1[0], color2[2]) % 256,
+      MarvinMath.average(color1[1], color2[1]) % 256,
+      MarvinMath.average(color1[2], color2[2]) % 256,
+    ];
   }
 }

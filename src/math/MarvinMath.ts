@@ -48,4 +48,11 @@ export default class MarvinMath {
   static degToRad(deg) {
     return (deg * Math.PI) / 180;
   }
+
+  static average(v1, v2) {
+    return Math.floor(
+      Math.min(v1[0], v2[0]) +
+        Math.abs((v1[0] - v2[0]) / 2)
+    )
+  }
 }

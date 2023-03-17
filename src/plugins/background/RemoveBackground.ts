@@ -34,7 +34,7 @@ export default class RemoveBackground {
     img_original.loadFromImage(imageIn);
     const marvin = new Marvin(imageOut);
     console.time("moravec");
-    const matrix: Dot[] = marvin.moravec(5, 500);
+    const matrix: Dot[] = marvin.moravec(3, 5000);
     console.timeEnd("moravec");
     const int = 1;
     const sanitizedMatrix = [...matrix];

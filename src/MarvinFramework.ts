@@ -26,7 +26,6 @@ import Scale from "./plugins/transform/Scale";
 import AlphaBoundary from "./plugins/color/AlphaBoundary";
 import MarvinAttributes from "./util/MarvinAttributes";
 import MarvinImageMask from "./image/MarvinImageMask";
-import MarvinBlob from "./image/MarvinBlob";
 import MarvinImage from "./image/MarvinImage";
 import * as fs from "fs";
 import MarvinJSUtils from "./MarvinJSUtils";
@@ -35,6 +34,8 @@ import Rotate from "./plugins/transform/Rotate";
 import NoiseReduction from "./plugins/restoration/NoiseReduction";
 import RemoveBackground from "./plugins/background/RemoveBackground";
 import DrawLine from "./plugins/draw/DrawLine";
+import MarvinColorModelConverter from "./color/MarvinColorModelConverter";
+import HeatMap from "./plugins/color/HeatMap";
 
 export default class Marvin {
   private image: MarvinImage;
@@ -285,7 +286,7 @@ export default class Marvin {
     Moravec.setAttribute("threshold", threshold);
     moravec.process(this.image, attrOut, MarvinImageMask.NULL_MASK, preview);
     const res = attrOut.get("cornernessMap");
-    
+
     return res;
   }
 
@@ -395,16 +396,14 @@ export default class Marvin {
   }
 
   // Thresholding
-  thresholding(threshold: number, thresholdRange: boolean) {
+  thresholding(threshold: number) {
     const thresholding = new Thresholding();
-    const mask = new MarvinImageMask(this.image.getWidth(), this.image.getHeight());
-    Thresholding.setAttribute("threshold", threshold);
-    this.image = thresholding.process(
-      this.image,
-      null,
-      mask,
-      false
+    const mask = new MarvinImageMask(
+      this.image.getWidth() % 256,
+      this.image.getHeight()
     );
+    Thresholding.setAttribute("threshold", threshold);
+    this.image = thresholding.process(this.image, null, mask, false);
     return this;
   }
 
@@ -482,19 +481,22 @@ export default class Marvin {
     return this;
   }
 
-
   //Remove Background
   /**
-   * @param threshold threshold to remove background. Default is 0.4
    * @returns an instance of Marvin
    * @example
    * const marvin = new Marvin('image.jpg');
-   * marvin.removeBackground(0.4);
+   * marvin.removeBackground();
    * marvin.save('image.jpg');
-    */
-  removeBackground(threshold = 0.4) {
+   */
+  removeBackground() {
     const removeBackground = new RemoveBackground();
-    this.image = removeBackground.process(this.image, null, MarvinImageMask.NULL_MASK, true);
+    this.image = removeBackground.process(
+      this.image,
+      null,
+      MarvinImageMask.NULL_MASK,
+      true
+    );
     return this;
   }
 
@@ -511,8 +513,15 @@ export default class Marvin {
    * @example
    * const marvin = new Marvin('image.jpg');
    * marvin.drawLine(0, 0, 100, 100, '#000000', 1).save('image.jpg');
-    */
-  drawLine(x1: number, y1: number, x2: number, y2: number, color = "#000000", weight = 1) {
+   */
+  drawLine(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    color = "#000000",
+    weight = 1
+  ) {
     const drawLine = new DrawLine();
     DrawLine.setAttribute("x1", x1);
     DrawLine.setAttribute("y1", y1);
@@ -523,6 +532,45 @@ export default class Marvin {
     this.image = drawLine.process(this.image);
     return this;
   }
+
+  //heatmap
+  /**
+   * @description Creates a heatmap from the image between cold color (coldIn) and hot color (hotIn) and outputs it between coldOut and hotOut
+   * @param coldIn color of the cold input. default is #ffffff
+   * @param hotIn color of the hot input. default is #000000
+   * @param coldOut color of the cold output. default is #0000ff
+   * @param hotOut color of the hot output. default is #ff0000
+   * @param viaOut color of the average output, if is a empty string it will be calculated. default is #ffff00
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExemple);
+   * marvin.heatMap().save('image.jpg');
+   *
+   **/
+  heatMap(
+    coldIn = "#ffffff",
+    hotIn = "#000000",
+    coldOut = "#0000ff",
+    hotOut = "#ff0000",
+    viaOut = "#ffff00"
+  ): Marvin {
+    const heatMap = new HeatMap();
+    const colorIn = {
+      cold: MarvinColorModelConverter.hexToRgb(coldIn),
+      hot: MarvinColorModelConverter.hexToRgb(hotIn),
+    };
+    const colorOut = {
+      cold: MarvinColorModelConverter.hexToRgb(coldOut),
+      hot: MarvinColorModelConverter.hexToRgb(hotOut),
+      via: [],
+    };
+    colorOut.via = viaOut
+    ? MarvinColorModelConverter.hexToRgb(viaOut)
+    : MarvinColorModelConverter.averageColor(colorOut.cold, colorOut.hot)
+    this.image = heatMap.process(this.image, colorIn, colorOut);
+    return this;
+  }
+
   //Output
   output() {
     return this.image;
