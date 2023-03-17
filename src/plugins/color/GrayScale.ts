@@ -20,6 +20,8 @@ export default class GrayScale extends MarvinAbstractImagePlugin {
     if (mask != null) {
       l_arrMask = mask.getMask();
     }
+
+    l_arrMask = l_arrMask || new  MarvinImageMask(imageIn.getWidth(), imageIn.getHeight()).getMask();
     
     let r, g, b, finalColor;
     for (let x = 0; x < imageIn.getWidth(); x++) {

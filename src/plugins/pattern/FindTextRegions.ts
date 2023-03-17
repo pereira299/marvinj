@@ -35,7 +35,7 @@ export default class FindTextRegions extends MarvinAbstractImagePlugin {
       FindTextRegions.getAttribute("grayScaleThreshold");
 
     const marvin = new Marvin(imageIn);
-    imageIn = marvin.thresholding(grayScaleThreshold, true).output();
+    imageIn = marvin.thresholding(grayScaleThreshold).output();
 
     const segments = [];
     for (let i = 0; i < imageIn.getHeight(); i++) {

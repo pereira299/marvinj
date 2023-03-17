@@ -157,12 +157,19 @@ export default class MarvinColorModelConverter {
   }
 
   static hexToRgb(hex: string) {
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-
-    return [r, g, b];
+    if(hex.length <= 4){
+      const rgb = [];
+      for(let i = 1; i < hex.length; i++){
+        rgb.push(parseInt(hex[i] + hex[i], 16));
+      }
+      return rgb;
+    }else {
+      const rgb = [];
+      for(let i = 1; i < hex.length; i+=2){
+        rgb.push(parseInt(hex[i] + hex[i+1], 16));
+      }
+      return rgb;
+    }
   }
 
   static averageColor(color1: number[], color2: number[]) {

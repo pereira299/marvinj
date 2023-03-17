@@ -22,37 +22,39 @@ type NeighborhoodDots = {
 };
 
 export default class RemoveBackground {
-  process(
-    imageIn: MarvinImage,
-    attributesOut: MarvinAttributes,
-    mask: MarvinImageMask,
-    previewMode: boolean
-  ) {
+  process(imageIn: MarvinImage, threshold: number, previewMode: boolean) {
     let imageOut = imageIn.clone();
     // deep copy of imageIn
-    const img_original = new MarvinImage(imageIn.getWidth(), imageIn.getHeight());
+    const img_original = new MarvinImage(
+      imageIn.getWidth(),
+      imageIn.getHeight()
+    );
     img_original.loadFromImage(imageIn);
     const marvin = new Marvin(imageOut);
     console.time("moravec");
-    const matrix: Dot[] = marvin.moravec(3, 5000);
+    const matrix: Dot[] = this.findDots(imageIn, threshold);
     console.timeEnd("moravec");
     const int = 1;
     const sanitizedMatrix = [...matrix];
     let avgGlobal = 0;
 
-    const dotsNearest:NeighborhoodDots[] = this.findNearPixels(sanitizedMatrix).sort((a, b) => {
+    const dotsNearest: NeighborhoodDots[] = this.findNearPixels(
+      sanitizedMatrix
+    ).sort((a, b) => {
       return a.avgDistancia - b.avgDistancia;
     });
 
+    // this.drawBorder(dotsNearest, imageIn);
     avgGlobal =
       dotsNearest.reduce((acc, curr) => acc + curr.avgDistancia, 0) /
       dotsNearest.length;
-    
+
     console.time("heatmap");
     const { imageOut: imageOutHeartMap, heartMap } = this.heatMap(
       dotsNearest,
       imageIn,
-      avgGlobal, 10
+      avgGlobal,
+      10
     );
     imageOut = imageOutHeartMap;
     console.timeEnd("heatmap");
@@ -69,10 +71,7 @@ export default class RemoveBackground {
     }
 
     console.time("remove");
-    imageOut = this.removeBg(
-        img_original,
-        heartMap,
-    );
+    imageOut = this.removeBg(img_original, heartMap);
     console.timeEnd("remove");
     return imageOut;
   }
@@ -124,6 +123,63 @@ export default class RemoveBackground {
     };
   }
 
+  async drawBorder(dots: NeighborhoodDots[], imageIn: MarvinImage) {
+    const imageOut = imageIn.clone();
+    let marvin = new Marvin(imageOut);
+    const matrix = Array.from({ length: imageIn.getWidth() }, () =>
+      Array(imageIn.getHeight())
+    );
+
+    dots.forEach((dot) => {
+      matrix[dot.ponto.x][dot.ponto.y] = dot;
+    });
+
+    const startX = matrix.findIndex((row) =>
+      row.some((col) => col !== undefined)
+    );
+    const endX =
+      matrix.length -
+      matrix
+        .reverse()
+        .findIndex((row) => row.some((col) => col !== undefined)) -
+      1;
+
+    for (let x = startX; x < endX; x++) {
+      const startY = matrix[x].find((col) => col !== undefined);
+      const endY = matrix[x].reverse().find((col) => col !== undefined);
+      if (!startY) continue;
+
+        marvin = marvin.drawLine(
+          startY.dotsComMenorDistancia.top?.ponto.x || startY.ponto.x,
+          startY.dotsComMenorDistancia.top?.ponto.y || startY.ponto.y,
+          startY.dotsComMenorDistancia.bottom?.ponto.x || startY.ponto.x,
+          startY.dotsComMenorDistancia.bottom?.ponto.y || startY.ponto.y,
+          "#ff0000"
+        )
+
+
+      // if (endY.dotsComMenorDistancia.top) {
+      //   marvin = marvin.drawLine(
+      //     endY.ponto.x,
+      //     endY.ponto.y,
+      //     endY.dotsComMenorDistancia.top.ponto.x,
+      //     endY.dotsComMenorDistancia.top.ponto.y,
+      //     "#ff0000"
+      //   );
+      // } else {
+      //   marvin = marvin.drawLine(
+      //     endY.ponto.x,
+      //     endY.ponto.y,
+      //     endY.dotsComMenorDistancia.bottom.ponto.x,
+      //     endY.dotsComMenorDistancia.bottom.ponto.y,
+      //     "#ff0000"
+      //   );
+      // }
+    }
+
+    marvin.save("output/border.png");
+  }
+
   drawHeatMap(
     heatMap: number[][],
     imageIn: MarvinImage,
@@ -152,6 +208,42 @@ export default class RemoveBackground {
     });
 
     return imageOut;
+  }
+
+  findDots(imageIn: MarvinImage, threshold: number) {
+    const marvin = new Marvin(imageIn);
+    const matrix: Dot[] = [];
+    const emboss = marvin.emboss().blackAndWhite(100).blackAndWhite(25).output();
+
+    for (let x = 0; x < emboss.getWidth(); x++) {
+      for (let y = 0; y < emboss.getHeight(); y++) {
+        const pixel = [
+          emboss.getIntComponent0(x, y),
+          emboss.getIntComponent1(x, y),
+          emboss.getIntComponent2(x, y),
+        ];
+        const distWhite = MarvinMath.euclideanDistance3D(
+          pixel[0],
+          pixel[1],
+          pixel[2],
+          255,
+          255,
+          255
+        );
+        const distBlack = MarvinMath.euclideanDistance3D(
+          pixel[0],
+          pixel[1],
+          pixel[2],
+          0,
+          0,
+          0
+        );
+        if (distWhite < threshold || distBlack < threshold) {
+          matrix.push({ x, y });
+        }
+      }
+    }
+    return matrix;
   }
 
   removeBg(imageIn: MarvinImage, heatMap: number[][]) {

@@ -7,6 +7,7 @@ const url =
   "https://cursinhoparamedicina.com.br/wp-content/uploads/2022/10/Paisagem-1.jpg";
 const url2 = "https://marvinproject.net/images/pluginsOut/noiseReductionIn.jpg";
 const url3 = "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa-ou-nao.jpg"
+const url4 = "https://marvinj.org/images/cheetah.jpg"
 
 const main = async () => {
   const image = await new MarvinImage(635, 424).load(url);
@@ -35,7 +36,7 @@ const main = async () => {
   // morphologicalDilation
   // new Marvin(image).morphologicalDilation([[0, 0, 0], [0, 0, 0]]).save("output/morphologicalDilation.png");
   // emboss
-  new Marvin(image3).emboss().save("output/emboss.png");
+  // new Marvin(image3).emboss().save("output/emboss.png");
   // morphologicalErosion
   // new Marvin(image).morphologicalErosion([[0, 0, 0], [0, 0, 0]]).save("output/morphologicalErosion.png");
   // findTextRegions
@@ -81,9 +82,11 @@ const main = async () => {
   // Noise Reduction
   // new Marvin(image2).noiseReduction().save("output/noiseReduction.png");
   // Remove Background
-  // new Marvin(image3).removeBackground(0.4).save("output/removeBackground.png");
+  // new Marvin(image3).removeBackground(1).save("output/removeBackground.png");
   // new Marvin(image3).emboss().blackAndWhite(100).noiseReduction(5, 0.8).save("output/emboss3.png");
-  new Marvin(image).prewitt(1).invertColors().thresholding(500, true).save("output/edge.png");
+  // new Marvin(image3).emboss().blackAndWhite(100).blackAndWhite(25).save("output/edge.png");
+  new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(1).blackAndWhite(10).invertColors().heatMap().save("output/edge.png");
+  new Marvin(image3).heatMap().save("output/heatMap.png");
 };
 
 main();

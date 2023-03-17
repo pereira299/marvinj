@@ -36,6 +36,7 @@ import RemoveBackground from "./plugins/background/RemoveBackground";
 import DrawLine from "./plugins/draw/DrawLine";
 import MarvinColorModelConverter from "./color/MarvinColorModelConverter";
 import HeatMap from "./plugins/color/HeatMap";
+import Sobel from "./plugins/edge/Sobel";
 
 export default class Marvin {
   private image: MarvinImage;
@@ -363,6 +364,19 @@ export default class Marvin {
     return this;
   }
 
+  // Sobel
+  sobel(intensity) {
+    const sobel = new Sobel();
+    Sobel.setAttribute("intensity", intensity);
+    this.image = sobel.process(
+      this.image,
+      null,
+      MarvinImageMask.NULL_MASK,
+      false
+    );
+    return this;
+  }
+
   // Scale
   scale(newWidth, newHeight) {
     const scale = new Scale();
@@ -399,7 +413,7 @@ export default class Marvin {
   thresholding(threshold: number) {
     const thresholding = new Thresholding();
     const mask = new MarvinImageMask(
-      this.image.getWidth() % 256,
+      this.image.getWidth(),
       this.image.getHeight()
     );
     Thresholding.setAttribute("threshold", threshold);
@@ -489,12 +503,11 @@ export default class Marvin {
    * marvin.removeBackground();
    * marvin.save('image.jpg');
    */
-  removeBackground() {
+  removeBackground(threshold = 0.4) {
     const removeBackground = new RemoveBackground();
     this.image = removeBackground.process(
       this.image,
-      null,
-      MarvinImageMask.NULL_MASK,
+      threshold,
       true
     );
     return this;

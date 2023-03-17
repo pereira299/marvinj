@@ -72,14 +72,14 @@ export default class Prewitt extends MarvinAbstractImagePlugin {
       Convolution.setAttribute("matrix", this.matrixPrewittY);
       imageOut = this.convolution.process(imageOut, this.matrixPrewittY);
       console.timeEnd("convolution Y");
-      console.time("convolution Diagonal");
-      Convolution.setAttribute("matrix", this.matrixPrewittDiagonal);
-      imageOut = this.convolution.process(imageOut, this.matrixPrewittDiagonal);
-      console.timeEnd("convolution Diagonal");
-      console.time("convolution Diagonal2");
-      Convolution.setAttribute("matrix", this.matrixPrewittDiagonal2);
-      imageOut = this.convolution.process(imageOut, this.matrixPrewittDiagonal2);
-      console.timeEnd("convolution Diagonal2");
+      // console.time("convolution Diagonal");
+      // Convolution.setAttribute("matrix", this.matrixPrewittDiagonal);
+      // imageOut = this.convolution.process(imageOut, this.matrixPrewittDiagonal);
+      // console.timeEnd("convolution Diagonal");
+      // console.time("convolution Diagonal2");
+      // Convolution.setAttribute("matrix", this.matrixPrewittDiagonal2);
+      // imageOut = this.convolution.process(imageOut, this.matrixPrewittDiagonal2);
+      // console.timeEnd("convolution Diagonal2");
       // console.log(
       //   "out R: " + imageOut.getIntComponent0(0, 0),
       //   " G: " + imageOut.getIntComponent1(0, 0),
