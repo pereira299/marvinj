@@ -22,7 +22,7 @@ type NeighborhoodDots = {
 };
 
 export default class RemoveBackground {
-  process(imageIn: MarvinImage, threshold: number, previewMode: boolean) {
+  process2(imageIn: MarvinImage, threshold: number, previewMode: boolean) {
     let imageOut = imageIn.clone();
     // deep copy of imageIn
     const img_original = new MarvinImage(
@@ -38,11 +38,13 @@ export default class RemoveBackground {
     const sanitizedMatrix = [...matrix];
     let avgGlobal = 0;
 
+    console.time("sanitized");
     const dotsNearest: NeighborhoodDots[] = this.findNearPixels(
       sanitizedMatrix
     ).sort((a, b) => {
       return a.avgDistancia - b.avgDistancia;
     });
+    console.timeEnd("sanitized");
 
     // this.drawBorder(dotsNearest, imageIn);
     avgGlobal =
@@ -76,6 +78,11 @@ export default class RemoveBackground {
     return imageOut;
   }
 
+  process(imageIn: MarvinImage, threshold: number, previewMode: boolean) {
+    const imageOut = imageIn.clone();
+    const corners = this.getCorners(imageIn, threshold);
+    return this.removeDots(corners, imageOut);
+  }
   heatMap(
     cornernessMap: NeighborhoodDots[],
     imageIn: MarvinImage,
@@ -149,14 +156,13 @@ export default class RemoveBackground {
       const endY = matrix[x].reverse().find((col) => col !== undefined);
       if (!startY) continue;
 
-        marvin = marvin.drawLine(
-          startY.dotsComMenorDistancia.top?.ponto.x || startY.ponto.x,
-          startY.dotsComMenorDistancia.top?.ponto.y || startY.ponto.y,
-          startY.dotsComMenorDistancia.bottom?.ponto.x || startY.ponto.x,
-          startY.dotsComMenorDistancia.bottom?.ponto.y || startY.ponto.y,
-          "#ff0000"
-        )
-
+      marvin = marvin.drawLine(
+        startY.dotsComMenorDistancia.top?.ponto.x || startY.ponto.x,
+        startY.dotsComMenorDistancia.top?.ponto.y || startY.ponto.y,
+        startY.dotsComMenorDistancia.bottom?.ponto.x || startY.ponto.x,
+        startY.dotsComMenorDistancia.bottom?.ponto.y || startY.ponto.y,
+        "#ff0000"
+      );
 
       // if (endY.dotsComMenorDistancia.top) {
       //   marvin = marvin.drawLine(
@@ -213,7 +219,13 @@ export default class RemoveBackground {
   findDots(imageIn: MarvinImage, threshold: number) {
     const marvin = new Marvin(imageIn);
     const matrix: Dot[] = [];
-    const emboss = marvin.emboss().blackAndWhite(100).blackAndWhite(25).output();
+    const emboss = marvin
+      .grayScale()
+      .gaussianBlur(5)
+      .sobel(1)
+      .thresholding(1)
+      .invertColors()
+      .output();
 
     for (let x = 0; x < emboss.getWidth(); x++) {
       for (let y = 0; y < emboss.getHeight(); y++) {
@@ -230,19 +242,17 @@ export default class RemoveBackground {
           255,
           255
         );
-        const distBlack = MarvinMath.euclideanDistance3D(
-          pixel[0],
-          pixel[1],
-          pixel[2],
-          0,
-          0,
-          0
-        );
-        if (distWhite < threshold || distBlack < threshold) {
+        if (distWhite > threshold) {
+          const last = matrix.at(-1);
+          const dist = last
+            ? MarvinMath.euclideanDistance2D(last.x, last.y, x, y)
+            : 10;
+          if (last && (dist < 5 || dist > 50)) continue;
           matrix.push({ x, y });
         }
       }
     }
+    console.log(matrix.length);
     return matrix;
   }
 
@@ -364,5 +374,88 @@ export default class RemoveBackground {
     const diffY = dot1.y - dot2.y;
 
     return Math.sqrt(diffX ** 2 + diffY ** 2);
+  }
+
+  getCorners(img_in: MarvinImage, matrixSize: number) {
+    const width = img_in.getWidth();
+    const height = img_in.getHeight();
+
+    const cornersImage = [];
+
+    let matrixRGB = [];
+    for (let c = 0; c < 4; c++) {
+      const startX = c % 2 === 0 ? 0 : width - 1 - matrixSize;
+      const startY = c < 2 ? 0 : height - 1 - matrixSize;
+      const endX = c % 2 === 0 ? matrixSize : width;
+      const endY = c < 2 ? matrixSize : height;
+      for (let x = startX; x < endX; x++) {
+        for (let y = startY; y < endY; y++) {
+          matrixRGB.push({
+            r: img_in.getIntComponent0(x, y),
+            g: img_in.getIntComponent1(x, y),
+            b: img_in.getIntComponent2(x, y),
+          });
+        }
+      }
+      const avgRGB: { r: number; g: number; b: number } = matrixRGB.reduce(
+        (acc, curr) => {
+          acc.r += curr.r;
+          acc.g += curr.g;
+          acc.b += curr.b;
+          return acc;
+        },
+        { r: 0, g: 0, b: 0 }
+      );
+      avgRGB.r /= matrixRGB.length;
+      avgRGB.g /= matrixRGB.length;
+      avgRGB.b /= matrixRGB.length;
+
+      const variance = matrixRGB.reduce(
+        (acc, curr) => {
+          acc.r += (curr.r - avgRGB.r) ** 2;
+          acc.g += (curr.g - avgRGB.g) ** 2;
+          acc.b += (curr.b - avgRGB.b) ** 2;
+          return acc;
+        },
+        { r: 0, g: 0, b: 0 }
+      );
+      variance.r /= matrixRGB.length;
+      variance.g /= matrixRGB.length;
+      variance.b /= matrixRGB.length;
+
+      cornersImage.push(avgRGB);
+
+      matrixRGB = [];
+    }
+
+    return cornersImage;
+  }
+  removeDots(corners, image) {
+    const width = image.getWidth();
+    const height = image.getHeight();
+    const newImage = new MarvinImage(width, height);
+    newImage.loadFromImage(image);
+    const halfVariation = 20;
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        const r = image.getIntComponent0(x, y);
+        const g = image.getIntComponent1(x, y);
+        const b = image.getIntComponent2(x, y);
+        for (let i = 0; i < corners.length; i++) {
+          const diffR = Math.abs(r - corners[i].r);
+          const diffG = Math.abs(g - corners[i].g);
+          const diffB = Math.abs(b - corners[i].b);
+          if (
+            diffR < halfVariation &&
+            diffG < halfVariation &&
+            diffB < halfVariation
+          ) {
+            newImage.setIntColor(x, y, 0, 0, 0, 0);
+            break;
+          }
+        }
+      }
+    }
+    return newImage;
   }
 }

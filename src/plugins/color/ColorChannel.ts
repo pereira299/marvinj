@@ -17,9 +17,7 @@ export default class ColorChannel extends MarvinAbstractImagePlugin {
 
   process(
     imageIn: MarvinImage,
-    attributesOut: MarvinAttributes,
-    mask: MarvinImageMask,
-    previewMode: boolean
+    intensity: number,
   ) {
     const imageOut = imageIn.clone();
     const vr = ColorChannel.getAttribute("red");
@@ -29,10 +27,15 @@ export default class ColorChannel extends MarvinAbstractImagePlugin {
     let mr = 1 + Math.abs((vr / 100.0) * 2.5);
     let mg = 1 + Math.abs((vg / 100.0) * 2.5);
     let mb = 1 + Math.abs((vb / 100.0) * 2.5);
+    // set intensity
+    mr *= intensity;
+    mg *= intensity;
+    mb *= intensity;
 
     mr = vr > 0 ? mr : 1.0 / mr;
     mg = vg > 0 ? mg : 1.0 / mg;
     mb = vb > 0 ? mb : 1.0 / mb;
+
 
     let red, green, blue;
     for (let y = 0; y < imageIn.getHeight(); y++) {

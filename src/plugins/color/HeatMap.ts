@@ -17,18 +17,32 @@ type ColorsMap = {
   via?: Color;
 };
 export default class HeatMap {
-  process(imageIn: MarvinImage, colorsIn: ColorsMap, colorsOut: ColorsMap) {
-    const heatMap = this.heatMap(imageIn, colorsIn);
-    const imageOut = this.drawHeatMap(heatMap, imageIn, colorsOut);
+  process(
+    imageIn: MarvinImage,
+    colorsIn: ColorsMap,
+    colorsOut: ColorsMap,
+    propagation: number
+  ) {
+    let heatMap = this.heatMap(imageIn, colorsIn);
+    const avg =
+      heatMap.reduce((acc, curr) => {
+        return acc + curr.reduce((acc2, curr2) => acc2 + curr2, 0);
+      }, 0) /
+      (heatMap.length * heatMap[0].length);
+    if (propagation) {
+      heatMap = this.propagateHeatMap(heatMap, propagation, avg);
+    }
+    const imageOut = this.drawHeatMap(heatMap, imageIn, colorsOut, avg);
     return imageOut;
   }
 
   heatMap(imageIn: MarvinImage, colorsIn: ColorsMap) {
-    const heatMap: number[][] = [];
+    const heatMap: number[][] = Array.from(Array(imageIn.getWidth()), () =>
+      new Array(imageIn.getHeight()).fill(0)
+    );
     const width = imageIn.getWidth();
     const height = imageIn.getHeight();
     for (let i = 0; i < width; i++) {
-      heatMap[i] = [];
       for (let j = 0; j < height; j++) {
         heatMap[i][j] = MarvinMath.euclideanDistance3D(
           imageIn.getIntComponent0(i, j),
@@ -43,15 +57,38 @@ export default class HeatMap {
     return heatMap;
   }
 
-  drawHeatMap(heatMap: number[][], imageIn: MarvinImage, colorsOut: ColorsMap) {
+  propagateHeatMap(heatMap: number[][], propagation: number, average: number) {
+    const width = heatMap.length;
+    const height = heatMap[0].length;
+    const newHeatMap = Array.from(Array(width), () =>
+      new Array(height).fill(0)
+    );
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        let sum = 0;
+        let count = 0;
+        for (let k = -propagation; k <= propagation; k++) {
+          for (let l = -propagation; l <= propagation; l++) {
+            if (i + k >= 0 && i + k < width && j + l >= 0 && j + l < height) {
+              sum += heatMap[i + k][j + l];
+              count++;
+            }
+          }
+        }
+        newHeatMap[i][j] = sum / count;
+      }
+    }
+    return newHeatMap;
+  }
+
+  drawHeatMap(
+    heatMap: number[][],
+    imageIn: MarvinImage,
+    colorsOut: ColorsMap,
+    avg: number
+  ) {
     const imageOut = imageIn.clone();
-    const max = heatMap.reduce((acc, curr) => {
-      return Math.max(acc, ...curr);
-    }, 0);
-    const min = heatMap.reduce((acc, curr) => {
-      return Math.min(acc, ...curr);
-    }, 0);
-    const avg = (max + min) / 2;
+
     const halfLess = [
       colorsOut.via[0] - colorsOut.cold[0],
       colorsOut.via[1] - colorsOut.cold[1],

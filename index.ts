@@ -13,7 +13,7 @@ const main = async () => {
   const image = await new MarvinImage(635, 424).load(url);
   // const image2 = await new MarvinImage(240, 320).load(url2);
   console.time("load");
-  const image3 = await new MarvinImage(240, 320).load(url3);
+  const image3 = await new MarvinImage(240, 320).load(url4);
   console.timeEnd("load");
   // alphaBoundary
   // new Marvin(image).alphaBoundary(50).save("output/alphaBoundary.png");-----No changes-----
@@ -82,11 +82,14 @@ const main = async () => {
   // Noise Reduction
   // new Marvin(image2).noiseReduction().save("output/noiseReduction.png");
   // Remove Background
-  // new Marvin(image3).removeBackground(1).save("output/removeBackground.png");
+  // new Marvin(image3).removeBackground(5).save("output/removeBackground.png");
   // new Marvin(image3).emboss().blackAndWhite(100).noiseReduction(5, 0.8).save("output/emboss3.png");
   // new Marvin(image3).emboss().blackAndWhite(100).blackAndWhite(25).save("output/edge.png");
-  new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(1).blackAndWhite(10).invertColors().heatMap().save("output/edge.png");
-  new Marvin(image3).heatMap().save("output/heatMap.png");
+  // new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(1).invertColors().save("output/edge.png");
+  // new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(10).blackAndWhite(10).invertColors().heatMap(5).save("output/heatMap.png");
+  // new Marvin(image3).emboss().invertColors().gaussianBlur(5).blackAndWhite(20).save("output/canny.png");
+  new Marvin(image3).colorChannel("#f58744", 0.5).save("output/colorChannel.png");
+  //rgb(150,20,20) rgb(20,150,20)  rgb(20,20,150)
 };
 
 main();

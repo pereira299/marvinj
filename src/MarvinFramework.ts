@@ -37,6 +37,8 @@ import DrawLine from "./plugins/draw/DrawLine";
 import MarvinColorModelConverter from "./color/MarvinColorModelConverter";
 import HeatMap from "./plugins/color/HeatMap";
 import Sobel from "./plugins/edge/Sobel";
+import Canny from "./plugins/edge/Canny";
+import Posterization from "./plugins/color/posterization";
 
 export default class Marvin {
   private image: MarvinImage;
@@ -115,16 +117,16 @@ export default class Marvin {
   }
 
   // Color Channel
-  colorChannel(red, green, blue) {
+  colorChannel(color, intensity) {
+    const [red,green,blue] = MarvinColorModelConverter.hexToRgb(color);
+
     const colorChannel = new ColorChannel();
     ColorChannel.setAttribute("red", red);
     ColorChannel.setAttribute("green", green);
     ColorChannel.setAttribute("blue", blue);
     this.image = colorChannel.process(
       this.image,
-      null,
-      MarvinImageMask.NULL_MASK,
-      false
+      intensity
     );
     return this;
   }
@@ -377,6 +379,28 @@ export default class Marvin {
     return this;
   }
 
+  // Canny
+  canny( lowThreshold: number, highThreshold: number) {
+    const canny = new Canny();
+    this.image = canny.process(this.image, lowThreshold, highThreshold);
+    return this;
+  }
+
+  cannyMatrix( lowThreshold: number, highThreshold: number) {
+    const canny = new Canny();
+    this.image = canny.process(this.image, lowThreshold, highThreshold);
+    return canny.getMatrix(this.image);
+  }
+
+  // Posterize
+  posterize(levels) {
+    const posterize = new Posterization();
+    this.image = posterize.process(
+      this.image,
+      levels
+    );
+    return this;
+  }
   // Scale
   scale(newWidth, newHeight) {
     const scale = new Scale();
@@ -505,11 +529,7 @@ export default class Marvin {
    */
   removeBackground(threshold = 0.4) {
     const removeBackground = new RemoveBackground();
-    this.image = removeBackground.process(
-      this.image,
-      threshold,
-      true
-    );
+    this.image = removeBackground.process(this.image, threshold, true);
     return this;
   }
 
@@ -549,6 +569,7 @@ export default class Marvin {
   //heatmap
   /**
    * @description Creates a heatmap from the image between cold color (coldIn) and hot color (hotIn) and outputs it between coldOut and hotOut
+   * @param propagation propagation of the heat. default is 0
    * @param coldIn color of the cold input. default is #ffffff
    * @param hotIn color of the hot input. default is #000000
    * @param coldOut color of the cold output. default is #0000ff
@@ -561,6 +582,7 @@ export default class Marvin {
    *
    **/
   heatMap(
+    propagation = 0,
     coldIn = "#ffffff",
     hotIn = "#000000",
     coldOut = "#0000ff",
@@ -578,9 +600,9 @@ export default class Marvin {
       via: [],
     };
     colorOut.via = viaOut
-    ? MarvinColorModelConverter.hexToRgb(viaOut)
-    : MarvinColorModelConverter.averageColor(colorOut.cold, colorOut.hot)
-    this.image = heatMap.process(this.image, colorIn, colorOut);
+      ? MarvinColorModelConverter.hexToRgb(viaOut)
+      : MarvinColorModelConverter.averageColor(colorOut.cold, colorOut.hot);
+    this.image = heatMap.process(this.image, colorIn, colorOut, propagation);
     return this;
   }
 
