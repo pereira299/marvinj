@@ -10,7 +10,7 @@ const url3 = "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa
 const url4 = "https://marvinj.org/images/cheetah.jpg"
 
 const main = async () => {
-  const image = await new MarvinImage(635, 424).load(url);
+  // const image = await new MarvinImage(635, 424).load(url);
   // const image2 = await new MarvinImage(240, 320).load(url2);
   console.time("load");
   const image3 = await new MarvinImage(240, 320).load(url4);
@@ -88,8 +88,12 @@ const main = async () => {
   // new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(1).invertColors().save("output/edge.png");
   // new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(10).blackAndWhite(10).invertColors().heatMap(5).save("output/heatMap.png");
   // new Marvin(image3).emboss().invertColors().gaussianBlur(5).blackAndWhite(20).save("output/canny.png");
-  new Marvin(image3).colorChannel("#f58744", 0.5).save("output/colorChannel.png");
-  //rgb(150,20,20) rgb(20,150,20)  rgb(20,20,150)
+  // new Marvin(image3).posterize(10).gaussianBlur(5).emboss().save("output/posterize.png");
+  // new Marvin(image3).drawRect(20, 20, 120, 50, "#ff0000", 20).save("output/drawLine.png");
+  new Marvin(image3).drawCubicCurve(100, 100, 300, 100, 110,400, 150, 50,{
+    color: "#ff0000",
+    weight: 2,
+  }).save("output/drawCubicCurve.png");
 };
 
 main();

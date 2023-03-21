@@ -2,7 +2,6 @@ import MarvinImage from "../image/MarvinImage";
 import MarvinMath from "../math/MarvinMath";
 
 export default class MarvinColorModelConverter {
-  constructor() {}
 
   static rgbToBinary(img, threshold) {
     const resultImage = new MarvinImage(
@@ -66,7 +65,7 @@ export default class MarvinColorModelConverter {
       const c = max - min;
 
       // H
-      let h, s, v;
+      let h;
       if (c != 0) {
         if (max == red) {
           if (green >= blue) {
@@ -84,10 +83,10 @@ export default class MarvinColorModelConverter {
       }
 
       // V
-      v = max;
+      const v = max;
 
       // S
-      s = c != 0 ? c / v : 0;
+      const s = c != 0 ? c / v : 0;
 
       hsvArray[i * 3] = h;
       hsvArray[i * 3 + 1] = s;
@@ -157,25 +156,19 @@ export default class MarvinColorModelConverter {
   }
 
   static hexToRgb(hex: string) {
-    if(hex.length <= 4){
-      const rgb = [];
-      for(let i = 1; i < hex.length; i++){
-        rgb.push(parseInt(hex[i] + hex[i], 16));
-      }
-      return rgb;
-    }else {
-      const rgb = [];
-      for(let i = 1; i < hex.length; i+=2){
-        rgb.push(parseInt(hex[i] + hex[i+1], 16));
-      }
-      return rgb;
+    const rgb = [];
+    const add = hex.length === 4 ? 1 : 2;
+    const pos = hex.length === 4 ? 0 : 1;
+    for (let i = 1; i < hex.length; i += add) {
+      rgb.push(parseInt(hex[i] + hex[i+pos], 16));
     }
+    return rgb;
   }
 
   static averageColor(color1: number[], color2: number[]) {
     if (color1.length < 3 || color2.length < 3)
       throw new Error("Color must be an array of 3 numbers");
-    
+
     return [
       MarvinMath.average(color1[0], color2[2]) % 256,
       MarvinMath.average(color1[1], color2[1]) % 256,

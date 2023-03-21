@@ -33,12 +33,15 @@ import Flip from "./plugins/transform/Flip";
 import Rotate from "./plugins/transform/Rotate";
 import NoiseReduction from "./plugins/restoration/NoiseReduction";
 import RemoveBackground from "./plugins/background/RemoveBackground";
-import DrawLine from "./plugins/draw/DrawLine";
+import DrawLine from "./plugins/draw/Line";
 import MarvinColorModelConverter from "./color/MarvinColorModelConverter";
 import HeatMap from "./plugins/color/HeatMap";
 import Sobel from "./plugins/edge/Sobel";
 import Canny from "./plugins/edge/Canny";
 import Posterization from "./plugins/color/posterization";
+import Rect from "./plugins/draw/Rect";
+import Curve from "./plugins/draw/Curve";
+import Circle from "./plugins/draw/Circle";
 
 export default class Marvin {
   private image: MarvinImage;
@@ -117,17 +120,22 @@ export default class Marvin {
   }
 
   // Color Channel
-  colorChannel(color, intensity) {
-    const [red,green,blue] = MarvinColorModelConverter.hexToRgb(color);
+  /**
+   * Applies a color channel to the image
+   * @param color - string of hex color
+   * @param intensity - number between 0 and 1
+   * @returns Marvin instance
+   * @example
+   * new Marvin(image).colorChannel("#ff0000", 0.5)
+   **/
+  colorChannel(color, intensity = 0.2) {
+    const [red, green, blue] = MarvinColorModelConverter.hexToRgb(color);
 
     const colorChannel = new ColorChannel();
     ColorChannel.setAttribute("red", red);
     ColorChannel.setAttribute("green", green);
     ColorChannel.setAttribute("blue", blue);
-    this.image = colorChannel.process(
-      this.image,
-      intensity
-    );
+    this.image = colorChannel.process(this.image, intensity);
     return this;
   }
 
@@ -380,13 +388,13 @@ export default class Marvin {
   }
 
   // Canny
-  canny( lowThreshold: number, highThreshold: number) {
+  canny(lowThreshold: number, highThreshold: number) {
     const canny = new Canny();
     this.image = canny.process(this.image, lowThreshold, highThreshold);
     return this;
   }
 
-  cannyMatrix( lowThreshold: number, highThreshold: number) {
+  cannyMatrix(lowThreshold: number, highThreshold: number) {
     const canny = new Canny();
     this.image = canny.process(this.image, lowThreshold, highThreshold);
     return canny.getMatrix(this.image);
@@ -395,10 +403,7 @@ export default class Marvin {
   // Posterize
   posterize(levels) {
     const posterize = new Posterization();
-    this.image = posterize.process(
-      this.image,
-      levels
-    );
+    this.image = posterize.process(this.image, levels);
     return this;
   }
   // Scale
@@ -566,6 +571,222 @@ export default class Marvin {
     return this;
   }
 
+  //Draw Rectangle
+  /**
+   *  Draw a rectangle in the image
+   * @param x x coordinate of the rectangle
+   * @param y y coordinate of the rectangle
+   * @param width width of the rectangle
+   * @param height height of the rectangle
+   * @param color color of the rectangle. default is #000000
+   * @param weight weight of the rectangle. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawRect(0, 0, 100, 100, '#000000', 1).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   **/
+  drawRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color = "#000000",
+    weight = 1
+  ) {
+    const drawRect = new Rect();
+    Rect.setAttribute("x", x);
+    Rect.setAttribute("y", y);
+    Rect.setAttribute("width", width);
+    Rect.setAttribute("height", height);
+    Rect.setAttribute("color", color);
+    Rect.setAttribute("weight", weight);
+    this.image = drawRect.process(this.image);
+    return this;
+  }
+
+  //Draw Circle
+  /**
+   * Draw a circle in the image
+   * @param x x coordinate of the circle
+   * @param y y coordinate of the circle
+   * @param radius radius of the circle
+   * @param color color of the circle. default is #000000
+   * @param weight weight of the circle. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawCircle(0, 0, 100, '#000000', 1).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * */
+  drawCircle(
+    x: number,
+    y: number,
+    radius: number,
+    color = "#000000",
+    weight = 1
+  ) {
+    const drawCircle = new Circle();
+    this.image = drawCircle.process(this.image, x, y, radius, color, weight);
+    return this;
+  }
+
+  //Draw Ellipse
+  /**
+   * Draw a ellipse in the image
+   * @param x x coordinate of the ellipse
+   * @param y y coordinate of the ellipse
+   * @param width width of the ellipse
+   * @param height height of the ellipse
+   * @param color color of the ellipse. default is #000000
+   * @param weight weight of the ellipse. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawEllipse(0, 0, 100, 100, '#000000', 1).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * */
+  drawEllipse(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color = "#000000",
+    weight = 1
+  ) {
+    // const drawEllipse = new Ellipse();
+    // Ellipse.setAttribute("x", x);
+    // Ellipse.setAttribute("y", y);
+    // Ellipse.setAttribute("width", width);
+    // Ellipse.setAttribute("height", height);
+    // Ellipse.setAttribute("color", color);
+    // Ellipse.setAttribute("weight", weight);
+    // this.image = drawEllipse.process(this.image);
+    return this;
+  }
+
+  //Draw Curve
+  /**
+   * Draw a regular curve in the image
+   * @param x1 x coordinate of the first point
+   * @param y1 y coordinate of the first point
+   * @param x2 x coordinate of the second point
+   * @param y2 y coordinate of the second point
+   * @param radius radius of the curve
+   * @param color color of the curve. default is #000000
+   * @param weight weight of the curve. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawCurve(0, 0, 100, 100, 50, '#000000', 1).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * */
+  drawCurve(
+    x1: number,
+    y1: number,
+    degStart: number,
+    degEnd: number,
+    radius: number,
+    color = "#000000",
+    weight = 1
+  ) {
+    const drawCurve = new Curve();
+    Curve.setAttribute("x1", x1);
+    Curve.setAttribute("y1", y1);
+    Curve.setAttribute("degStart", degStart);
+    Curve.setAttribute("degEnd", degEnd);
+    Curve.setAttribute("radius", radius);
+    Curve.setAttribute("color", color);
+    Curve.setAttribute("weight", weight);
+    Curve.setAttribute("type", "regular");
+    this.image = drawCurve.process(this.image);
+    return this;
+  }
+
+  //Draw Quadratic Curve
+  /**
+   * Draw a quadratic curve in the image
+   * @param x1 x coordinate of the first point
+   * @param y1 y coordinate of the first point
+   * @param x2 x coordinate of the second point
+   * @param y2 y coordinate of the second point
+   * @param dotX x coordinate of the point control
+   * @param dotY y coordinate of the point control
+   * @param options options of the quadratic curve
+   * @param options.color color of the quadratic curve. default is #000000
+   * @param options.weight weight of the quadratic curve. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawQuadraticCurve(120, 90, 100, 100, 50, 10,).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * */
+  drawQuadraticCurve(
+    x1 = this.image.getWidth() - 10,
+    y1 = this.image.getHeight() - 10,
+    x2 = this.image.getWidth() + 10,
+    y2 = this.image.getHeight() + 10,
+    dotX = this.image.getWidth(),
+    dotY = this.image.getHeight(),
+    { color = "#000000", weight = 1 }
+  ) {
+    const drawQuadraticCurve = new Curve();
+    Curve.setAttribute("x1", x1);
+    Curve.setAttribute("y1", y1);
+    Curve.setAttribute("x2", x2);
+    Curve.setAttribute("y2", y2);
+    Curve.setAttribute("dot1", { x: dotX, y: dotY });
+    Curve.setAttribute("color", color);
+    Curve.setAttribute("weight", weight);
+    Curve.setAttribute("type", "quadratic");
+    this.image = drawQuadraticCurve.process(this.image);
+    return this;
+  }
+
+  //Draw Cubic Curve
+  /**
+   * Draw a cubic curve in the image
+   * @param x1 x coordinate of the first point
+   * @param y1 y coordinate of the first point
+   * @param x2 x coordinate of the second point
+   * @param y2 y coordinate of the second point
+   * @param dot1X x coordinate of the first point control
+   * @param dot1Y y coordinate of the first point control
+   * @param dot2X x coordinate of the second point control
+   * @param dot2Y y coordinate of the second point control
+   * @param options options of the cubic curve
+   * @param options.color color of the cubic curve. default is #000000
+   * @param options.weight weight of the cubic curve. default is 1
+   * @returns an instance of Marvin
+   * @example
+   * const marvin = new Marvin(marvinImageExample);
+   * marvin.drawCubicCurve(120, 90, 100, 100, 50, 10, 50, 10).save('image.jpg');
+   * @author Lucas Pereira Machado <github.com/pereira299>
+   * */
+  drawCubicCurve(
+    x1 = this.image.getWidth() - 10,
+    y1 = this.image.getHeight() - 10,
+    x2 = this.image.getWidth() + 10,
+    y2 = this.image.getHeight() + 10,
+    dot1X = this.image.getWidth(),
+    dot1Y = this.image.getHeight(),
+    dot2X = this.image.getWidth(),
+    dot2Y = this.image.getHeight(),
+    { color = "#000000", weight = 1 }
+  ) {
+    const drawCubicCurve = new Curve();
+    Curve.setAttribute("x1", x1);
+    Curve.setAttribute("y1", y1);
+    Curve.setAttribute("x2", x2);
+    Curve.setAttribute("y2", y2);
+    Curve.setAttribute("dot1", { x: dot1X, y: dot1Y });
+    Curve.setAttribute("dot2", { x: dot2X, y: dot2Y });
+    Curve.setAttribute("color", color);
+    Curve.setAttribute("weight", weight);
+    Curve.setAttribute("type", "cubic");
+    this.image = drawCubicCurve.process(this.image);
+    return this;
+  }
   //heatmap
   /**
    * @description Creates a heatmap from the image between cold color (coldIn) and hot color (hotIn) and outputs it between coldOut and hotOut

@@ -1,5 +1,3 @@
-import { JSDOM } from "jsdom";
-import axios from "axios";
 import * as canvas from "canvas";
 import * as fs from "fs";
 
@@ -95,8 +93,8 @@ export default class MarvinImage {
       this.imageData = marvinImage.ctx.getImageData(
         0,
         0,
-        marvinImage.getWidth(),
-        marvinImage.getHeight()
+        marvinImage.width,
+        marvinImage.height
       );
 
       if (marvinImage.onload != null) {
@@ -110,8 +108,8 @@ export default class MarvinImage {
 
   clone(all = true) {
     const image = new MarvinImage(
-      this.getWidth(),
-      this.getHeight(),
+      this.width,
+      this.height,
       this.colorModel
     );
     if (all) {
@@ -129,8 +127,8 @@ export default class MarvinImage {
   }
 
   clear(color) {
-    for (let y = 0; y < this.getHeight(); y++) {
-      for (let x = 0; x < this.getWidth(); x++) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         this.setIntColor(x, y, color);
       }
     }
@@ -142,27 +140,27 @@ export default class MarvinImage {
   }
 
   getAlphaComponent(x, y) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     return this.imageData.data[start + 3];
   }
 
   setAlphaComponent(x, y, alpha) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     this.imageData.data[start + 3] = alpha;
   }
 
   getIntComponent0(x, y) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     return this.imageData.data[start];
   }
 
   getIntComponent1(x, y) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     return this.imageData.data[start + 1];
   }
 
   getIntComponent2(x, y) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     return this.imageData.data[start + 2];
   }
 
@@ -188,7 +186,7 @@ export default class MarvinImage {
   }
 
   getIntColor(x, y) {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
 
     return (
       0x100000000 +
@@ -208,12 +206,12 @@ export default class MarvinImage {
   }
 
   setBinaryColor(x, y, value) {
-    const pos = y * this.getWidth() + x;
+    const pos = y * this.width + x;
     this.arrBinaryColor[pos] = value;
   }
 
   getBinaryColor(x, y) {
-    const pos = y * this.getWidth() + x;
+    const pos = y * this.width + x;
     return this.arrBinaryColor[pos];
   }
 
@@ -252,7 +250,7 @@ export default class MarvinImage {
   fillRect(x, y, width, height, color) {
     for (let i = x; i < x + width; i++) {
       for (let j = y; j < y + height; j++) {
-        if (i < this.getWidth() && j < this.getHeight()) {
+        if (i < this.width && j < this.height) {
           this.setIntColor(i, j, color);
         }
       }
@@ -305,7 +303,7 @@ export default class MarvinImage {
     g: number,
     b: number
   ): void {
-    const start = (y * this.getWidth() + x) * 4;
+    const start = (y * this.width + x) * 4;
     this.imageData.data[start] = r;
     this.imageData.data[start + 1] = g;
     this.imageData.data[start + 2] = b;
