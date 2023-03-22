@@ -1,21 +1,92 @@
-# MarvinJ
-MarvinJ was created to be the Javascript version of Marvin Image Processing Framework aiming to provide the same features in the web, server and mobile platforms powered by Javascript.
+# Marvin-TS
+Marvin-TS is Typescript version of Marvin Image Processing Framework with some more features and updates.
 
-If you are not familiar with Marvin Framework and want to play with MarvinJ, don't worry. The rest of this article shows the basic image processing features of MarvinJ using JSFiddle snippets that you can make your own version and play with it.
+## Tutorial
 
+### Install
+
+You can install from npm or yarn
+
+**NPM**
+```
+npm i marvin-ts
+```
+
+**Yarn**
+```
+yarn add marvin-ts
+```
 ### Image Loading
-In the case of MarvinJ we load images from URLs and usually use a HTML5 canvas for displaying processed images.
+The first step to use Marvin-TS is load a image.
+```
+   import { MarvinImage } from "marvin-ts"
+
+   // load from remote image
+   let url = "http://ww.exemple.com/image.jpg";
+   const image = await new MarvinImage().load(url);
+
+   // or load from local image
+   let url2 = fs.readSyncFile("image.png");
+   const image2 = await new MarvinImage().loadFromBase64(url2);
+```
+### Marvin instance
+Before load image you need create a new Marvin instance
 
 ```
-let canvas = document.getElementById("canvas");
-let image = new MarvinImage();
+   import Marvin, { MarvinImage } from "marvin-ts"
+   ...
+   ...
+   // image is the MarvinImage instance the you create before
+   const marvin = new Marvin(image);
 
-image.load("https://i.imgur.com/4O8VFQY.jpg", function(){
-   image.draw(canvas);
-});
+   // Now you can use all features of Marvin-TS
 ```
-Continue Reading:
 
-### "Playing with image processing in Javascript using MarvinJ 1.0 (JSFiddle Examples)"
-http://marvinj.org/en/releases/marvinj_1.0.html
+## Features
+### Blur
+```
+   
+```
+### Color
+```
+   
+```
+### Combine
+```
+   
+```
+### Corner
+```
+   
+```
+### Draw
+```
+   
+```
+### Edge
+```
+   
+```
+### Pattern
+```
+   
+```
+### Restoration
+```
+   
+```
+### Segment
+```
+   
+```
+### Transform
+```
+   
+```
+### Get or save
+```
+   
+```
+
+This project is a fork of [MarvinJ](http://marvinj.org/)
 
