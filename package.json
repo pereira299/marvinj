@@ -1,10 +1,18 @@
 {
   "name": "marvin-ts",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "typescript image processing framework",
   "main": "index.ts",
   "repository": "https://github.com/pereira299/marvinj.git",
   "author": "Lucas Pereira <lucasper057@gmail.com>",
+  "keywords": [
+    "image",
+    "processing",
+    "framework",
+    "typescript",
+    "jsdom",
+    "canvas"
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
