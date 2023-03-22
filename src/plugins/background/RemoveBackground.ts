@@ -161,7 +161,10 @@ export default class RemoveBackground {
         startY.dotsComMenorDistancia.top?.ponto.y || startY.ponto.y,
         startY.dotsComMenorDistancia.bottom?.ponto.x || startY.ponto.x,
         startY.dotsComMenorDistancia.bottom?.ponto.y || startY.ponto.y,
-        "#ff0000"
+        {
+          color: "#ff0000",
+          weight: 1,
+        }
       );
 
       // if (endY.dotsComMenorDistancia.top) {

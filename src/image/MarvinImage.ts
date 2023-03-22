@@ -77,8 +77,9 @@ export default class MarvinImage {
       this.image.src = base64;
     });
   }
-  // WARN: the callback "this" object is the reference to js Image object.
-  callbackImageLoaded(marvinImage: MarvinImage) {
+  
+  callbackImageLoaded(marvinImage: MarvinImage): MarvinImage
+   {
     try {
       marvinImage.width = marvinImage.image.width;
       marvinImage.height = marvinImage.image.height;

@@ -50,10 +50,10 @@ export default class Rect extends MarvinAbstractImagePlugin {
 
     const halfWeight = Math.floor(weight / 2);
     const marvin = new Marvin(imageIn)
-      .drawLine(Math.max(x-halfWeight, 0), y, Math.min(x + width + halfWeight, imageIn.getWidth()), y, color, weight)
-      .drawLine(x, y, x, y + height, color, weight)
-      .drawLine(x + width, y, x + width, y + height, color, weight)
-      .drawLine(Math.max(x-halfWeight, 0), y + height, Math.min(x + width + halfWeight, imageIn.getWidth()), y + height, color, weight);
+      .drawLine(Math.max(x-halfWeight, 0), y, Math.min(x + width + halfWeight, imageIn.getWidth()), y, {color, weight})
+      .drawLine(x, y, x, y + height, {color, weight})
+      .drawLine(x + width, y, x + width, y + height, {color, weight})
+      .drawLine(Math.max(x-halfWeight, 0), y + height, Math.min(x + width + halfWeight, imageIn.getWidth()), y + height, {color, weight});
     return marvin.output();
   }
 }

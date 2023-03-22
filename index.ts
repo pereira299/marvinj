@@ -6,8 +6,9 @@ import marvinJSUtils from "./src/MarvinJSUtils";
 const url =
   "https://cursinhoparamedicina.com.br/wp-content/uploads/2022/10/Paisagem-1.jpg";
 const url2 = "https://marvinproject.net/images/pluginsOut/noiseReductionIn.jpg";
-const url3 = "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa-ou-nao.jpg"
-const url4 = "https://marvinj.org/images/cheetah.jpg"
+const url3 =
+  "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa-ou-nao.jpg";
+const url4 = "https://marvinj.org/images/cheetah.jpg";
 
 const main = async () => {
   // const image = await new MarvinImage(635, 424).load(url);
@@ -15,22 +16,16 @@ const main = async () => {
   console.time("load");
   const image3 = await new MarvinImage(240, 320).load(url4);
   console.timeEnd("load");
-  // alphaBoundary
-  // new Marvin(image).alphaBoundary(50).save("output/alphaBoundary.png");-----No changes-----
   // averageColor
   // console.log(new Marvin(image).averageColor())
   // blackAndWhite
   // new Marvin(image).blackAndWhite(25).save("output/blackAndWhite.png");
-  // boundaryFill
-  // new Marvin(image).boundaryFill(0, 0, "0xd3d570", 0.2).save("output/boundaryFill.png"); -----No changes-----
   // brightnessAndContrast
   // new Marvin(image).brightnessAndContrast(50, 50).save("output/brightnessAndContrast.png");
   // colorChannel
   // new Marvin(image).colorChannel(50, 50, 150).save("output/colorChannel.png");
   // combineByAlpha
   // new Marvin(image).combineByAlpha(image, 200, 200).save("output/combineByAlpha.png");
-  // morphologicalClosing
-  // new Marvin(image).morphologicalClosing(marvinJSUtils.createMatrix2D(image.width, image.height, false)).save("output/morphologicalClosing.png");  -----No changes-----
   // crop
   // new Marvin(image).crop(50, 50,200,200).save("output/crop.png");
   // morphologicalDilation
@@ -49,8 +44,6 @@ const main = async () => {
   // new Marvin(image3).grayScale().save("output/grayScale.png");
   // invertColors
   // new Marvin(image).invertColors().save("output/invertColors.png");
-  // iteratedFunctionSystem
-  // new Marvin(image).iteratedFunctionSystem(null, 200).save("output/iteratedFunctionSystem.png");  -----No changes-----
   // mergePhotos
   // new Marvin(image).mergePhotos([image], 0.5).save("output/mergePhotos.png");
   // moravec
@@ -58,15 +51,13 @@ const main = async () => {
   // x: 156 y: 491
   // console.log(new Marvin(image3).moravec(3, 15000, true));
   // prewitt
-  // new Marvin(image).prewitt(1).save("output/prewitt.png"); //-----No changes-----
+  // new Marvin(image3).prewitt(1).save("output/prewitt.png");
   // scale
   // new Marvin(image).scale(50,20).save("output/scale.png");
   // sepia
   // new Marvin(image).sepia(20).save("output/sepia.png");
   // thresholding
   // new Marvin(image3).thresholding(100, true).save("output/thresholding.png");
-  // thresholdingNeighborhood
-  // new Marvin(image).thresholdingNeighborhood(100,null, 20).save("output/thresholdingNeighborhood.png");  -----No changes-----
   // halftoneErrorDiffusion
   // new Marvin(image).halftoneErrorDiffusion().save("output/halftoneErrorDiffusion.png");
   // Flip horizontal
@@ -82,7 +73,6 @@ const main = async () => {
   // Noise Reduction
   // new Marvin(image2).noiseReduction().save("output/noiseReduction.png");
   // Remove Background
-  // new Marvin(image3).removeBackground(5).save("output/removeBackground.png");
   // new Marvin(image3).emboss().blackAndWhite(100).noiseReduction(5, 0.8).save("output/emboss3.png");
   // new Marvin(image3).emboss().blackAndWhite(100).blackAndWhite(25).save("output/edge.png");
   // new Marvin(image3).grayScale().gaussianBlur(5).sobel(5).thresholding(1).invertColors().save("output/edge.png");
@@ -90,10 +80,12 @@ const main = async () => {
   // new Marvin(image3).emboss().invertColors().gaussianBlur(5).blackAndWhite(20).save("output/canny.png");
   // new Marvin(image3).posterize(10).gaussianBlur(5).emboss().save("output/posterize.png");
   // new Marvin(image3).drawRect(20, 20, 120, 50, "#ff0000", 20).save("output/drawLine.png");
-  new Marvin(image3).drawCubicCurve(100, 100, 300, 100, 110,400, 150, 50,{
-    color: "#ff0000",
-    weight: 2,
-  }).save("output/drawCubicCurve.png");
+  // new Marvin(image3)
+  //   .drawCubicCurve(100, 100, 300, 100, 110, 400, 150, 50, {
+  //     color: "#ff0000",
+  //     weight: 2,
+  //   })
+  //   .save("output/drawCubicCurve.png");
 };
 
 main();
