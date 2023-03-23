@@ -1,6 +1,6 @@
 {
   "name": "marvin-ts",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "typescript image processing framework",
   "main": "index.ts",
   "repository": "https://github.com/pereira299/marvinj.git",
@@ -11,7 +11,8 @@
     "framework",
     "typescript",
     "jsdom",
-    "canvas"
+    "canvas",
+    "image processing"
   ],
   "license": "MIT",
   "private": false,
@@ -30,6 +31,7 @@
   "dependencies": {
     "axios": "^1.3.4",
     "canvas": "^2.11.0",
-    "jsdom": "^21.1.0"
+    "jsdom": "^21.1.0",
+    "node-fetch": "^3.3.1"
   }
 }
