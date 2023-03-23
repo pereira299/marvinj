@@ -75,6 +75,7 @@ export default class MarvinImage {
         resolve(res);
       };
       this.image.src = base64;
+    
     });
   }
   

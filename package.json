@@ -1,6 +1,6 @@
 {
   "name": "marvin-ts",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "description": "typescript image processing framework",
   "main": "index.ts",
   "repository": "https://github.com/pereira299/marvinj.git",

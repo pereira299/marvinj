@@ -751,7 +751,7 @@ export default class Marvin {
     y2 = this.image.getHeight() + 10,
     dotX = this.image.getWidth(),
     dotY = this.image.getHeight(),
-    { color = "#000000", weight = 1 }
+    options = { color: "#000000", weight: 1 }
   ) {
     const drawQuadraticCurve = new Curve();
     Curve.setAttribute("x1", x1);
@@ -759,8 +759,8 @@ export default class Marvin {
     Curve.setAttribute("x2", x2);
     Curve.setAttribute("y2", y2);
     Curve.setAttribute("dot1", { x: dotX, y: dotY });
-    Curve.setAttribute("color", color);
-    Curve.setAttribute("weight", weight);
+    Curve.setAttribute("color", options.color);
+    Curve.setAttribute("weight", options.weight);
     Curve.setAttribute("type", "quadratic");
     this.image = drawQuadraticCurve.process(this.image);
     return this;
@@ -795,7 +795,7 @@ export default class Marvin {
     dot1Y = this.image.getHeight(),
     dot2X = this.image.getWidth(),
     dot2Y = this.image.getHeight(),
-    { color = "#000000", weight = 1 }
+    options = { color: "#000000", weight: 1 }
   ) {
     const drawCubicCurve = new Curve();
     Curve.setAttribute("x1", x1);
@@ -804,8 +804,8 @@ export default class Marvin {
     Curve.setAttribute("y2", y2);
     Curve.setAttribute("dot1", { x: dot1X, y: dot1Y });
     Curve.setAttribute("dot2", { x: dot2X, y: dot2Y });
-    Curve.setAttribute("color", color);
-    Curve.setAttribute("weight", weight);
+    Curve.setAttribute("color", options.color);
+    Curve.setAttribute("weight", options.weight);
     Curve.setAttribute("type", "cubic");
     this.image = drawCubicCurve.process(this.image);
     return this;
