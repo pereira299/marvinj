@@ -44,7 +44,18 @@ import Curve from "./plugins/draw/Curve";
 import Circle from "./plugins/draw/Circle";
 import Ellipse from "./plugins/draw/Ellipse";
 import Star from "./plugins/draw/Star";
+import Write from "./plugins/pattern/Write";
+import { Fonts } from "./types/Fonts";
 
+type OptionsWrite = {
+  font?: Fonts["google"];
+  fontSize?: number;
+  color?: string;
+  fontWeight?: string;
+  maxWidth?: number;
+  textAlign?: 'center' | 'end' | 'left' | 'right' | 'start';
+  textBaseline?: 'alphabetic' | 'bottom' | 'hanging' | 'ideographic' | 'middle' | 'top';
+}
 export default class Marvin {
   private image: MarvinImage;
   private x: number;
@@ -171,6 +182,36 @@ export default class Marvin {
       null,
       MarvinImageMask.NULL_MASK,
       false
+    );
+    return this;
+  }
+
+  // Write
+  /**
+   * write text on the image
+   * @param text the text to write on the image
+   * @param x x position of the text
+   * @param y y position of the text
+   * @param options options to write the text
+   * @param options.font link of the font to use
+   * @param options.fontSize size of the font
+   * @param options.color color of the font
+   * @param options.fontWeight weight of the font
+   * @param options.maxWidth max width of the text
+   * @param options.textAlign text align
+   * @param options.textBaseline text baseline
+   * @returns Marvin instance
+   * @example
+   * new Marvin(image).write("Hello World", 10, 10, {color: "#ff0000", fontSize: 20})
+   */
+  async write(text: string, x: number, y: number, options?: OptionsWrite) {
+    const write = new Write();
+    this.image = await write.process(
+      this.image,
+      text, 
+      x,
+      y,
+      options
     );
     return this;
   }

@@ -13,3 +13,13 @@ export {
   MarvinMath,
   MarvinJSUtils as MarvinUtils,
 };
+
+async function main() {
+
+const url = "https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg"
+const image = await new MarvinImage().load(url);
+(await new Marvin(image).write("Exemplo", 10,10)).save("output/write.png");
+
+}
+
+main();
